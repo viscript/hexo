@@ -1,0 +1,365 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>rc.sysint | viscript</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="viscript">
+    
+    <meta name="description" content="# !/bin/bash##  /etc/rc.d/rc.sysinit - run once at boot time###  Rerun ourselves through initlog                                                // 通过 ">
+    
+    
+    
+    
+    
+<link href="/favicon.ico" rel="icon" type="image/x-ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="viscript" title="viscript"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="viscript">viscript</a></h1>
+				<h2 class="blog-motto">修合无人见，存心有天知。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:v-script.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/02/24/rc-sysint/" title="rc.sysint" itemprop="url">rc.sysint</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="https://plus.google.com/https://plus.google.com/u/0/118332448986920483228?rel=author" title="viscript" target="_blank" itemprop="author">viscript</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2015-02-24T10:16:47.746Z" itemprop="datePublished">2月 24 2015</time>
+    更新日期:<time datetime="2015-02-24T10:01:03.847Z" itemprop="dateModified">2月 24 2015</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<p># !/bin/bash<br>#<br>#  /etc/rc.d/rc.sysinit - run once at boot time<br>#<br>#<br>#  Rerun ourselves through initlog                                                // 通过 /sbin/initlog 命令重新运行自己<br>if [ -z “$IN_INITLOG” -a -x /sbin/initlog ]; then                            // 条件是 ：如果 IN_INITLOG 变量的值不为空，且 /sbin/initlog 可执行<br>    exec /sbin/initlog -r /etc/rc.d/rc.sysinit                                // 调用 exec /sbin/initlog ，-r 是表示运行某个程序<br>fi<br>####################\<br>HOSTNAME=<code>/bin/hostname</code>                            # 取得主机名<br>HOSTTYPE=<code>uname -m</code>                                    # 取得主机类型<br>unamer=<code>uname -r</code>                                          # 取得内核的 release 版本（例如 2.4.9.30-8）</p>
+<p>eval version=<code>echo $unamer | awk -F &#39;.&#39; &#39;{ print &quot;(&quot; $1 &quot; &quot; $2 &quot;)&quot; }&#39;</code>            # 取得版本号<br>if [ -f /etc/sysconfig/network ]; then                # 如果存在 /etc/sysconfig/network ，则执行该文件。<br>    . /etc/sysconfig/network                             # network 文件主要控制是否启用网络、默认网关、主机名<br>fi<br>if [ -z “$HOSTNAME” -o “$HOSTNAME” = “(none)” ]; then            # 如果执行 network 文件后 HOSTNAME 为空或者为 “(none)” ，<br>    HOSTNAME=localhost                                                        # 则将主机名设置为 “localhost”<br>fi<br> Mount /proc and /sys (done here so volume labels can work with fsck)        # 接下来是挂载 /proc 和 /sys ，这样 fsck 才能使用卷标<br>mount -n -t proc /proc /proc                                                                      # -n 表示不写 /etc/mtab ，这在 /etc 所在的文件系统为只读时用。因为此时的/还是只读的<br>[ -d /proc/bus/usb ] &amp;&amp; mount -n -t usbfs /proc/bus/usb /proc/bus/usb        # 如果存在 /proc/bus/usb 目录则把 /proc/bus/usb 以 usbfs 挂载到 /proc/bus/usb 下<br>mount -n -t sysfs /sys /sys &gt;/dev/null 2&gt;&amp;1                                                    # 接下来就是把 /sys 目录以 sysfs 格式挂载到 /sys 目录下<br>####################\<br>. /etc/init.d/functions             # 执行 /etc/init.d/functions 文件，该文件提供了很多有用的函数,具体见 “functions 脚本提供的函数”一文<br>####################\<br># Check SELinux status<br>selinuxfs=<code>awk &#39;/ selinuxfs / { print $2 }&#39; /proc/mounts</code><br>SELINUX=<br>if [ -n “$selinuxfs” ] &amp;&amp; [ “<code>cat /proc/self/attr/current</code>“ != “kernel” ]; then<br>if [ -r $selinuxfs/enforce ] ; then<br>   SELINUX=<code>cat $selinuxfs/enforce</code><br>else<br>    assume enforcing if you can’t read it<br>   SELINUX=1<br>fi<br>fi<br>if [ -x /sbin/restorecon ] &amp;&amp; LC_ALL=C fgrep -q “ /dev “ /proc/mounts ; then<br>/sbin/restorecon -R /dev 2&gt;/dev/null<br>fi<br>disable_selinux() {<br>echo “<strong><em> Warning — SELinux is active”<br>echo “</em></strong> Disabling security enforcement for system recovery.”<br>echo “<strong><em> Run ‘setenforce 1’ to reenable.”<br>echo “0” &gt; $selinuxfs/enforce<br>}<br>relabel_selinux() {<br>    if [ -x /usr/bin/rhgb-client ] &amp;&amp; /usr/bin/rhgb-client —ping ; then<br>chvt 1<br>    fi<br>    echo “
+         </em></strong> Warning — SELinux relabel is required. <strong><em>
+</em></strong> Disabling security enforcement.         <strong><em>
+</em></strong> Relabeling could take a very long time, <strong><em>
+</em></strong> depending on file system size.          <strong><em><br>“<br>    echo “0” &gt; $selinuxfs/enforce<br>    /sbin/fixfiles -F relabel &gt; /dev/null 2&gt;&amp;1<br>    rm -f /.autorelabel<br>    echo “</em></strong> Enabling security enforcement.         <em>**”<br>    echo $SELINUX &gt; $selinuxfs/enforce<br>    if [ -x /usr/bin/rhgb-client ] &amp;&amp; /usr/bin/rhgb-client —ping ; then<br>chvt 8<br>    fi<br>}<br>####################\<br>if [ “$HOSTTYPE” != “s390” -a “$HOSTTYPE” != “s390x” ]; then<br>last=0<br>for i in `LC_ALL=C grep ‘^[0-9].</em>respawn:/sbin/mingetty’ /etc/inittab | sed ‘s/^.<em> tty([0-9][0-9]</em>).*/\1/g’`; do</p>
+<pre><code>    &gt; <span class="regexp">/dev/tty</span><span class="variable">$i</span>
+    last=<span class="variable">$i</span>
+</code></pre><p>done<br>if [ $last -gt 0 ]; then</p>
+<pre><code>   &gt; <span class="regexp">/dev/tty</span><span class="variable">$(</span>(last+<span class="number">1</span>))
+   &gt; <span class="regexp">/dev/tty</span><span class="variable">$(</span>(last+<span class="number">2</span>))
+</code></pre><p>fi<br>fi<br>####################\<br>if [ “$CONSOLETYPE” = “vt” -a -x /sbin/setsysfont ]; then            # 下面是设置屏幕的默认字体。如果 CONSOLETYPE 变量的值为 vt 且 /sbin/setsysfont 命令可执行<br>   echo -n “Setting default font ($SYSFONT): “                            # 打印 “setting deafault font xxxx “ ,默认字体应该是 xxxx<br>   /sbin/setsysfont                                                                   # 执行 /sbin/setsysfont<br>   if [ $? -eq 0 ]; then                                                                # 如果上述命令执行返回的 exit status 为 0<br>      success                                                                                # 则调用 success 函数（来自于 functions 脚本），记录一个成功的事件<br>   else<br>      failure                                                                                 # 否则调用 failure 函数<br>   fi<br>   echo ; echo<br>fi<br>####################\<br># Print a text banner.                                                                # 下面部分是打印 “welcome to xxxxx” 的标题栏</p>
+<p>echo -en $”\t\tWelcome to “                                                      # 打印 “<tab><tab>Welcom to” ，同时不换行<br>if LC_ALL=C fgrep -q “Red Hat” /etc/redhat-release ; then           # 从 /etc/redhat-release 文件中找出含有 “Red Hat” 的行，如果找到<br>[ “$BOOTUP” = “color” ] &amp;&amp; echo -en “\033[0;31m”                        # 则变量 BOOTUP 的值为 color ，并设置输出字体输出红色<br>echo -en “Red Hat”                                                                    # 同时打印 “Red Hat” ，接下来打印发行版本（产品）<br>[ “$BOOTUP” = “color” ] &amp;&amp; echo -en “\033[0;39m”                        # 如果变量 BOOTUP 的值为 color 则设置输出字体为白色<br>PRODUCT=<code>sed &quot;s/Red Hat \(.*\) release.*/\1/&quot; /etc/redhat-release</code>    # 从 /etc/redhat-release 中找出含有 “Red Hat” 且后面若干字符，然后是 “release” 的行，并截取中间部分给 PRODUCT</tab></tab></p>
+<p>echo “ $PRODUCT”                                                                            # 输出变量 PRODUCT 的值（白色）<br>elif LC_ALL=C fgrep -q “Fedora” /etc/redhat-release ; then             # 如果/etc/redhat-release 中没有 Red Hat 字符串，但有 Fedora ，则执行类似过程<br>[ “$BOOTUP” = “color” ] &amp;&amp; echo -en “\033[0;31m”<br>echo -en “Fedora”<br>[ “$BOOTUP” = “color” ] &amp;&amp; echo -en “\033[0;39m”<br>PRODUCT=<code>sed &quot;s/Fedora \(.*\) release.*/\1/&quot; /etc/redhat-release</code><br>echo “ $PRODUCT”<br>else                                                                                            # 如果 /etc/redhat-release 中既没有含 Red Hat 也没有含 Fedora 的行，则<br>PRODUCT=<code>sed &quot;s/ release.*//g&quot; /etc/redhat-release</code>                    # 找到含有 ‘release’ 的行，并把它前面的部分输出，作为 PRODUCT 变量的值并输出<br>echo “$PRODUCT”<br>fi<br># 补充 ：实际效果是 Red Hat 两个字是红色，其他都是白色<br>####################\</p>
+<p>if [ “$PROMPT” != “no” ]; then                                                        # 如果变量 PROMPT 的值不为 “no” （表示允许交互启动），则<br>echo -en $”\t\tPress ‘I’ to enter interactive startup.”                            # 打印提示信息“Press I to enter interactive startup”，但此时按 I 还未起作用<br>echo<br>fi<br>####################\<br># 注释 ：下面部分是设置输出到 console 的日志的详细级别<br># Fix console loglevel                                                                  # 设置控制台的日志级别<br>if [ -n “$LOGLEVEL” ]; then                                                             # 如果 LOGLEVEL 变量的值不为空<br>/bin/dmesg -n $LOGLEVEL                                                                 # 则执行 dmesg ，设置打印到 consoel 的日志的级别为 $LOGLEVEL<br>fi<br>####################\<br># 注释 ：下面部分是启动 udev 并加载 ide、scsi、network、audio 以及其他类型的设备的模块的部分<br>[ -x /sbin/start_udev ] &amp;&amp; /sbin/start_udev                                    # 如果 /sbin/start_udev 可执行，则执行它，会在屏幕上显示 “Starting udev … [OK]”<br># Only read this once.<br>cmdline=$(cat /proc/cmdline)                                                        # 读取 /proc/cmdline ，这是内核启动的时的参数，赋予变量 cmdline</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/摘录/">摘录</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="https://v-script.com/2015/02/24/rc-sysint/" data-title="rc.sysint | viscript" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/02/24/TAR命令高级用法/" title="TAR命令高级用法">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  TAR命令高级用法</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/02/24/MARKDOWN参数参考/"  title="MARKDOWN参数参考">
+ <strong>NEXT:</strong><br/> 
+ <span>MARKDOWN参数参考
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/LINUX命令/" title="LINUX命令">LINUX命令<sup>5</sup></a></li>
+		
+			<li><a href="/categories/参考/" title="参考">参考<sup>1</sup></a></li>
+		
+			<li><a href="/categories/图片BLOG/" title="图片BLOG">图片BLOG<sup>1</sup></a></li>
+		
+			<li><a href="/categories/摘录/" title="摘录">摘录<sup>3</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/MARKDOWN/" title="MARKDOWN">MARKDOWN<sup>1</sup></a></li>
+		
+			<li><a href="/tags/好用的命令/" title="好用的命令">好用的命令<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+  <div class="archiveslist">
+    <p class="asidetitle"><a href="/archives">归档</a></p>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">February 2015</a><span class="archive-list-count">11</span></li></ul>
+  </div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+      <li><a href="http://blog.chinaunix.net/uid/30115009.html" target="_blank" title="vs">China Unix</a></li>
+      <li><a href="http://www.ibm.com/developerworks/cn/linux/" target="_blank" title="IBM Developer">IBM Developer</a></li>
+    </ul>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> o(∩_∩)o <br/>
+			Step by Step</p>
+	</section>
+	 
+	<div class="social-font clearfix">
+		
+		<a href="http://weibo.com/http://weibo.com/3597871112" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/https://github.com/viscript" target="_blank" title="github"></a>
+		
+		
+		<a href="https://www.facebook.com/https://www.facebook.com/drowingleaf" target="_blank" title="facebook"></a>
+		
+		
+	</div>
+		<p class="copyright">One Step a Day © 2015 
+		
+		<a href="https://v-script.com" target="_blank" title="viscript">viscript</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+  </body>
+</html>

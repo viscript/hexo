@@ -1,0 +1,414 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>GRUB自引导命令 | viscript</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="viscript">
+    
+    <meta name="description" content="其步骤如下：
+
+a   进入grub的命令模式。
+
+b  先熟悉一下grub  的一些命令 grub&amp;gt;help
+
+c  熟悉一下cat命令
+- d  root指令来指定/boot所在的分区
+- e  kernel指令来指定linux的内核，及所在的分区
+- f  用initrd命令来指定ini">
+    
+    
+    
+    
+    
+<link href="/favicon.ico" rel="icon" type="image/x-ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="viscript" title="viscript"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="viscript">viscript</a></h1>
+				<h2 class="blog-motto">修合无人见，存心有天知。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:v-script.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/02/24/GRUB自引导命令/" title="GRUB自引导命令" itemprop="url">GRUB自引导命令</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="https://plus.google.com/https://plus.google.com/u/0/118332448986920483228?rel=author" title="viscript" target="_blank" itemprop="author">viscript</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2015-02-24T10:16:47.750Z" itemprop="datePublished">2月 24 2015</time>
+    更新日期:<time datetime="2015-02-24T08:40:45.364Z" itemprop="dateModified">2月 24 2015</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<h3 id="其步骤如下：">其步骤如下：</h3>
+<ul>
+<li><p>a   进入grub的命令模式。</p>
+</li>
+<li><p>b  先熟悉一下grub  的一些命令 grub&gt;help</p>
+</li>
+<li><p>c  熟悉一下cat命令</p>
+<p><strong><em>- d  root指令来指定/boot所在的分区</em></strong></p>
+<p><strong><em>- e  kernel指令来指定linux的内核，及所在的分区</em></strong></p>
+<p><strong><em>- f  用initrd命令来指定initrd文件</em></strong></p>
+<p><strong><em>- g boot引导系统</em></strong></p>
+<h3 id="cat命令的用法">cat命令的用法</h3>
+</li>
+</ul>
+<p>cat指令是用来查看文件内容的，有时我们不知道Linux的/boot分区，以及/根分区所在的位置，要查看/etc/fstab的内容来得知， 这时，我们就要用到cat (hd[0-n],y)/etc/fstab 来获得这些内容；注意要学会用tab键命令补齐的功能；<br>grub&gt; cat (     按tab 键会出来hd0或hd1之类的；<br>grub&gt; cat (hd0, 注：输入hd0,然后再按tab键；会出来分区之类的；<br>grub&gt; cat (hd0,6)<br>Possible partitions are:<br>   Partition num: 0,  Filesystem type unknown, partition type 0x7<br>   Partition num: 4,  Filesystem type is fat, partition type 0xb<br>   Partition num: 5,  Filesystem type is reiserfs, partition type 0x83<br>   Partition num: 6,  Filesystem type is ext2fs, partition type 0x83<br>   Partition num: 7,  Filesystem type unknown, partition type 0x83<br>   Partition num: 8,  Filesystem type is reiserfs, partition type 0x83<br>   Partition num: 9,  Filesystem type unknown, partition type 0x82</p>
+<p>注：比如我想查看一下 (hd0,6)/etc/fstab的内容就这样输入：<br>   grub&gt; cat (hd0,6)/etc/fstab </p>
+<p>LABEL=/                 /                       ext3    defaults        1 1<br>/dev/devpts             /dev/pts                devpts  gid=5,mode=620  0 0<br>/dev/shm                /dev/shm                tmpfs   defaults        0 0<br>/dev/proc               /proc                   proc    defaults        0 0<br>/dev/sys                /sys                    sysfs   defaults        0 0<br>LABEL=SWAP-hda1         swap                    swap    defaults        0 0<br>/dev/hdc                /media/cdrecorder       auto    pamconsole,exec,noauto,<br>managed 0 0<br>主要查看/etc/fstab中的内容，主要是Linux的/分区及/boot是否是独立的分区；如果没有/boot类似的行，证明/boot和 Linux的/处于同一个硬盘分区；比如上面的例子中LABEL=/ 这行是极为重要的；说明Linux系统就安在标签为LABEL=/的分区中；</p>
+<p>如果Linux系统/boot和/没有位于同一个分区，可能cat (hd[a-n],y) 查到的是类似下面的：</p>
+<p>LABEL=/                 /                       ext3    defaults        1 1<br>LABEL=/boot             /boot                   ext3    defaults        1 2</p>
+<h3 id="root_(hd[0-n,y)_指令来指定/boot所在的分区；">root (hd[0-n,y) 指令来指定/boot所在的分区；</h3>
+<p>其实这个root (hd[0,n],y)是可以省略的，如果省略了，我们要在kerenl 命令中指定；我们前面已经说过 (hd[0-n],y) 硬盘分区的表示方法的用途；主要是用来指定 /boot所在的分区；</p>
+<p>eg:</p>
+<p>grub&gt; root (hd0,0)</p>
+<h3 id="kernel_指令，用来指定Linux的内核，及/所在的分区；">kernel 指令，用来指定Linux的内核，及/所在的分区；</h3>
+<p>如果我们已经通过root (hd[0-n],y) 指定了/boot所在的分区，语法有两个：</p>
+<p>如果/boot和Linux的/位于同一个分区，应该是下面的一种格式；</p>
+<p>kernel /boot/vmlinuz在这里按tab键来补齐，就看到内核全称了 ro root=/dev/hd[a-z]X</p>
+<p>如果/boot有自己独立的分区，应该是；</p>
+<p>kernel /vmlinuz在这里按tab键来补齐，就看到内核全称了 ro root=/dev/hd[a-z]X</p>
+<p>在这里 root=/dev/hd[a-z]X 是Linux 的/根所位于的分区，如果不知道是哪个分区，就用tab出来的来计算，一个一个的尝试；或用cat (hd[0-n],y)/etc/fstab 中得到Linux的/所在的分区或分区的标签；</p>
+<p>grub&gt; kernel /boot/在这里按tab键；这样就列出/boot中的文件了；<br>Possible files are: grub initrd-2.6.11-1.1369_FC4.img System.map-2.6.11-1.1369<br>_FC4 config-2.6.11-1.1369_FC4 vmlinuz-2.6.11-1.1369_FC4 grubBAK memtest86+-1.55<br>.1 xen-syms xen.gz</p>
+<p>grub&gt; kernel /boot/vmlinuz-2.6.11-1.1369_FC4 ro root=LABEL=/<br>   [Linux-bzImage, setup=0x1e00, size=0x18e473]</p>
+<h4 id="注解：_root=LABEL=/_是Linux的/所在的分区的文件系统的标签；如果您知道Linux的/在哪个具体的分区，用root=/dev/hd[a-z]X来指定也行。比如下面的一行也是可以的；">注解： root=LABEL=/ 是Linux的/所在的分区的文件系统的标签；如果您知道Linux的/在哪个具体的分区，用root=/dev/hd[a-z]X来指定也行。比如下面的一行也是可以的；</h4>
+<p>grub&gt; kernel /boot/vmlinuz-2.6.11-1.1369_FC4 ro root=/dev/hda7<br>也可以把/boot所在的分区的指定 root (hd[0-n],y)这行省掉，直接在kernel 中指定/boot所在的分区；所以就在下面的语法；</p>
+<p>如果是/boot和Linux的根同处一个分区；<br>kernel (hd[0-n],y)/boot/vmlinuz ro root=/dev/hd[a-z]X<br>比如：<br>grub&gt;kernel<br>如果是/boot和Linux所在的根不在一个分区；则是；<br>kernel (hd[0-n],y)/vmlinuz  ro root=/dev/hd[a-z]X<br>grub&gt; kernel (hd0,0)/boot/vmlinuz-2.6.11-1.1369_FC4 ro root=/dev/hda7<br>   [Linux-bzImage, setup=0x1e00, size=0x18e473]<br>或下面的输入，以cat 出/etc/fstab内容为准；</p>
+<p>grub&gt; kernel (hd0,0)/boot/vmlinuz-2.6.11-1.1369_FC4 ro root=LABEL=/<br>   [Linux-bzImage, setup=0x1e00, size=0x18e473]</p>
+<h4 id="PS：kernel_最后可以跟参数：">PS：kernel 最后可以跟参数：</h4>
+<p>  kernel /vmlinuz-2.6…..e15 ro root=LABEL=/ rhgb quiet<br>        rhgb：是redhat自带的参数。redhat启动之后，将原本的内核信息，版本信息全部遮盖。<br>        quiet：内核参数。驱动键盘鼠标，分配内存之类，变成进度条什么的。。<br>               删掉rhgb和quiet，显示更加详细的信息。<br>  可接选项：</p>
+<pre><code>   -<span class="ruby"> <span class="symbol">ro:</span>只读。可以不写。可以<span class="symbol">:</span>  _root=<span class="regexp">/dev/sda</span>2   将sda2当作根分区.此段是很关键的内核参数。
+</span>    有承上启下的作用。承上：bootloader--&gt;kernel  启下：--&gt;init
+    可以再添加：vga=0x314  分辨率是800 600。启动了显卡驱动
+   -<span class="ruby"> selinux=off
+</span>   -<span class="ruby"> acpi=off  测温度什么什么的关掉
+</span>   -<span class="ruby"> <span class="number">1</span>    在kernel不识别<span class="number">1</span>的时候，传给initrd，进入单用户模式。（不需要密码）
+</span>    缺点：sda2需要排序
+</code></pre><h3 id="initrd_命令行来指定initrd文件">initrd 命令行来指定initrd文件</h3>
+<p>grub&gt; initrd /boot/initrd在这里tab 来补齐；<br>grub&gt; initrd /boot/initrd-2.6.11-1.1369_FC4.img<br>   [Linux-initrd @ 0x2e1000, 0x10e685 bytes]<br>如果/boot是独立的一个分区，应该是如下样子的语法；比如下面的；</p>
+<p>grub&gt; initrd /initrd在这里tab 来补齐；<br>grub&gt; initrd /initrd-2.6.11-1.1369_FC4.img<br>   [Linux-initrd @ 0x2e1000, 0x10e685 bytes]</p>
+<h4 id="PS:">PS:</h4>
+<p>initrd /initrd-2……e15.img<br>    给kernel辅助的。编译内核至少要30分钟。不同种的设备需要不同的内核。<br>    将内核的其中一部分（可变的，跟内核启动相关的）写到initrd。eg:SATA硬盘驱动写到initrd</p>
+<p>很多时候打包到initrd都会失败，因此需要命令：</p>
+<h4 id="mkinitrd">mkinitrd</h4>
+<p>第二个命令的硬盘添加卷标：  e2label  /dev/sda2    根分区后边可以添： -1 -2 -3。多系统启动。多个根分区。</p>
+<h3 id="boot_引导系统：">boot 引导系统：</h3>
+<p>grub&gt;boot</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/LINUX命令/">LINUX命令</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="https://v-script.com/2015/02/24/GRUB自引导命令/" data-title="GRUB自引导命令 | viscript" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/02/24/INIT/" title="INIT">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  INIT</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/02/24/GRUB命令详解/"  title="GRUB命令详解">
+ <strong>NEXT:</strong><br/> 
+ <span>GRUB命令详解
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/LINUX命令/" title="LINUX命令">LINUX命令<sup>5</sup></a></li>
+		
+			<li><a href="/categories/参考/" title="参考">参考<sup>1</sup></a></li>
+		
+			<li><a href="/categories/图片BLOG/" title="图片BLOG">图片BLOG<sup>1</sup></a></li>
+		
+			<li><a href="/categories/摘录/" title="摘录">摘录<sup>3</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/MARKDOWN/" title="MARKDOWN">MARKDOWN<sup>1</sup></a></li>
+		
+			<li><a href="/tags/好用的命令/" title="好用的命令">好用的命令<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+  <div class="archiveslist">
+    <p class="asidetitle"><a href="/archives">归档</a></p>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">February 2015</a><span class="archive-list-count">11</span></li></ul>
+  </div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+      <li><a href="http://blog.chinaunix.net/uid/30115009.html" target="_blank" title="vs">China Unix</a></li>
+      <li><a href="http://www.ibm.com/developerworks/cn/linux/" target="_blank" title="IBM Developer">IBM Developer</a></li>
+    </ul>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> o(∩_∩)o <br/>
+			Step by Step</p>
+	</section>
+	 
+	<div class="social-font clearfix">
+		
+		<a href="http://weibo.com/http://weibo.com/3597871112" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/https://github.com/viscript" target="_blank" title="github"></a>
+		
+		
+		<a href="https://www.facebook.com/https://www.facebook.com/drowingleaf" target="_blank" title="facebook"></a>
+		
+		
+	</div>
+		<p class="copyright">One Step a Day © 2015 
+		
+		<a href="https://v-script.com" target="_blank" title="viscript">viscript</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+  </body>
+</html>

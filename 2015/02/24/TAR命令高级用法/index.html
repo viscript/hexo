@@ -1,0 +1,400 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>TAR命令高级用法 | viscript</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="viscript">
+    
+    <meta name="description" content="Linux tar命令高级用法——备份数据
+Linux上有功能强大的tar命令，tar最初是为了制作磁带备份（tape archive）而设计的，它的作用是把文件和目录备份到磁带中，然后从磁带中提取或恢复文件。现在我们可以使用tar来备份数据到任何存储介质上。它是文件级备份，不必考虑底层文件系统类别">
+    
+    
+    
+    
+    
+<link href="/favicon.ico" rel="icon" type="image/x-ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="viscript" title="viscript"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="viscript">viscript</a></h1>
+				<h2 class="blog-motto">修合无人见，存心有天知。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:v-script.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/02/24/TAR命令高级用法/" title="TAR命令高级用法" itemprop="url">TAR命令高级用法</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="https://plus.google.com/https://plus.google.com/u/0/118332448986920483228?rel=author" title="viscript" target="_blank" itemprop="author">viscript</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2015-02-24T10:16:47.746Z" itemprop="datePublished">2月 24 2015</time>
+    更新日期:<time datetime="2015-02-24T08:02:53.973Z" itemprop="dateModified">2月 24 2015</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<h2 id="Linux_tar命令高级用法——备份数据">Linux tar命令高级用法——备份数据</h2>
+<p>Linux上有功能强大的tar命令，tar最初是为了制作磁带备份（tape archive）而设计的，它的作用是把文件和目录备份到磁带中，然后从磁带中提取或恢复文件。现在我们可以使用tar来备份数据到任何存储介质上。它是文件级备份，不必考虑底层文件系统类别，并且支持增量备份。</p>
+<h3 id="1-部分常用选项">1.部分常用选项</h3>
+<ul>
+<li>z, —gzip：使用gzip工具（解）压缩，后缀一般为.gz</li>
+<li>c, —create：tar打包，后缀一般为.tar</li>
+<li>f, —file=：后面立刻接打包或压缩后得到的文件名</li>
+<li>x, —extract：解包命令，与-c对应</li>
+<li>p：保留备份数据的原本权限和属性</li>
+<li>g：后接增量备份的快照文件</li>
+<li>C：指定解压缩的目录<br>—exclude：排除不打包的目录或文件，支持正则匹配<h3 id="其他">其他</h3>
+</li>
+<li>X, —exclude-from：在一个文件中列出要排除的目录或文件（在—exclude=较多时使用）</li>
+<li>t, —list：列出备份档案中的文件列表，不与-c、-x同时出现</li>
+<li>j, —bzip2：使用bzip2工具（解）压缩，后缀一般为.bz2</li>
+<li>P：保留绝对路径，解压时同样会自动解压到绝对路径下</li>
+<li>v：（解）压缩过程显示文件处理过程，常用但不建议对大型文件使用<h3 id="2-增量备份（网站）数据">2.增量备份（网站）数据</h3>
+许多系统（应用或网站）每天都有静态文件产生，对于一些比较重要的静态文件如果有进行定期备份的需求，就可以通过tar打包压缩备份到指定的地方，特别是对一些总文件比较大比较多的情况，还可以利用-g选项来做增量备份。<br>备份的目录最好使用相对路径，也就是进入到需要备份的根目录下<br>具体示例方法如下。<br>备份当前目录下的所有文件</li>
+</ul>
+<p>tar -g /tmp/snapshot_data.snap -zcpf /tmp/data01.tar.gz .<br>在需要恢复的目录下解压恢复</p>
+<p>tar -zxpf /tmp/data01.tar.gz -C .<br>-g选项可以理解备份时给目录文件做一个快照，记录权限和属性等信息，第一次备份时/tmp/snapshot_data.snap不存在，会新建一个并做完全备份。当目录下的文件有修改后，再次执行第一条备份命令（记得修改后面的档案文件名），会自动根据-g指定的快照文件，增量备份修改过的文件，包括权限和属性，没有动过的文件不会重复备份。<br>另外需要注意上面的恢复，是“保留恢复”，即存在相同文件名的文件会被覆盖，而原目录下已存在（但备份档案里没有）的，会依然保留。所以如果你想完全恢复到与备份文件一模一样，需要清空原目录。如果有增量备份档案，则还需要使用同样的方式分别解压这些档案，而且要注意顺序。<br>下面演示一个比较综合的例子，要求：<br>备份/tmp/data目录，但cache目录以及临时文件排除在外<br>由于目录比较大（&gt;4G），所以全备时分割备份的档案（如每个备份档案文件最大1G）<br>保留所有文件的权限和属性，如用户组和读写权限</p>
+<p>cd /tmp/data</p>
+<h3 id="做一次完全备份">做一次完全备份</h3>
+<p>rm -f /tmp/snapshot<em>data.snap<br>tar -g /tmp/snapshot_data.snap -zcpf - —exclude=./cache ./ | split -b 1024M - /tmp/bak_data$(date -I).tar.gz</em><br>分割后文件名后会依次加上aa,ab,ac,…，上面最终的备份归档会保存成<br>bakdata2014-12-07.tar.gz_aa<br>bak_data2014-12-07.tar.gz_ab<br>bak_data2014-12-07.tar.gz_ac<br>…</p>
+<h3 id="增量备份">增量备份</h3>
+<p>可以是与完全备份一模一样的命令，但需要注意的是假如你一天备份多次，可能导致档案文件名重复，那么就会导致<br>备份实现，因为split依然会从aa,ab开始命名，如果一天的文件产生（修改）量不是特别大，那么建议增量部分不<br>分割处理了：（ 一定要分割的话，文件名加入更细致的时间如$(date +%Y-%m-%d%H) ）<br>tar -g /tmp/snapshot_data.snap -zcpf /tmp/bak_data2014-12-07.tar.gz —exclude=./cache ./</p>
+<h3 id="第二天增备">第二天增备</h3>
+<p>tar -g /tmp/snapshot_data.snap -zcpf /tmp/bak_data2014-12-08.tar.gz —exclude=./cache ./</p>
+<h3 id="恢复过程">恢复过程</h3>
+<p>恢复完全备份的档案文件<br>可以选择是否先清空/tmp/data/目录<br>cat /tmp/bak<em>data2014-12-07.tar.gz</em>* | tar -zxpf - -C /tmp/data/</p>
+<h3 id="恢复增量备份的档案文件">恢复增量备份的档案文件</h3>
+<p>$ tar –zxpf /tmp/bak_data2014-12-07.tar.gz -C /tmp/data/<br>$ tar –zxpf /tmp/bak_data2014-12-08.tar.gz -C /tmp/data/<br>…<br>一定要保证是按时间顺序恢复的，像下面文件名规则也可以使用上面通配符的形式<br>如果需要定期备份，如每周一次全备，每天一次增量备份，则可以结合crontab实现。</p>
+<h3 id="3-备份文件系统">3.备份文件系统</h3>
+<p>备份文件系统方法有很多，例如cpio, rsync, dump, tar，这里演示一个通过tar备份整个Linux系统的例子，整个备份与恢复过程与上面类似。<br>首先Linux（这里是CentOS）有一部分目录是没必要备份的，如/proc、/lost+found、/sys、/mnt、/media、/dev、/proc、/tmp，如果是备份到磁带/dev/st0则不必关心那么多，因为我这里是备份到本地/backup目录，所以也需要排除，还有其它一些NFS或者网络存储挂载的目录。<br>创建排除列表文件</p>
+<p>vi /backup/backup_tar_exclude.list<br> /backup<br> /proc<br> /lost+found<br> /sys<br> /mnt<br> /media<br> /dev<br> /tmp<br> $ tar -zcpf /backup/backup_full.tar.gz -g /backup/tar_snapshot.snap —exclude-from=/backup/tar_exclude.list /</p>
+<h3 id="4-注意">4.注意</h3>
+<p>使用tar无论是备份数据还是文件系统，需要考虑是在原系统上恢复还是另一个新的系统上恢复。<br>tar备份极度依赖于文件的atime属性，<br>文件所属用户是根据用户ID来确定的，异机恢复需要考虑相同用户拥有相同USERID<br>备份和恢复的过程尽量不要运行其他进程，可能会导致数据不一致<br>软硬连接文件可以正常恢复<br>如果还不明白</p>
+<h3 id="tar_测试">tar 测试</h3>
+<ul>
+<li>初始化测试压缩用文件</li>
+<li>删除snap文件<br>rm /tmp/test.snap</li>
+<li>删除测试文件夹<br>rm ./test -fr</li>
+<li>删除压缩文件<br>rm test.tar.gz</li>
+<li>建立新的测试压缩文件夹<br>mkdir ./test<br>echo “test” |tee ./test/a|tee ./test/b|tee ./test/c</li>
+<li>普通测试压缩文件<br>tar -zcvpf ./test.tar.gz ./test</li>
+<li>解压普通测试压缩包<br>mkdir test2<br>tar -zxvpf ./test.tar.gz -C ./test2<br>ll ./test2/<br>ll ./test2/test</li>
+<li>不带C解压<br>cd ./test2<br>tar -zxvpf ../test.tar.gz  #直接覆盖原文件</li>
+<li>增量备份<br>rm test2 -fr<br>tar -g /tmp/test.snap -zcvpf ./test.tar.gz ./test<br>echo “test2” | tee ./test/d<br>tar -g /tmp/test.snap -zcvpf ./test.tar.gz ./test</li>
+</ul>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/LINUX命令/">LINUX命令</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="https://v-script.com/2015/02/24/TAR命令高级用法/" data-title="TAR命令高级用法 | viscript" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/02/24/人生得与失/" title="人生得与失">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  人生得与失</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/02/24/rc-sysint/"  title="rc.sysint">
+ <strong>NEXT:</strong><br/> 
+ <span>rc.sysint
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/LINUX命令/" title="LINUX命令">LINUX命令<sup>5</sup></a></li>
+		
+			<li><a href="/categories/参考/" title="参考">参考<sup>1</sup></a></li>
+		
+			<li><a href="/categories/图片BLOG/" title="图片BLOG">图片BLOG<sup>1</sup></a></li>
+		
+			<li><a href="/categories/摘录/" title="摘录">摘录<sup>3</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/MARKDOWN/" title="MARKDOWN">MARKDOWN<sup>1</sup></a></li>
+		
+			<li><a href="/tags/好用的命令/" title="好用的命令">好用的命令<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+  <div class="archiveslist">
+    <p class="asidetitle"><a href="/archives">归档</a></p>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">February 2015</a><span class="archive-list-count">11</span></li></ul>
+  </div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+      <li><a href="http://blog.chinaunix.net/uid/30115009.html" target="_blank" title="vs">China Unix</a></li>
+      <li><a href="http://www.ibm.com/developerworks/cn/linux/" target="_blank" title="IBM Developer">IBM Developer</a></li>
+    </ul>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> o(∩_∩)o <br/>
+			Step by Step</p>
+	</section>
+	 
+	<div class="social-font clearfix">
+		
+		<a href="http://weibo.com/http://weibo.com/3597871112" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/https://github.com/viscript" target="_blank" title="github"></a>
+		
+		
+		<a href="https://www.facebook.com/https://www.facebook.com/drowingleaf" target="_blank" title="facebook"></a>
+		
+		
+	</div>
+		<p class="copyright">One Step a Day © 2015 
+		
+		<a href="https://v-script.com" target="_blank" title="viscript">viscript</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+  </body>
+</html>
