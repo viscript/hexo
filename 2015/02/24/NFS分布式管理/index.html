@@ -4,16 +4,16 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>比IFCONFIG更好用的IP命令 | viscript</title>
+    <title>viscript</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="viscript">
     
-    <meta name="description" content="ip命令比ifconfig命令更加强大
-ip是iproute2软件包里面的一个强大的网络配置工具，它能够替代一些传统的网络管理工具，例如ifconfig、route等，使用权限为超级用户。几乎所有的Linux发行版本都支持该命令。
+    <meta name="description" content="title: NFS分布式管理categories: LINUX命令tags:[nfs,autofs,auto.master]
 
-ip ad sh   ad：address    sh：show
-">
+ls /etc/auto.*
+.master和.misc能完全达到功能
+mount /dev/cdrom    /misc/cd   这样是可以的。但是需求在公司里需要自">
     
     
     
@@ -70,66 +70,65 @@ ip ad sh   ad：address    sh：show
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/02/24/LINUX比IFCONFIG更好用的IP命令/" title="比IFCONFIG更好用的IP命令" itemprop="url">比IFCONFIG更好用的IP命令</a>
+      <a href="/2015/02/24/NFS分布式管理/" title="" itemprop="url"></a>
   </h1>
   <p class="article-author">By
     
       <a href="https://plus.google.com/https://plus.google.com/u/0/118332448986920483228?rel=author" title="viscript" target="_blank" itemprop="author">viscript</a>
     </p>
   <p class="article-time">
-    <time datetime="2015-02-24T10:16:47.743Z" itemprop="datePublished">2月 24 2015</time>
-    更新日期:<time datetime="2015-02-24T08:08:48.259Z" itemprop="dateModified">2月 24 2015</time>
+    <time datetime="2015-02-24T14:12:03.361Z" itemprop="datePublished">2月 24 2015</time>
+    更新日期:<time datetime="2015-02-24T14:12:03.359Z" itemprop="dateModified">2月 24 2015</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
 		
-		<h3 id="ip命令比ifconfig命令更加强大">ip命令比ifconfig命令更加强大</h3>
-<p>ip是iproute2软件包里面的一个强大的网络配置工具，它能够替代一些传统的网络管理工具，例如ifconfig、route等，使用权限为超级用户。几乎所有的Linux发行版本都支持该命令。</p>
-<ul>
-<li>ip ad sh<br>   ad：address    sh：show</li>
-<li>ip ad help</li>
-<li>ip ad </li>
-<li>ip ad add 182.168.1.254/255.255.255.0 dev eth0<br>再次用ifconfig查看，并没有显示添加的新的IP地址。但是用ip ad sh能看到。因为ifconfig未必能支持它的接口。</li>
-</ul>
-<h3 id="ip_help">ip help</h3>
-<p>ip还能添加策略路由。  </p>
-<h3 id="ip_link_help">ip link help</h3>
-<p>IP设置好之后，看网络是否连接：</p>
-<p>网线插好，不知道是链接到eth1还是0.</p>
-<ul>
-<li>mii-tool</li>
-<li><p>mii-tool -v      有的网卡是不支持的。</p>
-<p>信息回馈：operation not supported</p>
-</li>
-</ul>
-<pre><code>mii-tool --<span class="keyword">help</span>
-</code></pre><p>-</p>
-<ul>
-<li>mii -tool   </li>
-</ul>
-<h3 id="若要让其启动生效：">若要让其启动生效：</h3>
-<p>vi /etc/sysconfig/network-scripts/ifcfg-eth0<br>cd !<br>cp ifcfg-eth0  ifcfg-eth0:8<br>vi !$<br>给这个网卡添加第二个IP<br>service network restart</p>
-<h3 id="system-config-network-tui_文本界面。_-gui图形化界面。">system-config-network-tui   文本界面。    -gui图形化界面。</h3>
-<h3 id="netconfig_-d_eth1:1不怎么用了">netconfig -d eth1:1不怎么用了</h3>
-<h3 id="PS：用到IP命令之后的注意事项">PS：用到IP命令之后的注意事项</h3>
-<p>ip ad add 的命令，service …restart  不生效了<br>要将其写到rc.local</p>
+		<p>title: NFS分布式管理<br>categories: LINUX命令<br>tags:[nfs,autofs,auto.master]</p>
+<hr>
+<p>ls /etc/auto.*</p>
+<p>.master和.misc能完全达到功能</p>
+<p>mount /dev/cdrom    /misc/cd   这样是可以的。但是需求在公司里需要自动加载。</p>
+<h3 id="autofs">autofs</h3>
+<p>vi /etc/auto.master<br>  在里边加上 /misc   让他监视这个目录         /etc/auto.misc      是配置文件<br>vi /etc/auto.misc<br>   加上子目录    /cd</p>
+<p>vi /etc/auto.misc里边有例子</p>
+<figure class="highlight"><pre><div class="line"><span class="built_in">cd</span>      -fstype=iso9660 , ro ,nosuid , nodev : /dev/cdrom</div></pre></figure>
+
+<p>默认已经有cd的例子了。（上述）</p>
+<p>下一步：</p>
+<p>service autofs restart</p>
+<p>chkconfig autofs on             启动完毕</p>
+<p>目的：别人都可以自动加载这个目录，加载光驱。</p>
+<figure class="highlight"><pre><div class="line">vi <span class="regexp">/etc/</span>auto.misc</div><div class="line">    </div><div class="line">     ser1    -ro,soft,intr     只读，软的，可中断的方式        <span class="number">192.168</span>.<span class="number">0.1</span>：<span class="regexp">/var/</span>ftp<span class="regexp">/pub</span></div></pre></figure>
+
+<p>再重启一次服务生效。只要访问ser1目录，就会自动加载nfs。</p>
+<h3 id="在服务器和客户端上分别配置：">在服务器和客户端上分别配置：</h3>
+<h4 id="服务器端：">服务器端：</h4>
+<p>比如在配置服务器192.168.0.254<br>添加用户的时候：</p>
+<figure class="highlight"><pre><div class="line">useradd <span class="operator">-d</span> /rhome/shrek shrek    设置主目录</div></pre></figure>
+
+<p>在服务器上，要vi /etc/exports    把/rhome下的所有文件夹共享出去</p>
+<p>要共享给：192.168.0.0/255.255.255.0（rw，async）</p>
+<figure class="highlight"><pre><div class="line"><span class="class"><span class="keyword">service</span> <span class="title">nfs</span> restart</span></div></pre></figure>
+
+<p>在客户端上：(192.168.0.1)</p>
+<figure class="highlight"><pre><div class="line">vi /etc/<span class="literal">auto</span>.master</div><div class="line"></div><div class="line">    /rhome   （本机上的<span class="number">0.1</span>，这台机子上的rhome目录）      /etc/<span class="literal">auto</span>.rhome随便写个名字。。</div><div class="line"></div><div class="line">vi /etc/<span class="literal">auto</span>.rhome </div><div class="line">   添加：   * -rw,soft,intr     <span class="number">192.168</span>.<span class="number">0.254</span>:/rhome/&     （*是什么，&就是什么）</div><div class="line"></div><div class="line">service autofs restart</div><div class="line">chkconfig autofs <span class="literal">on</span></div></pre></figure>
+
+<p>只要有人访问ls /rhome/shrek     那么自动把* 替换成shrek  。&amp;也随之改变。</p>
+<p>等于自动运行：  </p>
+<figure class="highlight"><pre><div class="line">mount -o intr,soft,rw <span class="number">192.168</span>.<span class="number">0</span>.<span class="number">254</span><span class="symbol">:/rhome/shrek</span>  /rhome/shrek</div></pre></figure>
+
   
 	</div>
 		<footer class="article-footer clearfix">
 
 
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/LINUX命令/">LINUX命令</a>
-</div>
-
 
 
 <div class="article-share" id="share">
 
-  <div data-url="https://v-script.com/2015/02/24/LINUX比IFCONFIG更好用的IP命令/" data-title="比IFCONFIG更好用的IP命令 | viscript" data-tsina="null" class="share clearfix">
+  <div data-url="https://v-script.com/2015/02/24/NFS分布式管理/" data-title="viscript" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -138,19 +137,11 @@ ip ad sh   ad：address    sh：show
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/02/24/Linux里的瑞士军刀/" title="Linux里的瑞士军刀">
-  <strong>PREVIOUS:</strong><br/>
-  <span>
-  Linux里的瑞士军刀</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/02/24/LINUX-IP命令文摘/"  title="LINUX IP命令文摘">
+<a href="/2015/02/24/NMAP命令摘录/"  title="NMAP命令摘录">
  <strong>NEXT:</strong><br/> 
- <span>LINUX IP命令文摘
+ <span>NMAP命令摘录
 </span>
 </a>
 </div>
