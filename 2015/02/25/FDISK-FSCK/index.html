@@ -4,17 +4,27 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>INIT | viscript</title>
+    <title>FDISK-FSCK | viscript</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="viscript">
     
-    <meta name="description" content="在inittab里内容：
- 7个运行级别。init X  
+    <meta name="description" content="正常流程：
+fdisk mount
 
- eg:当输入5的时候，会检测每行有5的命令。
-      输入6是无限重启。
-/etc/rc.sysinit 加载所有重要的东西。eg:       mount -a       mount -o rw,remount /dev/sda">
+分区： 
+fdisk或者   parted
+
+
+
+fdisk -l  列出已经装上的fdisk -l /dev/sdafdisk /dev/sda 分区
+
+fdisk里的 n  d  p  w  l  t分别代表什么。
+partprobe   分区表更新
+
+
+
+">
     
     
     
@@ -71,40 +81,56 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/02/24/INIT/" title="INIT" itemprop="url">INIT</a>
+      <a href="/2015/02/25/FDISK-FSCK/" title="FDISK-FSCK" itemprop="url">FDISK-FSCK</a>
   </h1>
   <p class="article-author">By
     
       <a href="https://plus.google.com/https://plus.google.com/u/0/118332448986920483228?rel=author" title="viscript" target="_blank" itemprop="author">viscript</a>
     </p>
   <p class="article-time">
-    <time datetime="2015-02-24T10:16:47.751Z" itemprop="datePublished">2月 24 2015</time>
-    更新日期:<time datetime="2015-02-24T08:56:15.841Z" itemprop="dateModified">2月 24 2015</time>
+    <time datetime="2015-02-25T02:24:17.143Z" itemprop="datePublished">2月 25 2015</time>
+    更新日期:<time datetime="2015-02-25T02:24:17.132Z" itemprop="dateModified">2月 25 2015</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
 		
-		<h3 id="在inittab里内容：">在inittab里内容：</h3>
-<pre><code> <span class="number">7</span>个运行级别。init <span class="keyword">X</span>  
+		<h3 id="正常流程：">正常流程：</h3>
+<figure class="highlight"><pre><div class="line"><span class="title">fdisk</span> </div><div class="line">mount</div></pre></figure>
 
- <span class="keyword">e</span><span class="variable">g:</span>当输入<span class="number">5</span>的时候，会检测每行有<span class="number">5</span>的命令。
-      输入<span class="number">6</span>是无限重启。
-</code></pre><p>/etc/rc.sysinit 加载所有重要的东西。eg:<br>       mount -a<br>       mount -o rw,remount /dev/sda2 /      只读加载根分区<br>       若出现问题(文件系统加载不上)： 先fsck.ext3，然后只读加载或者umount不加载。</p>
-<p>mount -a 用到了另外一个配置文件 /etc/fstab。这个文件是 rc.sysinit里被使用。如果fstab有问题，那么<br>rc.sysinit报错。错误提示：  （fix  filesystem  1）</p>
-<pre><code>    会加载<span class="built_in">swap</span>分区，进行必要的初始化
-                    lsmod里的驱动都是rc.sysinit帮忙加载的
-</code></pre><p>举例：当运行rc3的时候，会调用 /etc/rc.d/rc3.d/下的所有的S开头的脚本。<br>           先把所有的K开头的脚本先STOP，然后把其他的S的开启。</p>
-<p>chkconfig sshd on 是把rc2 ,3, 4, 5里的所有的SXXsshd开启<br>chkconfig sshd off —level 3<br>ls /etc/rc.d/rc3.d/<em>sshd  /etc/rc.d/rc5.d/</em>sshd  会发现一个开头S，一个开头K</p>
-<p>实际上这些文件名都是软连接。都链接到上级目录的init.d/sshd。sshd里边有stop.start.restart…..<br>看是执行哪个需要看开头是K还是S</p>
-<p>   K，S后边的数字：<br>/etc/rc.d/rc3.d/S10network<br>/etc/rc.d/rc3.d/S25sshd        优先级。 SSH 服务是网络后台服务。 先运行network</p>
-<p>其实实质上，/etc/rc.d/rc3.d/Kxxxx stop 就是/etc/rc.d/init.d/xxx stop<br>                    命令也可用：service xxx  stop</p>
-<p>这个规范：POSIX规范。</p>
-<p>.d是daemon，守护进程。</p>
-<p>chkconfig 命令会看前边的注释信息。</p>
-<p>当自己新建一个脚本的时候，必需要写入到rc.local或者chkconfig </p>
-<p>chkconfig —add xxx</p>
+<p>分区： </p>
+<figure class="highlight"><pre><div class="line">fdisk或者   parted</div></pre></figure>
+
+
+
+<figure class="highlight"><pre><div class="line">fdisk <span class="operator">-l</span>  列出已经装上的</div><div class="line">fdisk <span class="operator">-l</span> /dev/sda</div><div class="line">fdisk /dev/sda 分区</div></pre></figure>
+
+<h4 id="fdisk里的_n_d_p_w_l_t分别代表什么。">fdisk里的 n  d  p  w  l  t分别代表什么。</h4>
+<figure class="highlight"><pre><div class="line"><span class="title">partprobe</span>   分区表更新</div></pre></figure>
+
+
+
+<figure class="highlight"><pre><div class="line"><span class="title">mkfs</span>.ext3 /dev/sda5</div><div class="line"><span class="title">mount</span> /dev/sda5 /<span class="typedef"><span class="keyword">data</span></span></div></pre></figure>
+
+
+
+<figure class="highlight"><pre><div class="line"><span class="title">vi</span> /etc/fstab </div><div class="line">   /dev/sda5   /<span class="typedef"><span class="keyword">data</span>   ext3   defaults  1 1     第一个数字：每多少天dump一次    第二个数字:1表示第二个检查这个磁盘。很多数字的时候按照数字顺序检查。</span></div></pre></figure>
+
+<h4 id="fstab是由rc-sysint_调用的。">fstab是由rc.sysint 调用的。</h4>
+<figure class="highlight"><pre><div class="line">tune2fs -j <span class="regexp">/dev/</span>sda2      将ext2文件系统立即升级成ext3</div><div class="line">调整文件系统的属性</div></pre></figure>
+
+<p>调整属性前一定要：</p>
+<figure class="highlight"><pre><div class="line">umount或者mount -o ro,<span class="comment">remount /xxx</span></div></pre></figure>
+
+
+
+<figure class="highlight"><pre><div class="line">dumpe2fs 查看分区的<span class="keyword">super</span> block   </div><div class="line">fsck.ext3  <span class="regexp">/dev/</span>sda1  检测分区</div></pre></figure>
+
+<p>fsck之前一定要umount或者mount -o ro,remount /xxx</p>
+<p>事先一定要把数据拷贝到另外一个磁盘上。写详细的报告。</p>
+<figure class="highlight"><pre><div class="line">fsck.ext3 -yf   f:强制以ext2的方式修复，如果不f的话，就只检查journal。检测每一个inode和<span class="keyword">block</span>的关系。</div></pre></figure>
+
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -119,7 +145,7 @@
 
 <div class="article-share" id="share">
 
-  <div data-url="https://v-script.com/2015/02/24/INIT/" data-title="INIT | viscript" data-tsina="null" class="share clearfix">
+  <div data-url="https://v-script.com/2015/02/25/FDISK-FSCK/" data-title="FDISK-FSCK | viscript" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -129,18 +155,18 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/02/24/NMAP命令摘录/" title="NMAP命令摘录">
+ <a href="/2015/02/25/MOUNT进阶/" title="MOUNT进阶">
   <strong>PREVIOUS:</strong><br/>
   <span>
-  NMAP命令摘录</span>
+  MOUNT进阶</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2015/02/24/GRUB自引导命令/"  title="GRUB自引导命令">
+<a href="/2015/02/25/NFS分布式管理/"  title="NFS分布式管理">
  <strong>NEXT:</strong><br/> 
- <span>GRUB自引导命令
+ <span>NFS分布式管理
 </span>
 </a>
 </div>
@@ -160,7 +186,9 @@
 	<p class="asidetitle">分类</p>
 		<ul>
 		
-			<li><a href="/categories/LINUX命令/" title="LINUX命令">LINUX命令<sup>6</sup></a></li>
+			<li><a href="/categories/Kernel/" title="Kernel">Kernel<sup>1</sup></a></li>
+		
+			<li><a href="/categories/LINUX命令/" title="LINUX命令">LINUX命令<sup>9</sup></a></li>
 		
 			<li><a href="/categories/参考/" title="参考">参考<sup>1</sup></a></li>
 		
@@ -194,7 +222,7 @@
   
   <div class="archiveslist">
     <p class="asidetitle"><a href="/archives">归档</a></p>
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">February 2015</a><span class="archive-list-count">13</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">February 2015</a><span class="archive-list-count">17</span></li></ul>
   </div>
 
 

@@ -4,13 +4,16 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>Linux里的瑞士军刀 | viscript</title>
+    <title>SWAP分区基础 | viscript</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="viscript">
     
-    <meta name="description" content="一、通过sort/uniq获取文件内容的交集、合集和不同之处：
-假设有a、b两个文本文件，文件本身已经去除了重复内容。下面是效率最高的方法，可以处理任何体积的文件，甚至几个G的文件。(Sort对内存没有要求，但也许你需要用 -T 参数。)可以试着比较一下，你可以看看如果用Java来处理磁盘上文件的合">
+    <meta name="description" content="swap到底用到哪个swap空间
+swapon -s    /dev/sda3                   partition           1052248    0         -1
+
+想再去添加swap或者删掉这个swap
+dd&amp;lt;/dev/zero&amp;gt;/opt/swa">
     
     
     
@@ -67,40 +70,43 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/02/24/Linux里的瑞士军刀/" title="Linux里的瑞士军刀" itemprop="url">Linux里的瑞士军刀</a>
+      <a href="/2015/02/25/SWAP分区基础/" title="SWAP分区基础" itemprop="url">SWAP分区基础</a>
   </h1>
   <p class="article-author">By
     
       <a href="https://plus.google.com/https://plus.google.com/u/0/118332448986920483228?rel=author" title="viscript" target="_blank" itemprop="author">viscript</a>
     </p>
   <p class="article-time">
-    <time datetime="2015-02-24T10:16:47.744Z" itemprop="datePublished">2月 24 2015</time>
-    更新日期:<time datetime="2015-02-20T07:45:21.566Z" itemprop="dateModified">2月 20 2015</time>
+    <time datetime="2015-02-25T02:55:44.800Z" itemprop="datePublished">2月 25 2015</time>
+    更新日期:<time datetime="2015-02-25T02:55:44.791Z" itemprop="dateModified">2月 25 2015</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
 		
-		<h2 id="一、通过sort/uniq获取文件内容的交集、合集和不同之处：">一、通过sort/uniq获取文件内容的交集、合集和不同之处：</h2>
-<pre><code>假设有a、b两个文本文件，文件本身已经去除了重复内容。下面是效率最高的方法，可以处理任何体积的文件，甚至几个G的文件。(<span class="keyword">Sort</span>对内存没有要求，但也许你需要用 -T 参数。)可以试着比较一下，你可以看看如果用Java来处理磁盘上文件的合并，需要用多少行代码。
-</code></pre><p>   cat a b | sort | uniq &gt; c   # c 是a和b的合集<br>   cat a b | sort | uniq -d &gt; c   # c 是a和b的交集<br>   cat a b b | sort | uniq -u &gt; c   # c 是a和b的不同</p>
-<h2 id="二、汇总一个文本内容里第三列数字的和(这个方法要比用Python来做快3倍并只需1/3的代码量)：">二、汇总一个文本内容里第三列数字的和(这个方法要比用Python来做快3倍并只需1/3的代码量)：</h2>
-<p>   awk ‘{ x += $3 } END { print x }’ myfile</p>
-<h2 id="三、如果你想查看一个目录树里的文件的体积和修改日期，用下面的方法，相当于你挨个目录做”ls_-l”，而且输出的形式比你用”ls_-lR”更可读：">三、如果你想查看一个目录树里的文件的体积和修改日期，用下面的方法，相当于你挨个目录做”ls -l”，而且输出的形式比你用”ls -lR”更可读：</h2>
-<p>   find . -type f -ls</p>
-<h2 id="四、使用xargs命令。这个命令非常的强大。注意每行上你可以控制多少个东西的执行。如果你不确定它是正确的执行，先使用xargs_echo。同样，-I{}_也非常有用。例子：">四、使用xargs命令。这个命令非常的强大。注意每行上你可以控制多少个东西的执行。如果你不确定它是正确的执行，先使用xargs echo。同样，-I{} 也非常有用。例子：</h2>
-<p>   find . -name *.py | xargs grep some_function<br>   cat hosts | xargs -I{} ssh root@{} hostname</p>
-<h2 id="五、假设你有一个文本文件，比如一个web服务器日志，在某些行上有一些值，比如URL中的acct_id参数。如果你想统计每个acct_id的所有请求记录：">五、假设你有一个文本文件，比如一个web服务器日志，在某些行上有一些值，比如URL中的acct_id参数。如果你想统计每个acct_id的所有请求记录：</h2>
-<p>   cat access.log | egrep -o ‘acct_id=[0-9]+’ | cut -d= -f2 | sort | uniq -c | sort -rn</p>
+		<p>swap到底用到哪个swap空间</p>
+<figure class="highlight"><pre><div class="line">swapon <span class="operator">-s</span></div><div class="line">    /dev/sda3                   partition           <span class="number">1052248</span>    <span class="number">0</span>         -<span class="number">1</span></div></pre></figure>
+
+<p>想再去添加swap或者删掉这个swap</p>
+<figure class="highlight"><pre><div class="line">dd&lt;<span class="regexp">/dev/</span>zero&gt;<span class="regexp">/opt/</span>swapfile1 bs=<span class="number">1</span>M <span class="keyword">count</span>=<span class="number">200</span></div></pre></figure>
+
+<p>新的空间一般需要格式化，但是swap不需要特别规范的文件类型</p>
+<figure class="highlight"><pre><div class="line">mkswap /<span class="keyword">opt</span>/swapfile1    速度非常快。其实就是在前边打个标记，而不是全部格式化。</div></pre></figure>
+
+
+
+<figure class="highlight"><pre><div class="line"><span class="keyword">vi</span> /etc/fstab</div><div class="line">   /<span class="keyword">opt</span>/swapfile1   swap   swap   defaults   <span class="number">0</span>   <span class="number">0</span></div></pre></figure>
+
+<p>想给ext3加上卷标：</p>
+<figure class="highlight"><pre><div class="line">e2label</div></pre></figure>
+
+<p>想给swap加上卷标：  </p>
+<figure class="highlight"><pre><div class="line"><span class="title">mkswap</span> -L</div></pre></figure>
+
   
 	</div>
 		<footer class="article-footer clearfix">
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/好用的命令/">好用的命令</a>
-  </div>
 
 
 <div class="article-categories">
@@ -112,7 +118,7 @@
 
 <div class="article-share" id="share">
 
-  <div data-url="https://v-script.com/2015/02/24/Linux里的瑞士军刀/" data-title="Linux里的瑞士军刀 | viscript" data-tsina="null" class="share clearfix">
+  <div data-url="https://v-script.com/2015/02/25/SWAP分区基础/" data-title="SWAP分区基础 | viscript" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -122,18 +128,18 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/02/24/MARKDOWN参数参考/" title="MARKDOWN参数参考">
+ <a href="/2015/02/25/内核编译/" title="内核编译">
   <strong>PREVIOUS:</strong><br/>
   <span>
-  MARKDOWN参数参考</span>
+  内核编译</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2015/02/24/LINUX比IFCONFIG更好用的IP命令/"  title="比IFCONFIG更好用的IP命令">
+<a href="/2015/02/25/MOUNT进阶/"  title="MOUNT进阶">
  <strong>NEXT:</strong><br/> 
- <span>比IFCONFIG更好用的IP命令
+ <span>MOUNT进阶
 </span>
 </a>
 </div>

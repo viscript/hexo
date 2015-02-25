@@ -4,13 +4,24 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>Linux里的瑞士军刀 | viscript</title>
+    <title>MOUNT进阶 | viscript</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="viscript">
     
-    <meta name="description" content="一、通过sort/uniq获取文件内容的交集、合集和不同之处：
-假设有a、b两个文本文件，文件本身已经去除了重复内容。下面是效率最高的方法，可以处理任何体积的文件，甚至几个G的文件。(Sort对内存没有要求，但也许你需要用 -T 参数。)可以试着比较一下，你可以看看如果用Java来处理磁盘上文件的合">
+    <meta name="description" content="FUSER命令
+mount -o iso9660 /aaa/rhe15u3.iso /tmp
+
+
+
+fuser -v /bbb   查看连接在bbb上的所有进程的名字
+
+
+
+fuser -km /bbb 把这个加载点下的进程全部干掉。。。
+
+sync   把缓存的数据全部同步到磁盘
+mount -o">
     
     
     
@@ -67,40 +78,76 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/02/24/Linux里的瑞士军刀/" title="Linux里的瑞士军刀" itemprop="url">Linux里的瑞士军刀</a>
+      <a href="/2015/02/25/MOUNT进阶/" title="MOUNT进阶" itemprop="url">MOUNT进阶</a>
   </h1>
   <p class="article-author">By
     
       <a href="https://plus.google.com/https://plus.google.com/u/0/118332448986920483228?rel=author" title="viscript" target="_blank" itemprop="author">viscript</a>
     </p>
   <p class="article-time">
-    <time datetime="2015-02-24T10:16:47.744Z" itemprop="datePublished">2月 24 2015</time>
-    更新日期:<time datetime="2015-02-20T07:45:21.566Z" itemprop="dateModified">2月 20 2015</time>
+    <time datetime="2015-02-25T02:51:40.573Z" itemprop="datePublished">2月 25 2015</time>
+    更新日期:<time datetime="2015-02-25T02:51:40.569Z" itemprop="dateModified">2月 25 2015</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
 		
-		<h2 id="一、通过sort/uniq获取文件内容的交集、合集和不同之处：">一、通过sort/uniq获取文件内容的交集、合集和不同之处：</h2>
-<pre><code>假设有a、b两个文本文件，文件本身已经去除了重复内容。下面是效率最高的方法，可以处理任何体积的文件，甚至几个G的文件。(<span class="keyword">Sort</span>对内存没有要求，但也许你需要用 -T 参数。)可以试着比较一下，你可以看看如果用Java来处理磁盘上文件的合并，需要用多少行代码。
-</code></pre><p>   cat a b | sort | uniq &gt; c   # c 是a和b的合集<br>   cat a b | sort | uniq -d &gt; c   # c 是a和b的交集<br>   cat a b b | sort | uniq -u &gt; c   # c 是a和b的不同</p>
-<h2 id="二、汇总一个文本内容里第三列数字的和(这个方法要比用Python来做快3倍并只需1/3的代码量)：">二、汇总一个文本内容里第三列数字的和(这个方法要比用Python来做快3倍并只需1/3的代码量)：</h2>
-<p>   awk ‘{ x += $3 } END { print x }’ myfile</p>
-<h2 id="三、如果你想查看一个目录树里的文件的体积和修改日期，用下面的方法，相当于你挨个目录做”ls_-l”，而且输出的形式比你用”ls_-lR”更可读：">三、如果你想查看一个目录树里的文件的体积和修改日期，用下面的方法，相当于你挨个目录做”ls -l”，而且输出的形式比你用”ls -lR”更可读：</h2>
-<p>   find . -type f -ls</p>
-<h2 id="四、使用xargs命令。这个命令非常的强大。注意每行上你可以控制多少个东西的执行。如果你不确定它是正确的执行，先使用xargs_echo。同样，-I{}_也非常有用。例子：">四、使用xargs命令。这个命令非常的强大。注意每行上你可以控制多少个东西的执行。如果你不确定它是正确的执行，先使用xargs echo。同样，-I{} 也非常有用。例子：</h2>
-<p>   find . -name *.py | xargs grep some_function<br>   cat hosts | xargs -I{} ssh root@{} hostname</p>
-<h2 id="五、假设你有一个文本文件，比如一个web服务器日志，在某些行上有一些值，比如URL中的acct_id参数。如果你想统计每个acct_id的所有请求记录：">五、假设你有一个文本文件，比如一个web服务器日志，在某些行上有一些值，比如URL中的acct_id参数。如果你想统计每个acct_id的所有请求记录：</h2>
-<p>   cat access.log | egrep -o ‘acct_id=[0-9]+’ | cut -d= -f2 | sort | uniq -c | sort -rn</p>
+		<h3 id="FUSER命令">FUSER命令</h3>
+<figure class="highlight"><pre><div class="line">mount -o iso9660 /<span class="keyword">aaa</span>/rhe15u3.iso /tmp</div></pre></figure>
+
+
+
+<figure class="highlight"><pre><div class="line"><span class="title">fuser</span> -v /bbb   查看连接在bbb上的所有进程的名字</div></pre></figure>
+
+
+
+<figure class="highlight"><pre><div class="line"><span class="title">fuser</span> -km /bbb 把这个加载点下的进程全部干掉。。。</div></pre></figure>
+
+<p>sync   把缓存的数据全部同步到磁盘</p>
+<figure class="highlight"><pre><div class="line">mount -o <span class="keyword">loop</span> -t iso <span class="number">9660</span>           挂载ISO</div></pre></figure>
+
+
+
+<figure class="highlight"><pre><div class="line"><span class="title">mount</span> //<span class="number">192.168.0.1</span>/tools /mnt</div><div class="line">上述是加载windows的共享</div></pre></figure>
+
+<p>如果需要用户名密码：</p>
+<figure class="highlight"><pre><div class="line">mount -t cifs -o <span class="variable">username=</span>administrator,<span class="variable">password=</span><span class="number">123</span> //<span class="number">192.168</span>.<span class="number">0.1</span>/tools /mnt</div></pre></figure>
+
+<h3 id="UMOUNT">UMOUNT</h3>
+<figure class="highlight"><pre><div class="line">vi <span class="regexp">/etc/</span>exports</div><div class="line"><span class="regexp">/vat/</span>ftp<span class="regexp">/pub   192.168.0.0/</span><span class="number">255.255</span>.<span class="number">255.0</span> (ro,async)</div></pre></figure>
+
+
+
+<figure class="highlight"><pre><div class="line">service nfs restart</div><div class="line">chkconfig nfs <span class="command"><span class="keyword">on</span>  开机启动</span></div></pre></figure>
+
+<p>/media/CDROM 是开启X gnome（hotplug机制）的时候，自动把/dev/scd自动挂载的</p>
+<p>mount有局限，如果按照顺序加载分区是没问题的。<br>但是大多数情况是不看顺序，看名字。<br>需要：</p>
+<figure class="highlight"><pre><div class="line"><span class="attribute">  e2label /dev/sda1  设定卷标</span></div><div class="line">    显示： /boot</div><div class="line">mount LABEL=<span class="string">/boot  /boot</span></div></pre></figure>
+
+<p>在fstab里边都是LABEL的方式加载的。</p>
+<figure class="highlight"><pre><div class="line">mount <span class="operator">-a</span>  会把/etc/fstab所有文件全部进行挂载 。</div></pre></figure>
+
+<p>fstab是mount命令的一个配置文件</p>
+<h3 id="FSTAB">FSTAB</h3>
+<figure class="highlight"><pre><div class="line"><span class="keyword">vi</span> /etc/fstab</div></pre></figure>
+
+
+
+<figure class="highlight"><pre><div class="line">mount -o 加载参数 </div><div class="line">mount <span class="regexp">/dev/</span>sda1 <span class="regexp">/mnt   其实是都是默认参数。</span></div></pre></figure>
+
+
+
+<figure class="highlight"><pre><div class="line"><span class="title">man</span> mount</div></pre></figure>
+
+
+
+<figure class="highlight"><pre><div class="line">/etc/rc.d/rc.sysinit 里的mount <span class="operator">-a</span>命令调用fstab</div></pre></figure>
+
+<p>重启才会生效</p>
   
 	</div>
 		<footer class="article-footer clearfix">
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/好用的命令/">好用的命令</a>
-  </div>
 
 
 <div class="article-categories">
@@ -112,7 +159,7 @@
 
 <div class="article-share" id="share">
 
-  <div data-url="https://v-script.com/2015/02/24/Linux里的瑞士军刀/" data-title="Linux里的瑞士军刀 | viscript" data-tsina="null" class="share clearfix">
+  <div data-url="https://v-script.com/2015/02/25/MOUNT进阶/" data-title="MOUNT进阶 | viscript" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -122,18 +169,18 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/02/24/MARKDOWN参数参考/" title="MARKDOWN参数参考">
+ <a href="/2015/02/25/SWAP分区基础/" title="SWAP分区基础">
   <strong>PREVIOUS:</strong><br/>
   <span>
-  MARKDOWN参数参考</span>
+  SWAP分区基础</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2015/02/24/LINUX比IFCONFIG更好用的IP命令/"  title="比IFCONFIG更好用的IP命令">
+<a href="/2015/02/25/FDISK-FSCK/"  title="FDISK-FSCK">
  <strong>NEXT:</strong><br/> 
- <span>比IFCONFIG更好用的IP命令
+ <span>FDISK-FSCK
 </span>
 </a>
 </div>

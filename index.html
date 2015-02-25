@@ -65,22 +65,98 @@
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/2015/02/24/GRUB命令详解/" title="GRUB命令详解" itemprop="url">
+    <a href="/2015/02/25/内核编译/" title="内核编译" itemprop="url">
   
-    <h1 itemprop="name">GRUB命令详解</h1>
+    <h1 itemprop="name">内核编译</h1>
     
      
-           <p itemprop="description" >一、菜单相关的命令
-  菜单命令只能用于grub配置文件的全局配置部分，不能用在grub命令行交互界面，菜单命令在配置文件中应放在其它命令之前。1、default //设置默认启动的菜单项2、fallback //设置启动某菜单项失败后反回的菜单项3、hiddenmenu //隐</p>
+           <p itemprop="description" >1-LINUX源代码树
+ls /boot/
+
+vmlinuz开头的是内核文件。z表示是gz，被压缩的文档。
+ls -l /boot
+
+initrd是跟vmlinuz相配套的。后边的版本号相同。
+init：初始化  r：RAM   d:diskinitrd：初始化内存磁盘
+
+con</p>
         
     
-    <time datetime="2015-02-24T14:16:57.499Z" itemprop="datePublished">2月 24 2015</time>
+    <time datetime="2015-02-25T05:53:35.537Z" itemprop="datePublished">2月 25 2015</time>
   </a>
 </section>
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/2015/02/24/NFS分布式管理/" title="NFS分布式管理" itemprop="url">
+    <a href="/2015/02/25/SWAP分区基础/" title="SWAP分区基础" itemprop="url">
+  
+    <h1 itemprop="name">SWAP分区基础</h1>
+    
+     
+           <p itemprop="description" >swap到底用到哪个swap空间
+swapon -s    /dev/sda3                   partition           1052248    0         -1
+
+想再去添加swap或者删掉这个swap
+dd&amp;lt;/dev/zero&amp;g</p>
+        
+    
+    <time datetime="2015-02-25T02:55:44.800Z" itemprop="datePublished">2月 25 2015</time>
+  </a>
+</section>
+
+  <section class="post" itemscope itemprop="blogPost">
+  
+    <a href="/2015/02/25/MOUNT进阶/" title="MOUNT进阶" itemprop="url">
+  
+    <h1 itemprop="name">MOUNT进阶</h1>
+    
+     
+           <p itemprop="description" >FUSER命令
+mount -o iso9660 /aaa/rhe15u3.iso /tmp
+
+
+
+fuser -v /bbb   查看连接在bbb上的所有进程的名字
+
+
+
+fuser -km /bbb 把这个加载点下的进程全部干掉。。。
+
+sync   把缓存的数据全部同步到磁</p>
+        
+    
+    <time datetime="2015-02-25T02:51:40.573Z" itemprop="datePublished">2月 25 2015</time>
+  </a>
+</section>
+
+  <section class="post" itemscope itemprop="blogPost">
+  
+    <a href="/2015/02/25/FDISK-FSCK/" title="FDISK-FSCK" itemprop="url">
+  
+    <h1 itemprop="name">FDISK-FSCK</h1>
+    
+     
+           <p itemprop="description" >正常流程：
+fdisk mount
+
+分区： 
+fdisk或者   parted
+
+
+
+fdisk -l  列出已经装上的fdisk -l /dev/sdafdisk /dev/sda 分区
+
+fdisk里的 n  d  p  w  l  t分别代表什么。
+partprobe  </p>
+        
+    
+    <time datetime="2015-02-25T02:24:17.143Z" itemprop="datePublished">2月 25 2015</time>
+  </a>
+</section>
+
+  <section class="post" itemscope itemprop="blogPost">
+  
+    <a href="/2015/02/25/NFS分布式管理/" title="NFS分布式管理" itemprop="url">
   
     <h1 itemprop="name">NFS分布式管理</h1>
     
@@ -92,70 +168,13 @@ autofs
 vi /etc/auto.master  在里边加上 /misc   让他监视这个目录</p>
         
     
-    <time datetime="2015-02-24T14:13:54.541Z" itemprop="datePublished">2月 24 2015</time>
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/2015/02/24/NMAP命令摘录/" title="NMAP命令摘录" itemprop="url">
-  
-    <h1 itemprop="name">NMAP命令摘录</h1>
-    
-     
-           <p itemprop="description" >Nmap是一款网络扫描和主机检测的非常有用的工具。Nmap是不局限于仅仅收集信息和枚举，同时可以用来作为一个漏洞探测器或安全扫描器。它可以适用于winodws,linux,mac等操作系统
-Nmap是一款非常强大的实用工具,可用于：检测活在网络上的主机（主机发现）检测主机上开放的</p>
-        
-    
-    <time datetime="2015-02-24T14:04:38.485Z" itemprop="datePublished">2月 24 2015</time>
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/2015/02/24/INIT/" title="INIT" itemprop="url">
-  
-    <h1 itemprop="name">INIT</h1>
-    
-     
-           <p itemprop="description" >在inittab里内容：
- 7个运行级别。init X  
-
- eg:当输入5的时候，会检测每行有5的命令。
-      输入6是无限重启。
-/etc/rc.sysinit 加载所有重要的东西。eg:       mount -a       mount -o rw,remoun</p>
-        
-    
-    <time datetime="2015-02-24T10:16:47.751Z" itemprop="datePublished">2月 24 2015</time>
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/2015/02/24/GRUB自引导命令/" title="GRUB自引导命令" itemprop="url">
-  
-    <h1 itemprop="name">GRUB自引导命令</h1>
-    
-     
-           <p itemprop="description" >其步骤如下：
-
-a   进入grub的命令模式。
-
-b  先熟悉一下grub  的一些命令 grub&amp;gt;help
-
-c  熟悉一下cat命令
-- d  root指令来指定/boot所在的分区
-- e  kernel指令来指定linux的内核，及所在的分区
-- f  用init</p>
-        
-    
-    <time datetime="2015-02-24T10:16:47.750Z" itemprop="datePublished">2月 24 2015</time>
+    <time datetime="2015-02-25T02:18:49.722Z" itemprop="datePublished">2月 25 2015</time>
   </a>
 </section>
 
 
   <nav id="page-nav" class="clearfix">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
   </nav>
 
 </div>
@@ -170,7 +189,9 @@ c  熟悉一下cat命令
 	<p class="asidetitle">分类</p>
 		<ul>
 		
-			<li><a href="/categories/LINUX命令/" title="LINUX命令">LINUX命令<sup>6</sup></a></li>
+			<li><a href="/categories/Kernel/" title="Kernel">Kernel<sup>1</sup></a></li>
+		
+			<li><a href="/categories/LINUX命令/" title="LINUX命令">LINUX命令<sup>9</sup></a></li>
 		
 			<li><a href="/categories/参考/" title="参考">参考<sup>1</sup></a></li>
 		
@@ -204,7 +225,7 @@ c  熟悉一下cat命令
   
   <div class="archiveslist">
     <p class="asidetitle"><a href="/archives">归档</a></p>
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">February 2015</a><span class="archive-list-count">13</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">February 2015</a><span class="archive-list-count">17</span></li></ul>
   </div>
 
 
