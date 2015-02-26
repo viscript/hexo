@@ -1,0 +1,445 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>IPTABLES | viscript</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="viscript">
+    
+    <meta name="description" content="IPTABLES简介
+iptables在最前端，如果还需要加固，需要硬件防火墙。先是以太网接受数据包，往上层区传：IP层（内嵌iptables）。调用的iptables感染了整个TCP/IP处理的各个环节。
+
+是在tcpwrap之前生效。
+
+tcpwrap是在pam之前生效。
+
+iptables是在">
+    
+    
+    
+    
+    
+<link href="/favicon.ico" rel="icon" type="image/x-ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="viscript" title="viscript"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="viscript">viscript</a></h1>
+				<h2 class="blog-motto">修合无人见，存心有天知。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:v-script.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/02/26/IPTABLES/" title="IPTABLES" itemprop="url">IPTABLES</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="https://plus.google.com/https://plus.google.com/u/0/118332448986920483228?rel=author" title="viscript" target="_blank" itemprop="author">viscript</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2015-02-26T05:57:11.505Z" itemprop="datePublished">2月 26 2015</time>
+    更新日期:<time datetime="2015-02-26T05:57:11.500Z" itemprop="dateModified">2月 26 2015</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<h3 id="IPTABLES简介">IPTABLES简介</h3>
+<p>iptables在最前端，如果还需要加固，需要硬件防火墙。<br>先是以太网接受数据包，往上层区传：IP层（内嵌iptables）。<br>调用的iptables感染了整个TCP/IP处理的各个环节。</p>
+<ul>
+<li><p>是在tcpwrap之前生效。</p>
+</li>
+<li><p>tcpwrap是在pam之前生效。</p>
+</li>
+<li><p>iptables是在内核生效的。数据包还没让应用程序看到，就生效了。等数据包整合在一起之后，才会调用tcpwrap和pam</p>
+</li>
+</ul>
+<h3 id="命令进阶">命令进阶</h3>
+<p>iptables -t  指定一个表。默认为filter，也有可能是NAT<br>把-t filter去掉，就是对filter进行操作</p>
+<p>-A  添加<br>-I  插入<br>-D  删除<br>-F  清除<br>-L  显示</p>
+<p>eg:</p>
+<figure class="highlight"><pre><div class="line"><span class="title">iptables</span> -A INPUT -p tcp(先确定协议) -s <span class="number">192.168.0.2</span> -d <span class="number">192.168.0.254</span>    --dport/sport(目标端口/源端口)  <span class="number">1</span>：<span class="number">50</span>（<span class="number">1</span>到<span class="number">50</span>端口）  -j  DROP</div><div class="line">iptables -L</div></pre></figure>
+
+<blockquote>
+<p>INPUT 传给对象，不转发。就是INPUT<br>FORWARD  转发  设置成1才会开启这个功能。和INPUT任选其一。一个生效另外一个就不生效。<br>OUTPUT  </p>
+</blockquote>
+<figure class="highlight"><pre><div class="line">iptables -I INPUT 2  插入到INPUT的第二列</div><div class="line"></div><div class="line">iptables -L  里边显示，有三个chains。可以理解成：什么时候</div><div class="line"></div><div class="line">iptables -P INPUT <span class="operator"><span class="keyword">DROP</span>/ACCEPT  没有我的允许，所有的数据包全部拒绝/接受。（不可能是REJECT）</span></div><div class="line">  iptables -F 无法清除-P **但是-P优先级是最低的。是-L里的chains生效之后再去判定-P的选项。</div><div class="line"></div><div class="line">iptables -A <span class="keyword">INPUT</span> -P tcp <span class="comment">--sport 1:1024 -s 192.168.0.1 -j ACCEPT</span></div><div class="line">iptables -L 会特别慢</div><div class="line"><span class="comment">--》  iptables -L -n   不会反向解析</span></div><div class="line"></div><div class="line">iptables -A <span class="keyword">INPUT</span> -p tcp <span class="comment">--sport 1025-2222 -s  !  192.168.0.1(叹号和IP之间有空格)  -i eth0 -o eth0  -j ACCEPT</span></div></pre></figure>
+
+<p>eg:我能SSH他，他不能SSH我：(用到扩展ｓｔａｔｅ防火墙)</p>
+<figure class="highlight"><pre><div class="line">iptables -A INPUT -<span class="keyword">m</span> <span class="keyword">state</span>  --<span class="keyword">state</span>  NEW (面向连接)</div></pre></figure>
+
+<p>IP A：3355（加冒号之后后边接端口） NEW（FORWARD没有限制，INPUT全部扔掉。面向链接没有任何记录情况下，就是NEW状态）  ——》    IP  B：22<br>再从B到A发送数据包的时候，状态就已经变得不新鲜了，变成ESTBLISHED。</p>
+<figure class="highlight"><pre><div class="line">netstat -<span class="keyword">ant</span>   不能写u，因为udp不是面向连接的。</div></pre></figure>
+
+<h3 id="例子总结：">例子总结：</h3>
+<figure class="highlight"><pre><div class="line">iptables -P INPUT <span class="operator"><span class="keyword">DROP</span></span></div><div class="line">iptables -A <span class="keyword">INPUT</span>  -m state <span class="comment">--state ESTABLISED,RELATED -j ACCEPT</span></div><div class="line">iptables -A <span class="keyword">INPUT</span> -m state <span class="comment">--state NEW -p tcp --dport 80 -j ACCEPT  服务器，能通过80端口访问我</span></div></pre></figure>
+
+<p>iptables 在用户空间叫iptables ，在计算机里叫netfilter<br>/lib/modules/2.6.18-…………e15/kernel/net/netfilter/<em>ftp</em>    查看ftp</p>
+<figure class="highlight"><pre><div class="line"><span class="keyword">server</span> iptables save</div></pre></figure>
+
+<p>等于：iptables-save &gt; /etc/sysconfig/iptables  </p>
+<figure class="highlight"><pre><div class="line">chkconfig iptables <span class="command"><span class="keyword">on</span></span></div><div class="line">service iptables restart</div></pre></figure>
+
+<p><strong>iptables还有其他扩展: -m limit</strong> </p>
+<figure class="highlight"><pre><div class="line">iptables -A INPUT -m limit --limit <span class="number">2000</span>/s -<span class="built_in">j</span> ACCEPT </div><div class="line">iptables -A INPUT -m limit --limit <span class="number">2200</span>/s -<span class="built_in">j</span> <span class="built_in">log</span>   当数据包达到<span class="number">2000</span>/s的时候记录日志</div></pre></figure>
+
+<p>这个日志是kernel相关的日志。</p>
+<figure class="highlight"><pre><div class="line">iptables -A INPUT -<span class="keyword">m</span> limit --limit <span class="number">2200</span>/<span class="keyword">s</span> -<span class="keyword">j</span> <span class="built_in">log</span>  <span class="built_in">log</span>--level <span class="number">5</span> --<span class="built_in">log</span>-profix <span class="string">"DDOS Atrack"</span></div><div class="line"><span class="keyword">vi</span> /etc/syslog.<span class="keyword">conf</span></div></pre></figure>
+
+<p>添加kernel.info       /var/log/ddoslog</p>
+<p>还有一个扩展。。。<br>-m mac     机房里有个WINDOWS机器，在一个机柜里边，这个电脑经常中病毒。ARP。网关劫持。<br>   想只要从这个mac地址发过来的信息全部丢掉。- -!   还不如直接arping绑定DNS得了。</p>
+<h3 id="关于共享上网的网关设置流程">关于共享上网的网关设置流程</h3>
+<p>介绍情况：</p>
+<p>一台机器，想通过内部网络发送一封邮件给公网，假设是新浪。其中路由的对内接口eth0，对外eth1。eth1处多了一个modem，产生一个ppp0接口。211.1.1.1（点对点通讯协议。)<br> 创建：</p>
+<figure class="highlight"><pre><div class="line"><span class="built_in">system</span>-config-network </div><div class="line">      ifup ppp0</div></pre></figure>
+
+<p>  或者可以：</p>
+<figure class="highlight"><pre><div class="line">adsl-setup</div><div class="line">adsl-<span class="operator"><span class="keyword">start</span></span></div></pre></figure>
+
+<p>自己的机器IP：192.168.0.2:6123(操作系统分配的随机端口)  发送一封邮件，发送地址为：61.1.1.1:80</p>
+<p>数据包先从自己机器网卡发送到eth0（192.168.0.1）   .<br>如果中间的那个路由要做网关，需要eth0打开。</p>
+<figure class="highlight"><pre><div class="line"><span class="keyword">vi</span> /etc/sysctl.<span class="keyword">conf</span>   </div><div class="line">       net.ipv4.ip_forward=<span class="number">1</span></div><div class="line">sysctl -<span class="keyword">p</span>  立即写入    命令输入完之后，直接能够当路由器咧。。。</div></pre></figure>
+
+<p>之后就可以成功通过eth0出去，然后一直转到61.1.1.1<br>然后，新浪收到了。。写回信。<br>在回信过程中：</p>
+<p><strong>目标地址变源地址，源地址变目标地址。</strong><br>目标地址：192.168.0.2</p>
+<p>这就会有个问题了。。。192.168.0.2太多了。。这种地址是<strong>保留地址</strong><br>这样的数据包一放到公网，直接拒绝丢掉。也就是说：你上不了网了。。<br>所以：你通过eth0出去之后，要经过转换。  </p>
+<blockquote>
+<p>刚数据包出去的时候，目标地址不变，源地址转换：snat  211.1.1.1（当替换成公网的地址之后，端口不变。还是6123）</p>
+<p>所以：192.168.0.2:6123 和211.1.1.1:6123的对应关系保留在了路由里。</p>
+<p>当数据包返回到ppp0的时候，路由会通过对应关系自动转换过来。<br>对应关系的配置文件位置：<br>/proc/net/ip_conntrack</p>
+</blockquote>
+<p><strong>要添加一个iptables：</strong></p>
+<figure class="highlight"><pre><div class="line"><span class="title">iptables</span> -t nat -A POSTROUTING (发送数据包之后)  -o ppp0 -s <span class="number">192.168.0.0</span>/<span class="number">24</span> -j snat --to <span class="number">211.1.1.1</span></div></pre></figure>
+
+<p>这个规则就可以起到自动转换地址的作用。</p>
+<p>但是有个问题。。ADSL的地址我不会关心。<br>因此有个默认的已经写好的规则。</p>
+<h3 id="共享上网：">共享上网：</h3>
+<p>ip_forward先变成1<br>然后</p>
+<figure class="highlight"><pre><div class="line"><span class="title">iptables</span> -t nat -A POSTROUTING -o ppp0 -s <span class="number">192.168.0.0</span>/<span class="number">24</span> -j MASQUERADE  自动侦测ppp0地址</div></pre></figure>
+
+<h3 id="完整过程：">完整过程：</h3>
+<figure class="highlight"><pre><div class="line"><span class="keyword">vi</span> /etc/sysctl.<span class="keyword">conf</span></div><div class="line">sysctl -<span class="keyword">p</span></div><div class="line">iptables -F</div><div class="line">iptables -<span class="keyword">t</span> nat -F</div><div class="line">iptables -<span class="keyword">t</span> nat -L</div><div class="line">iptables -<span class="keyword">t</span> nat -A POSTROUTING -<span class="keyword">o</span> ppp0 -<span class="keyword">s</span> <span class="number">192.168</span>.<span class="number">0.0</span>/<span class="number">24</span> -<span class="keyword">j</span> MASQUERADE</div><div class="line">iptables -<span class="keyword">t</span> nat -L -<span class="keyword">n</span></div><div class="line">service save</div><div class="line">chkconfig iptables <span class="keyword">on</span></div></pre></figure>
+
+<p>这样你的机器已经可以作为一个网关，让其他机器共享上网了。o(∩_∩)o </p>
+<h3 id="SQUID透明代理">SQUID透明代理</h3>
+<figure class="highlight"><pre><div class="line">iptables -t nat -<span class="literal">A</span> PREROUTING 用的</div></pre></figure>
+
+<p>很多机器上网，但是网关就一个。而且带宽很窄。</p>
+<p>第一个人上新浪，然后数据包返回后缓存留在网关。第二个人访问的时候，直接内网调用。<br>占用的是内网的带宽。</p>
+<p>机制：都是访问对面的80端口，访问80端口的数据包全都重定向到自己的代理服务器上。<br>用到工具：squid<br>位置：/etc/squid/squid.conf<br>在里边监听端口。（默认3128）.当访问80端口的时候，重定向到3128端口。 加速上网，你懂得o(∩_∩)o </p>
+<h4 id="设定：">设定：</h4>
+<figure class="highlight"><pre><div class="line"><span class="keyword">vi</span> /etc/squid/squid.<span class="keyword">conf</span>                           <span class="number">2.6</span>版本</div><div class="line">chkconfig squid <span class="keyword">on</span></div><div class="line">service squid start</div><div class="line">iptables -<span class="keyword">t</span> nat -A PREROUTING -<span class="keyword">i</span> eth0 -<span class="keyword">s</span> <span class="number">192.168</span>.<span class="number">0.0</span>/<span class="number">24</span> -<span class="keyword">p</span> tcp -dport <span class="number">80</span> -<span class="keyword">j</span> REDIRECT --<span class="keyword">to</span>-ports <span class="number">3128</span></div></pre></figure>
+
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/LINUX命令/">LINUX命令</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="https://v-script.com/2015/02/26/IPTABLES/" data-title="IPTABLES | viscript" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2015/02/26/运维安全基础/"  title="运维安全基础">
+ <strong>NEXT:</strong><br/> 
+ <span>运维安全基础
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/Kernel/" title="Kernel">Kernel<sup>1</sup></a></li>
+		
+			<li><a href="/categories/LINUX命令/" title="LINUX命令">LINUX命令<sup>10</sup></a></li>
+		
+			<li><a href="/categories/参考/" title="参考">参考<sup>2</sup></a></li>
+		
+			<li><a href="/categories/图片BLOG/" title="图片BLOG">图片BLOG<sup>1</sup></a></li>
+		
+			<li><a href="/categories/摘录/" title="摘录">摘录<sup>4</sup></a></li>
+		
+			<li><a href="/categories/配置文件/" title="配置文件">配置文件<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/MARKDOWN/" title="MARKDOWN">MARKDOWN<sup>1</sup></a></li>
+		
+			<li><a href="/tags/auto-master/" title="auto.master">auto.master<sup>1</sup></a></li>
+		
+			<li><a href="/tags/autofs/" title="autofs">autofs<sup>1</sup></a></li>
+		
+			<li><a href="/tags/nfs/" title="nfs">nfs<sup>1</sup></a></li>
+		
+			<li><a href="/tags/好用的命令/" title="好用的命令">好用的命令<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+  <div class="archiveslist">
+    <p class="asidetitle"><a href="/archives">归档</a></p>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">February 2015</a><span class="archive-list-count">20</span></li></ul>
+  </div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+      <li><a href="http://blog.chinaunix.net/uid/30115009.html" target="_blank" title="vs">China Unix</a></li>
+      <li><a href="http://www.ibm.com/developerworks/cn/linux/" target="_blank" title="IBM Developer">IBM Developer</a></li>
+    </ul>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> o(∩_∩)o <br/>
+			Step by Step</p>
+	</section>
+	 
+	<div class="social-font clearfix">
+		
+		<a href="http://weibo.com/http://weibo.com/3597871112" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/https://github.com/viscript" target="_blank" title="github"></a>
+		
+		
+		<a href="https://www.facebook.com/https://www.facebook.com/drowingleaf" target="_blank" title="facebook"></a>
+		
+		
+	</div>
+		<p class="copyright">One Step a Day © 2015 
+		
+		<a href="https://v-script.com" target="_blank" title="viscript">viscript</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+  </body>
+</html>

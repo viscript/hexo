@@ -4,13 +4,12 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>GRUB命令详解 | viscript</title>
+    <title>运维安全基础 | viscript</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="viscript">
     
-    <meta name="description" content="一、菜单相关的命令
-  菜单命令只能用于grub配置文件的全局配置部分，不能用在grub命令行交互界面，菜单命令在配置文件中应放在其它命令之前。1、default //设置默认启动的菜单项2、fallback //设置启动某菜单项失败后反回的菜单项3、hiddenmenu //隐藏菜单界面4、tim">
+    <meta name="description" content="cd /vi /etc/initab      进程为3chkconfig --list   系统中运行的进程chkconfig --list |grep 3:onchkconfig cups offinit 6ps aux 看看有没有不认识的进程。。netstat -antup   iptable">
     
     
     
@@ -67,27 +66,89 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/02/24/GRUB命令详解/" title="GRUB命令详解" itemprop="url">GRUB命令详解</a>
+      <a href="/2015/02/26/运维安全基础/" title="运维安全基础" itemprop="url">运维安全基础</a>
   </h1>
   <p class="article-author">By
     
       <a href="https://plus.google.com/https://plus.google.com/u/0/118332448986920483228?rel=author" title="viscript" target="_blank" itemprop="author">viscript</a>
     </p>
   <p class="article-time">
-    <time datetime="2015-02-24T14:16:57.499Z" itemprop="datePublished">2月 24 2015</time>
-    更新日期:<time datetime="2015-02-24T14:16:57.494Z" itemprop="dateModified">2月 24 2015</time>
+    <time datetime="2015-02-26T05:25:20.531Z" itemprop="datePublished">2月 26 2015</time>
+    更新日期:<time datetime="2015-02-26T05:25:20.527Z" itemprop="dateModified">2月 26 2015</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
 		
-		<h2 id="一、菜单相关的命令">一、菜单相关的命令</h2>
-<p>  菜单命令只能用于grub配置文件的全局配置部分，不能用在grub命令行交互界面，菜单命令在配置文件中应放在其它命令之前。<br>1、default //设置默认启动的菜单项<br>2、fallback //设置启动某菜单项失败后反回的菜单项<br>3、hiddenmenu //隐藏菜单界面<br>4、timeout //设置菜单自动启动的延时时间<br>5、title //开始一个菜单项</p>
-<h2 id="二、一些常规命令">二、一些常规命令</h2>
-<p>  常规命令可以应该于配置文件和grub命令行交互界面，可使用的常规命令有<br>1、bootp //通过bootp初始化网络设备<br>2、color //设置菜单界面的颜色<br>3、device //指定设备文件作为驱动器<br>4、dhcp //通过DHCP初始化网络设备<br>5、hide //隐藏某分区<br>6、ifconfig //手工配置网络设备<br>7、pager //改变内部页程序的状态<br>8、partnew //新建一个主分区<br>9、parttype //改变分区的类型<br>10、password 为菜单界面设置口令<br>11、rarp //通过RARP初始化网络设置<br>12、serial //设置串口设备<br>13、setkey //设置键盘映射<br>14、splashimage //设置GRUB启动时的背景图片文件<br>15、termainal //选择终端类型<br>16、tftpserver //指定TFTP服务器<br>17、unhide //还原某隐藏分区</p>
-<h2 id="三、命令行和菜单项命令">三、命令行和菜单项命令</h2>
-<p>   命令行和菜单项命令可应该于GRUB配置文件的菜单项设置中，也可以用在GRUB命令交互界面。<br>1、bolcklist //显示某文件所在分区位置（block list notation）<br>2、boot //启动操作系统<br>3、cat //显示文件内容<br>4、chainloader //把启动控制权软交给另外的启动引导器<br>5、cmp //比较两个文件<br>6、configfile //加载已存在的GRUB配置文件<br>7、debug //设置为debug模式<br>8、displayapm //显示APM BIOS信息<br>9、displaymem //显示内存配置<br>10、embed //嵌入Stage 1.5文件<br>11、find //查找包括某文件的所有设备<br>12、fstest //测试文件系统<br>13、geometry //显示某驱动器的物理信息<br>14、halt //停止计算机运行（软件关机）<br>15、help //显示GRUB的命令帮助信息<br>16、impsprobe //查询对称多处理器（SMP）的信息<br>17、initrd //加载initrd文件<br>18、install //安装GRUB<br>19、ioprobe //查询某驱动器的输入输出（I/O）端口<br>20、kernel //引导操作系统内核<br>21、lock //锁定某GRUB导菜单项，使其输入密码后才可启动<br>22、makeactive //激活某主分区<br>23、map //虚拟映射某驱动器<br>24、md5crypt //使用MD5加密口令<br>25、module //加载模块<br>26、modulenounzip //加载模块不进行解压<br>27、pause //暂停并等待按键<br>28、quit //退出GRUB<br>29、reboot //重新启动计算机<br>30、read //读取内存中的内容<br>31、root //设置GRUB的root设备<br>32、rootnoverify //设备GRUB的root设备但不装载文件系统<br>33、savedefault //保存当前的启动菜单项为默认启动<br>34、setup //自动安装GRUB<br>35、testload //从文件系统中测试读取某文件<br>36、testvbe //测试VESA BIOS EXTENSION<br>37、uppermem //强制设置主机上位内存的大小<br>38、vbeprobe //查询VESA BIOS EXTENSION信息</p>
+		<figure class="highlight"><pre><div class="line"><span class="title">cd</span> /</div><div class="line">vi /etc/initab      进程为<span class="number">3</span></div><div class="line">chkconfig --list   系统中运行的进程</div><div class="line">chkconfig --list |grep <span class="number">3</span>:<span class="built_in">on</span></div><div class="line">chkconfig cups <span class="built_in">off</span></div><div class="line">init <span class="number">6</span></div><div class="line">ps aux 看看有没有不认识的进程。。</div><div class="line">netstat -antup   </div><div class="line">iptables  -A INPUT -p tcp --dport  <span class="number">3306</span>  -s  ! <span class="number">127.0.0.1</span> -j DROP      <span class="number">3306</span>端口：mysql端口。   -s:来源地址不是<span class="number">127</span>时候，丢包。也可以reject</div></pre></figure>
+
+<h3 id="梳理安全配置：">梳理安全配置：</h3>
+<h4 id="安全分成：">安全分成：</h4>
+<ul>
+<li>1.host  主机安全<pre><code>  <span class="title">passwd</span>    sshd_config密钥认证    authconfig    rpm -V   hids   selinux
+</code></pre></li>
+<li>2.service 服务安全 <pre><code> 程序本身有安全控制  sshd  <span class="number">12312</span>   tcp_wrap访问控制  xinetd.<span class="keyword">conf</span>    
+</code></pre></li>
+<li>3.netwok 网络安全<pre><code> <span class="title">iptables</span>    arptables   nids网络入侵检测系统     
+</code></pre></li>
+</ul>
+<p>安全配置好之后，报警，审核机制： </p>
+<ul>
+<li>logs   日志</li>
+<li>audit 审计    </li>
+<li>nagios   cacti   mrtg   监控</li>
+</ul>
+<p>系统崩溃后：恢复。</p>
+<h3 id="服务器疑似入侵后处理办法">服务器疑似入侵后处理办法</h3>
+<p>疑似入侵后标准步骤：</p>
+<ul>
+<li>1.断网</li>
+<li>2.当前系统做镜像</li>
+<li>3.检查   （不用当前机器去查）光盘或者别的介质启动，然后硬盘mount到某个目录去查</li>
+</ul>
+<h4 id="rootkit">rootkit</h4>
+<p>黑客黑root的工具包。命令替换。ps、netstat、ls这些。。</p>
+<figure class="highlight"><pre><div class="line"><span class="comment">rpm</span> <span class="literal">-</span><span class="comment">V</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">root</span> <span class="comment">/mnt/sysimage</span>  <span class="comment">/bin/ls</span>         <span class="comment">以mount后的系统路径为root</span>  <span class="string">,</span><span class="comment">这时/bin目录的根目录是硬盘的，不是光盘的</span></div><div class="line"></div><div class="line"><span class="comment">rpm</span> <span class="literal">-</span><span class="comment">ivh</span>  <span class="literal">-</span><span class="literal">-</span><span class="comment">root</span> <span class="comment">/mnt/sysimage</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">force</span> <span class="comment">aaaa</span><span class="string">.</span><span class="comment">rpm</span>   <span class="comment">强行替换回来</span></div><div class="line"></div><div class="line"><span class="comment">logwatch</span>  <span class="comment">看指定的主机日志</span></div></pre></figure>
+
+<p>selinux ：</p>
+<p>灰常强大。</p>
+<h3 id="XINETD">XINETD</h3>
+<p>最基本的服务的配置文件： </p>
+<figure class="highlight"><pre><div class="line"><span class="regexp">/etc/</span>rc.d<span class="regexp">/rc.sysinit  系统初始化脚本</span></div></pre></figure>
+
+<p>/etc/rc.d/rc  3<br>/etc/rc.d/rc3.d/Kxxx   stop   /etc/rc.d/init.d/xxx<br>   S         start</p>
+<h4 id="特殊的服务：">特殊的服务：</h4>
+<blockquote>
+<p>xinetd<br>X：加强了安全的。。。<br>/etc/xinetd.d/*<br>要启动的话：</p>
+</blockquote>
+<figure class="highlight"><pre><div class="line">chkconfig  xinetd <span class="command"><span class="keyword">on</span>  并不是<span class="title">K</span>改成<span class="title">S</span>，是完全不同的脚本方式</span></div></pre></figure>
+
+<p>然后再   : </p>
+<figure class="highlight"><pre><div class="line">chkconfig krb5-telnet <span class="command"><span class="keyword">on</span></span></div></pre></figure>
+
+
+
+<figure class="highlight"><pre><div class="line"><span class="keyword">ls</span> /etc/xinetd.<span class="keyword">conf</span>   总配置文件</div></pre></figure>
+
+<p>里边有个includedir  /etc/xinetd.d</p>
+<figure class="highlight"><pre><div class="line"><span class="keyword">ls</span> /etc/xinetd.<span class="keyword">d</span>/</div></pre></figure>
+
+<p>举例：</p>
+<figure class="highlight"><pre><div class="line">vi /etc/xinetd.d/krb5-telnet   </div><div class="line">         <span class="class"><span class="keyword">service</span> <span class="title">telnet</span></span>{ </div><div class="line">                disable = no   开启的。</div><div class="line">                </div><div class="line"></div><div class="line">                              }</div></pre></figure>
+
+<p>会去services 查看端口号。</p>
+<figure class="highlight"><pre><div class="line"><span class="keyword">grep</span> telnet  <span class="regexp">/etc/</span>services</div><div class="line"> <span class="number">23</span>端口</div></pre></figure>
+
+<p>若要查看这个服务的man page:<br>man xinetd.conf     因为是这个文件include进来的<br>可以看到在/etc/xinetd.d/xxxx   里边有标准的框架结构，而且每个服务可以放的值都也列出</p>
+<p>ls /etc/xinetd.d/<br>之后这些脚本，都可以添加： <strong>only_from</strong>   访问控制</p>
+<p>rpm -qlf <code>which telnet</code></p>
+<h3 id="访问控制">访问控制</h3>
+<p>iptables —&gt;  用户空间  xinetd (调用的库libwrap  ) —&gt; xinetd.conf  —&gt;<br>没有优先级，只是启动的顺序。</p>
+<p>ldd <code>which xinetd</code>   查看调用的库</p>
+<figure class="highlight"><pre><div class="line"><span class="keyword">vi</span> /etc/xinetd.<span class="keyword">conf</span></div></pre></figure>
+
+<p>里边会有defaults默认设置</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -95,14 +156,14 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/摘录/">摘录</a>
+  <a class="article-category-link" href="/categories/参考/">参考</a>
 </div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="https://v-script.com/2015/02/24/GRUB命令详解/" data-title="GRUB命令详解 | viscript" data-tsina="null" class="share clearfix">
+  <div data-url="https://v-script.com/2015/02/26/运维安全基础/" data-title="运维安全基础 | viscript" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -112,18 +173,18 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/02/25/INIT/" title="INIT">
+ <a href="/2015/02/26/IPTABLES/" title="IPTABLES">
   <strong>PREVIOUS:</strong><br/>
   <span>
-  INIT</span>
+  IPTABLES</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2015/02/24/NMAP命令摘录/"  title="NMAP命令摘录">
+<a href="/2015/02/26/NGINX配置文件/"  title="NGINX配置文件">
  <strong>NEXT:</strong><br/> 
- <span>NMAP命令摘录
+ <span>NGINX配置文件
 </span>
 </a>
 </div>
