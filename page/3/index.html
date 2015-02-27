@@ -65,6 +65,42 @@
 
   <section class="post" itemscope itemprop="blogPost">
   
+    <a href="/2015/02/25/NFS分布式管理/" title="NFS分布式管理" itemprop="url">
+  
+    <h1 itemprop="name">NFS分布式管理</h1>
+    
+     
+           <p itemprop="description" >ls /etc/auto.*
+.master和.misc能完全达到功能
+mount /dev/cdrom    /misc/cd   这样是可以的。但是需求在公司里需要自动加载。
+autofs
+vi /etc/auto.master  在里边加上 /misc   让他监视这个目录</p>
+        
+    
+    <time datetime="2015-02-25T02:18:49.722Z" itemprop="datePublished">2月 25 2015</time>
+  </a>
+</section>
+
+  <section class="post" itemscope itemprop="blogPost">
+  
+    <a href="/2015/02/25/INIT/" title="INIT" itemprop="url">
+  
+    <h1 itemprop="name">INIT</h1>
+    
+     
+           <p itemprop="description" >在inittab里内容：
+  7个运行级别。init X  
+  eg:当输入5的时候，会检测每行有5的命令。  输入6是无限重启。
+/etc/rc.sysinit 加载所有重要的东西。eg:
+mount -a mount -o rw,remount /dev/sda2 /   </p>
+        
+    
+    <time datetime="2015-02-25T02:15:31.948Z" itemprop="datePublished">2月 25 2015</time>
+  </a>
+</section>
+
+  <section class="post" itemscope itemprop="blogPost">
+  
     <a href="/2015/02/24/GRUB命令详解/" title="GRUB命令详解" itemprop="url">
   
     <h1 itemprop="name">GRUB命令详解</h1>
@@ -116,46 +152,6 @@ c  熟悉一下cat命令
   </a>
 </section>
 
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/2015/02/24/运维技术讨论/" title="运维技术讨论" itemprop="url">
-  
-    <h1 itemprop="name">运维技术讨论</h1>
-    
-     
-       <p itemprop="description" >My First Step Article
-1.请举例说明CLI方式下如何分析系统日志？
-2.谈谈你对开源日志分析工具和商业日志分析工具使用的感受或心得？
-3.谈谈你是如何收集Unix/Linux以及Windows平台上各种日志？
-4.介绍你目前的日志存储方案？是否考虑架设集中日</p>
-      
-    
-    <time datetime="2015-02-24T10:16:47.748Z" itemprop="datePublished">2月 24 2015</time>
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/2015/02/24/人生得与失/" title="人生得与失" itemprop="url">
-  
-    <h1 itemprop="name">人生得与失</h1>
-    
-     
-       <p itemprop="description" >第一本相册BLOG
-===
-对酒当歌，人生几何！譬如朝露，去日苦多。
-慨当以慷，忧思难忘。何以解忧？唯有杜康。
-青青子衿，悠悠我心。但为君故，沉吟至今。
-呦呦鹿鸣，食野之苹。我有嘉宾，鼓瑟吹笙。
-明明如月，何时可掇？忧从中来，不可断绝。
-越陌度阡，枉用相存。契阔谈宴，心念旧恩。
-</p>
-      
-    
-    <time datetime="2015-02-24T10:16:47.747Z" itemprop="datePublished">2月 24 2015</time>
-  </a>
-</section>
-
 
   <nav id="page-nav" class="clearfix">
     <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
@@ -172,6 +168,10 @@ c  熟悉一下cat命令
 <div class="categorieslist">
 	<p class="asidetitle">分类</p>
 		<ul>
+		
+			<li><a href="/categories/AHACHE/" title="AHACHE">AHACHE<sup>1</sup></a></li>
+		
+			<li><a href="/categories/DNS/" title="DNS">DNS<sup>1</sup></a></li>
 		
 			<li><a href="/categories/Kernel/" title="Kernel">Kernel<sup>1</sup></a></li>
 		
@@ -211,7 +211,7 @@ c  熟悉一下cat命令
   
   <div class="archiveslist">
     <p class="asidetitle"><a href="/archives">归档</a></p>
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">February 2015</a><span class="archive-list-count">21</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">February 2015</a><span class="archive-list-count">23</span></li></ul>
   </div>
 
 

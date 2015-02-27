@@ -1,0 +1,628 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>DNS服务器BIND | viscript</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="viscript">
+    
+    <meta name="description" content="BIND的安装和基础
+rpm -qa|grep bind  bind是DNS的工具包
+
+bind的进程：
+
+named
+
+server named start rpm -qa|grep cach  这个包没有装的啊，必要的配置文件就没有。
+
+发现没装。。。
+mount /dev/cdrom  /mn">
+    
+    
+    
+    
+    
+<link href="/favicon.ico" rel="icon" type="image/x-ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="viscript" title="viscript"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="viscript">viscript</a></h1>
+				<h2 class="blog-motto">修合无人见，存心有天知。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:v-script.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/02/27/DNS服务器BIND/" title="DNS服务器BIND" itemprop="url">DNS服务器BIND</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="https://plus.google.com/https://plus.google.com/u/0/118332448986920483228?rel=author" title="viscript" target="_blank" itemprop="author">viscript</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2015-02-27T06:09:15.751Z" itemprop="datePublished">2月 27 2015</time>
+    更新日期:<time datetime="2015-02-27T06:09:15.746Z" itemprop="dateModified">2月 27 2015</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<h3 id="BIND的安装和基础">BIND的安装和基础</h3>
+<figure class="highlight"><pre><div class="line">rpm -qa|<span class="keyword">grep</span> <span class="keyword">bind</span>  <span class="keyword">bind</span>是DNS的工具包</div></pre></figure>
+
+<p>bind的进程：</p>
+<blockquote>
+<p>named</p>
+</blockquote>
+<figure class="highlight"><pre><div class="line">server named start </div><div class="line"></div><div class="line">rpm -<span class="keyword">qa</span>|<span class="keyword">grep</span> cach  这个包没有装的啊，必要的配置文件就没有。</div></pre></figure>
+
+<p>发现没装。。。</p>
+<figure class="highlight"><pre><div class="line"><span class="title">mount</span> /dev/cdrom  /mnt</div><div class="line">cd /mnt/Server/</div><div class="line">rpm -ivh caching-nameserver-<span class="number">9.3.6.4</span>-pl.e15_4.<span class="number">2</span>.i386.rpm</div><div class="line">service named start</div></pre></figure>
+
+<p>bind运行时，以 <strong>/var/named/chroot/</strong>为根。是bind-chroot-9.xxxx  决定的。<br>增加安全性。</p>
+<figure class="highlight"><pre><div class="line">ls <span class="regexp">/var/</span>named<span class="regexp">/chroot/</span>etc<span class="regexp">/named.*</span></div></pre></figure>
+
+<h3 id="DNS的体系结构">DNS的体系结构</h3>
+<p>eg:</p>
+<blockquote>
+<p>www.sina.com.   com后边有那个点，一般可以不用输入，但是存在。</p>
+</blockquote>
+<p>这个点的解析全球有<strong>13台</strong>服务器。</p>
+<p>解析的时候，是先从最后的点开始解析，然后从后往前解析。</p>
+<p>每台主机都内置了13台根域服务器的地址。</p>
+<blockquote>
+<p>DNS服务器先去通过根域服务器，解析com. 的DNS服务器位置。然后会去查询com.的这个DNS服务器关于sina.com. 的DNS服务器的位置。然后DNS服务器再去解析sina.com. 关于www.sina.&gt;com.或者mail.sina.com.之类的IP地址，然后将IP地址返回给用户。<strong>（递归查询）</strong></p>
+</blockquote>
+<p>有关的命令：</p>
+<figure class="highlight"><pre><div class="line">host</div><div class="line"><span class="keyword">dig</span></div><div class="line">__nslookup__  可以模仿这个流程</div></pre></figure>
+
+<h3 id="NSLOOPUP">NSLOOPUP</h3>
+<figure class="highlight"><pre><div class="line"><span class="keyword">dig</span> +trace www.sina.<span class="keyword">com</span>.</div></pre></figure>
+
+<p>比ping命令显示更多的信息。能够完整的将整个解析过程显示出来。</p>
+<figure class="highlight"><pre><div class="line"><span class="keyword">cat</span> /etc/resolv.<span class="keyword">conf</span></div></pre></figure>
+
+<p>显示内容有本机默认的DNS服务器IP地址。</p>
+<blockquote>
+<p> nameserver 192.168.1.100    </p>
+</blockquote>
+<figure class="highlight"><pre><div class="line">nslookup</div></pre></figure>
+
+<p>> set q=ns  类型。邮件是mx。网站是a。dns服务器本身是ns<br>> .    根<br>   Address:213.229.75.15<br>>server 213.229.75.15<br>> .<br>不行。。。</p>
+<figure class="highlight"><pre><div class="line">cach-name-server</div><div class="line"><span class="keyword">ls</span> /var/named/chroot/var/named/</div><div class="line"></div><div class="line"><span class="keyword">cat</span> !$/named.<span class="keyword">ca</span></div></pre></figure>
+
+<p>里边有13个根域服务器的地址</p>
+<h4 id="找其中一个服务器">找其中一个服务器</h4>
+<figure class="highlight"><pre><div class="line"><span class="command">\&gt;</span>server 192.33.4.12</div><div class="line"><span class="command">\&gt;</span> .</div><div class="line"><span class="command">\&gt;</span>set q=ns</div><div class="line"><span class="command">\&gt;</span> com .    可以看到有很多的com. 服务器地址</div><div class="line"><span class="command">\&gt;</span>server 192.26.92.30</div><div class="line"><span class="command">\&gt;</span>yahoo.com.   看到yahoo.com. 的服务器地址</div><div class="line"><span class="command">\&gt;</span>server 68.180.131.16</div><div class="line"><span class="command">\&gt;</span>www.yahoo.com.  看到是个别名记录</div><div class="line"><span class="command">\&gt;</span>set q=a </div><div class="line"><span class="command">\&gt;</span>www.yahoo.com.  </div><div class="line"><span class="command">\&gt;</span>fp.wgl.b.yahoo.com. 刚才www.yahoo.com.查到的别名记录名称,返回信息表示无应答，继续递归</div><div class="line"><span class="command">\&gt;</span>set q=ns</div><div class="line"><span class="command">\&gt;</span>b.yahoo.com. </div><div class="line"><span class="command">\&gt;</span>server 121.101.152.99</div><div class="line"><span class="command">\&gt;</span>fp.wgl.b.yahoo.com.   能查出来。有八台服务器（其实是负载均衡器，不止8台服务器，是8个集群）。</div></pre></figure>
+
+
+
+<figure class="highlight"><pre><div class="line"><span class="keyword">dig</span> www.sohu.<span class="keyword">com</span>.</div></pre></figure>
+
+<p>看到了很多。。。</p>
+<blockquote>
+<p>www.sohu.com.  CNAME  d7.a.sohu.com.    表示www.sohu.com. 是后边的一个别名记录<br>而<br>d7xxx  CNAME  pgcnctct07.a.sohu.com.   一样。<br>cnc是网通。<br>看到不止有一个IP地址。其实后边的每个地址代表的是squid，缓存服务器。</p>
+</blockquote>
+<h3 id="主从ZONE以及SELinux设定">主从ZONE以及SELinux设定</h3>
+<figure class="highlight"><pre><div class="line"><span class="keyword">vi</span> /var/named/chroot/etc/named.caching-nameserver.<span class="keyword">conf</span></div></pre></figure>
+
+
+
+<figure class="highlight"><pre><div class="line">man named.<span class="keyword">conf</span></div></pre></figure>
+
+<p>看到acl 的相关架构</p>
+<h4 id="架构：">架构：</h4>
+<blockquote>
+<p>acl cncnet {211.1.1.0/255.255.255.0 ; 61.1.1.0/255.255.255.0 ;} ;  起名cncnet<br>acl localhostnet {127.0.0.0/255.255.255.0 ;} ;<br>之后就可以通过名字来进行各种控制。</p>
+</blockquote>
+<figure class="highlight"><pre><div class="line">options{}</div><div class="line">zone <span class="string">"sina.com."</span> IN {</div><div class="line">          <span class="class"><span class="keyword">type</span> <span class="title">master</span>;   主<span class="title">zone</span></span></div><div class="line">          file <span class="string">"/var/named/aaa.zone"</span>     例子：区域传递的<span class="number">53</span>端口是UDP的<span class="number">53</span>端口</div><div class="line">          allow-transfer {<span class="number">192.168</span><span class="number">.0</span><span class="number">.253</span> ; } ;   允许<span class="number">0.253</span> 区域传递</div><div class="line">}</div><div class="line">zone <span class="string">"sina.com."</span> IN {</div><div class="line">          <span class="class"><span class="keyword">type</span> <span class="title">slave</span>;</span></div><div class="line">          masters {<span class="number">192.168</span><span class="number">.0</span><span class="number">.254</span> ; }</div><div class="line">          file <span class="string">"/var/named/slave/slave.aaa.zone"</span></div><div class="line">}</div></pre></figure>
+
+<p><strong>之后去创建文件夹</strong></p>
+<figure class="highlight"><pre><div class="line"><span class="keyword">cd</span> /var/named/chroot/var/named/</div><div class="line"><span class="keyword">ls</span></div><div class="line"><span class="keyword">ls</span> -lZd slaves/</div><div class="line">          named_cache_t</div><div class="line"><span class="keyword">ls</span> -lZd .</div><div class="line">          named_zone_t</div><div class="line"><span class="keyword">ps</span> aZx | <span class="keyword">grep</span> named   看到named_t是可以写入slaves/  ，而且信息写入的是named，而不是用户本身。所以类型都要改成named_chche_t</div><div class="line"></div><div class="line"><span class="keyword">ls</span> -ldZ slave*</div><div class="line">chcon -R -<span class="keyword">t</span> named_cache_t slave    slave是自己创建的</div><div class="line"></div><div class="line">chmod <span class="number">770</span> slave</div><div class="line"></div><div class="line">chown named.named slave</div></pre></figure>
+
+<p>在selinux每次启动都有一个策略集。命令：</p>
+<figure class="highlight"><pre><div class="line">semanage</div></pre></figure>
+
+<p>因此想更改默认目录，以后都写入slave而不是slaves</p>
+<figure class="highlight"><pre><div class="line">semanage  fcontext  <span class="operator">-a</span> <span class="operator">-f</span> <span class="string">""</span> -t named_cache_t   <span class="string">'/var/named/chroot/slavedata(/.*)?'</span></div></pre></figure>
+
+<p>括号表示可有可无，有可能是个目录，或者是目录下所有文件及文件夹（正则表达式）。避免bash影响，加’ ‘</p>
+<figure class="highlight"><pre><div class="line"><span class="built_in">mkdir</span>  /var/named/chroot/slavedata</div><div class="line"></div><div class="line"><span class="keyword">ls</span> -ldZ !$</div></pre></figure>
+
+<p>看到文件类型：<strong>named_conf_t</strong>  ，成功了</p>
+<figure class="highlight"><pre><div class="line">restorecon  !$  会把类型恢复成named_cache_t  （刚才semanage规则里定义的）</div><div class="line"></div><div class="line"><span class="keyword">chown</span> named.named !$</div><div class="line"></div><div class="line">ls -ldZ /var/named/<span class="keyword">chroot</span>/slavedata</div><div class="line"></div><div class="line"><span class="keyword">chmod</span> <span class="number">770</span> !$</div></pre></figure>
+
+<p>不改的话，日志里会看到错误,permission denied ，是文件系统不让master写入slave里。<br>因此有三个限定：</p>
+<ul>
+<li>DNS本身   </li>
+<li>文件系统   </li>
+<li>SELinux</li>
+</ul>
+<h3 id="Rndc">Rndc</h3>
+<p>首先打开配置文件：</p>
+<figure class="highlight"><pre><div class="line"><span class="keyword">vi</span> /etc/named.<span class="keyword">conf</span>  没有chroot包的情况下</div><div class="line"><span class="keyword">vi</span> /etc/named.caching-nameserver.<span class="keyword">conf</span>  装了cache-nameserver包的情况下</div><div class="line"></div><div class="line"><span class="keyword">ls</span> /etc/named.</div><div class="line"></div><div class="line"><span class="keyword">ls</span> -<span class="keyword">l</span> /etc/named.caching-nameserver.<span class="keyword">conf</span>  其实是个软连接</div><div class="line"></div><div class="line"><span class="keyword">vi</span> /var/named/chroot/etc/named.caching-nameserver.<span class="keyword">conf</span>  </div><div class="line"></div><div class="line">server named restart</div></pre></figure>
+
+
+
+<figure class="highlight"><pre><div class="line">netstat -antup |<span class="keyword">grep</span> named</div></pre></figure>
+
+<p>会监听TCP的53端口和UDP的53端口，监听IP是127.0.0.1<br>原因：在配置文件里的options{ }有相关设置。</p>
+<blockquote>
+<pre><code>listen-<span class="command"><span class="keyword">on</span> <span class="title">port</span> <span class="title">53</span> { }</span>
+</code></pre><p>里边可以改成any ；  IPV6可以注释掉（如果不用）</p>
+</blockquote>
+<figure class="highlight"><pre><div class="line"><span class="class"><span class="keyword">service</span> <span class="title">named</span> restart</span></div><div class="line"></div><div class="line">netstat -antup |grep named   会看到监听IP变更了。</div></pre></figure>
+
+<p>option框架里的内容：</p>
+<ul>
+<li>directory 是作为数据存放的主目录。  /其实是/etc/named/chroot/</li>
+<li>dump-dir  将缓存放到硬盘中</li>
+<li>allow query {localhost ;} ;  允许查询。一般改成any</li>
+<li>allow-recursion { }允许递归。一般是关闭的。网通这些运营提供商才会打开。。</li>
+<li>rescursion boolean  递归的开关</li>
+<li>max-cache-ttl  eg:一个域名，同时配套一个ip和 ttl时间 ，这是时间是解析出来后放到缓存多久。</li>
+</ul>
+<p><strong>配置一个路由一般只是一个转发服务器。</strong>里边的参数是：</p>
+<blockquote>
+<p>forward (only)  不做递归，只做转发<br>forwarders (xxx.xxx.xxx.xxx ) 定向的转发给某个IP</p>
+</blockquote>
+<p>eg:</p>
+<figure class="highlight"><pre><div class="line">ZONE  <span class="string">"sina.com."</span> IN {</div><div class="line">          <span class="class"><span class="keyword">type</span> <span class="title">master</span>;</span></div><div class="line">          file <span class="string">"/var/named/aaa.zone"</span>;</div><div class="line">};</div></pre></figure>
+
+
+
+<figure class="highlight"><pre><div class="line">vi <span class="regexp">/var/</span>named<span class="regexp">/chroot/</span>var<span class="regexp">/named/</span>localdomain.zone</div></pre></figure>
+
+<p>已经写好的模板。复制下来。。<br>然后到aaa.zone ，黏贴下来。</p>
+<h4 id="ZONE配置文件详解">ZONE配置文件详解</h4>
+<p>sina.com.有很多个DNS服务器。但是谁是DNS服务器的老大，是sina.com.<br>解析成IP地址后，是192.168.0.254<br>其他所有的DNS服务器都是从它不断的获取数据。怎么获取数据是（）内的内容。</p>
+<ul>
+<li>数据更新后，42变成43，代表版本号。</li>
+<li>3H是每隔3小时更新一次。</li>
+<li>15分钟重试</li>
+<li>1W 1周都看不到老大。。数据标记失效</li>
+<li>1D   最短数据有效时间是一天</li>
+</ul>
+<p>SOA ： 起始授权机构</p>
+<figure class="highlight"><pre><div class="line">IN SOA ns1.sina.<span class="keyword">com</span>. （这个zone主要是由sina.<span class="keyword">com</span>.负责的） root（）  </div><div class="line">sina.<span class="keyword">com</span>.          IN NS  ns1.sina.<span class="keyword">com</span></div><div class="line">sina.<span class="keyword">com</span>.          IN NS  ns2.sina.<span class="keyword">com</span></div><div class="line">sina.<span class="keyword">com</span>.          IN NS  ns3.sina.<span class="keyword">com</span></div><div class="line">ns1.sina.<span class="keyword">com</span>     IN A   <span class="number">192.168</span>.<span class="number">0.254</span></div><div class="line">sina.<span class="keyword">com</span>.          IN A   <span class="number">192.168</span>.<span class="number">0.254</span></div><div class="line">www.sina.<span class="keyword">com</span>.  IN A   <span class="number">192.168</span>.<span class="number">0.254</span></div></pre></figure>
+
+
+
+<figure class="highlight"><pre><div class="line"><span class="class"><span class="keyword">service</span> <span class="title">named</span> reload   也可以</span></div><div class="line">rndc reload</div></pre></figure>
+
+<p>DNS bind原配的控制程序是rndc<br>不是red hat系统的话只能rndc </p>
+<p><strong>rndc的前身：ndc</strong></p>
+<figure class="highlight"><pre><div class="line"><span class="title">rndc</span> dumpdb</div></pre></figure>
+
+<p>内存数据写到硬盘:</p>
+<figure class="highlight"><pre><div class="line">vi <span class="regexp">/var/</span>named<span class="regexp">/chroot/</span>var<span class="regexp">/named/</span>data<span class="regexp">/cache_dump.db  写在这里。。</span></div></pre></figure>
+
+
+
+<figure class="highlight"><pre><div class="line">rndc <span class="operator">-s</span> IP   可以远程访问对方的DNS服务器</div></pre></figure>
+
+
+
+<figure class="highlight"><pre><div class="line"><span class="keyword">cat</span> /etc/rndc.key 要确定本机的这个和对方的是一一对应的。是一对密钥。才能访问到对方。</div></pre></figure>
+
+<h4 id="eg：开启apache">eg：开启apache</h4>
+<figure class="highlight"><pre><div class="line">apachectl <span class="operator"><span class="keyword">start</span></span></div></pre></figure>
+
+<p>其实，service httpd start是调用了apachectl start 脚本</p>
+<figure class="highlight"><pre><div class="line">rpm -qfl  <span class="code">`which rndc`</span></div></pre></figure>
+
+<p>下边列表中很多的配置文件：</p>
+<blockquote>
+<p>named-checkconf  /etc/下的配置文件语法正确与否<br>named-checkzone  查看zone语法问题</p>
+</blockquote>
+<p>另外：</p>
+<figure class="highlight"><pre><div class="line">named-checkzone  sina.com <span class="regexp">/var/</span>named<span class="regexp">/chroot/</span>var<span class="regexp">/named/</span>aaa.zone</div></pre></figure>
+
+<p>可以看到返回值是OK</p>
+<h3 id="DOMAIN-ZONE">DOMAIN-ZONE</h3>
+<p>区域和域是一样的<br>zone是有zone文件的域，有相配套的文件，就是zone，没有就是域</p>
+<h3 id="named补充作用以及反向解析PTR_(Pointer_Record)">named补充作用以及反向解析PTR (Pointer Record)</h3>
+<p>两个应用：</p>
+<ul>
+<li>1.反向解析</li>
+<li>2.把自己的域委托出去</li>
+</ul>
+<figure class="highlight"><pre><div class="line">mtr www.yahoo.<span class="keyword">com</span></div></pre></figure>
+
+<p>反向解析：<br>eg:  211.1.2.3<br>—&gt;   3.2.1.211.in-addr.arpa     相当于sina.com</p>
+<p>系统中有反向解析的例子：</p>
+<figure class="highlight"><pre><div class="line"><span class="keyword">vi</span> /etc/named.rf1912.zones</div></pre></figure>
+
+<p>里边有反向解析的zone的定义。</p>
+<figure class="highlight"><pre><div class="line"><span class="keyword">vi</span> /var/named/chroot/etc/named.caching-nameserver.<span class="keyword">conf</span></div></pre></figure>
+
+<p><strong>在view cnc这里，将zone定义复制过来。</strong></p>
+<p>更改为：  </p>
+<blockquote>
+<pre><code>zone <span class="string">"0.168.192.in-addr.arpa."</span> <span class="keyword">IN</span> {
+<span class="keyword">type</span> master;
+file <span class="string">"192.168.0.zone"</span>;
+allow<span class="attribute">-update</span> {<span class="literal">none</span>;}; 不允许升级。是和DHCP连用的，是动态DNS。分配的动态的IP到这里动态的更新。
+     }
+</code></pre><p>这里只是网通的，还要到view tel这里复制相同的一段。</p>
+</blockquote>
+<figure class="highlight"><pre><div class="line"><span class="keyword">cp</span> named.local(写的解析的例子)  <span class="number">192.168</span>.<span class="number">0</span>.zone</div><div class="line"><span class="keyword">vi</span> <span class="number">192.168</span>.<span class="number">0</span>.zone</div></pre></figure>
+
+<p>PTR反向解析。<br>shrek.uplooking.com  中的第一个点，本来是@， 但是@表示的是zone的名字。所以不能用@，用点来代替。</p>
+<figure class="highlight"><pre><div class="line">service named restart</div><div class="line">tail /var/<span class="built_in">log</span>/<span class="keyword">messages</span></div><div class="line">host <span class="number">192.168</span>.<span class="number">0.1</span></div></pre></figure>
+
+<p>因为在zone文件中最后一行的server1.sina.com少了一个点。所以出错了。</p>
+<p>添上之后，</p>
+<figure class="highlight"><pre><div class="line"><span class="title">rndc</span> reload</div><div class="line">host <span class="number">192.168.0.1</span>   正常。做出了反向解析。</div><div class="line"></div><div class="line">rpm -ql |grep named</div></pre></figure>
+
+<p>当DNS建立从192.168.1.1 到 1.254 ，多个产生要用到参数。</p>
+<h3 id="轮训view-round">轮训view-round</h3>
+<p>eg:网通的访问网通的，电信的访问电信的。但是域名是同一个。sohu就是此类。</p>
+<p>在named.caching-nameserver.conf里边，</p>
+<blockquote>
+<p>acl cncnet下边再添加一行，0.0的网段是网通，1.0网段是电信<br>acl telnet ｛192.168.1.0/255.255.255.0 ; 61.1.1.0/255.255.255.0｝;</p>
+</blockquote>
+<p>view就是这个作用。要把view之外的定义的zone放到view里边。</p>
+<p>然后对view进行修改。—&gt;为了网通准备</p>
+<p>match-clients {cncnet}  当过来搜寻的客户端是网通的客户端</p>
+<p>match-clients {telnet} 是电信的客户端</p>
+<p>cd  /var/named/chroot/var/named<br>cp aaa.zone  bbb.zone<br>然后把里边的信息改一下。</p>
+<figure class="highlight"><pre><div class="line"><span class="title">service</span>  named  restart</div><div class="line">vi !<span class="comment">#</span></div><div class="line">rndc reconfig</div></pre></figure>
+
+<p>用rndc reload 发现有问题</p>
+<figure class="highlight"><pre><div class="line">tail /var/<span class="built_in">log</span>/<span class="keyword">messages</span></div></pre></figure>
+
+<p>—&gt;用restart之后，还要看一眼log文件。</p>
+<p>log指明了第十四行有问题。</p>
+<p><strong>要在最后加上分号</strong></p>
+<p>然后 </p>
+<figure class="highlight"><pre><div class="line"><span class="class"><span class="keyword">service</span> <span class="title">named</span> restart</span></div></pre></figure>
+
+<p>还是错误 - -！</p>
+<p>在69行有问题。少一个大括号。</p>
+<p>然后service  named  restart</p>
+<p>成功</p>
+<figure class="highlight"><pre><div class="line">tail /var/<span class="built_in">log</span>/<span class="keyword">messages</span></div></pre></figure>
+
+<p>看到：<br>serial 42<br>是成功的。</p>
+<h4 id="核心部分：">核心部分：</h4>
+<figure class="highlight"><pre><div class="line">host www.sina.<span class="keyword">com</span></div><div class="line">看到  <span class="number">0.254</span></div><div class="line"></div><div class="line"><span class="keyword">vi</span> /etc/resolv.<span class="keyword">conf</span></div><div class="line"></div><div class="line">nameserver <span class="number">192.168</span>.<span class="number">0.254</span>改成<span class="number">1.254</span></div><div class="line"></div><div class="line">然后host www.sina.<span class="keyword">com</span></div><div class="line"></div><div class="line">看到返回值是不一样的。</div><div class="line"></div><div class="line">用不一样的网段搜寻得到不同的返回值。</div></pre></figure>
+
+<h4 id="轮训总结">轮训总结</h4>
+<p>caching-nameserver.conf<br>1.acl  起一个名字，以后无论什么控制引用这个名字就方便很多。</p>
+<p>2.view的设置。就一个：match-clients</p>
+<p>3.匹配不同的网段用不同的zone文件。</p>
+<h6 id="#">#</h6>
+<p>round:</p>
+<ul>
+<li>1.</li>
+</ul>
+<figure class="highlight"><pre><div class="line">www.sina.<span class="keyword">com</span>.	<span class="number">1</span>  IN A <span class="number">61.1</span>.<span class="number">1.1</span></div><div class="line">www.sina.<span class="keyword">com</span>.	<span class="number">1</span>  IN A <span class="number">61.1</span>.<span class="number">1.2</span></div><div class="line">www.sina.<span class="keyword">com</span>.	<span class="number">1</span>  IN A <span class="number">61.1</span>.<span class="number">1.3</span></div></pre></figure>
+
+<p>在IN A 之前可以设置TTL时间。默认是此配置文件上边的1D<br>ttl：生存时间。放到查询者DNS缓存当中多长时间。设置的短一点。1s</p>
+<ul>
+<li><p>2.rndc reload</p>
+</li>
+<li><p>3.host www.sina.com</p>
+<p>   host www.sina.com<br>   host www.sina.com</p>
+</li>
+</ul>
+<p>看到第一个总是在变。</p>
+<p><strong>用DNS做负载均衡。</strong></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/DNS/">DNS</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="https://v-script.com/2015/02/27/DNS服务器BIND/" data-title="DNS服务器BIND | viscript" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2015/02/27/APACHE控制、配置/"  title="APACHE控制、配置">
+ <strong>NEXT:</strong><br/> 
+ <span>APACHE控制、配置
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/AHACHE/" title="AHACHE">AHACHE<sup>1</sup></a></li>
+		
+			<li><a href="/categories/DNS/" title="DNS">DNS<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Kernel/" title="Kernel">Kernel<sup>1</sup></a></li>
+		
+			<li><a href="/categories/LINUX命令/" title="LINUX命令">LINUX命令<sup>11</sup></a></li>
+		
+			<li><a href="/categories/参考/" title="参考">参考<sup>2</sup></a></li>
+		
+			<li><a href="/categories/图片BLOG/" title="图片BLOG">图片BLOG<sup>1</sup></a></li>
+		
+			<li><a href="/categories/摘录/" title="摘录">摘录<sup>4</sup></a></li>
+		
+			<li><a href="/categories/配置文件/" title="配置文件">配置文件<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/MARKDOWN/" title="MARKDOWN">MARKDOWN<sup>1</sup></a></li>
+		
+			<li><a href="/tags/auto-master/" title="auto.master">auto.master<sup>1</sup></a></li>
+		
+			<li><a href="/tags/autofs/" title="autofs">autofs<sup>1</sup></a></li>
+		
+			<li><a href="/tags/nfs/" title="nfs">nfs<sup>1</sup></a></li>
+		
+			<li><a href="/tags/好用的命令/" title="好用的命令">好用的命令<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+  <div class="archiveslist">
+    <p class="asidetitle"><a href="/archives">归档</a></p>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">February 2015</a><span class="archive-list-count">23</span></li></ul>
+  </div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+      <li><a href="http://blog.chinaunix.net/uid/30115009.html" target="_blank" title="vs">China Unix</a></li>
+      <li><a href="http://www.ibm.com/developerworks/cn/linux/" target="_blank" title="IBM Developer">IBM Developer</a></li>
+    </ul>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> o(∩_∩)o <br/>
+			Step by Step</p>
+	</section>
+	 
+	<div class="social-font clearfix">
+		
+		<a href="http://weibo.com/http://weibo.com/3597871112" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/https://github.com/viscript" target="_blank" title="github"></a>
+		
+		
+		<a href="https://www.facebook.com/https://www.facebook.com/drowingleaf" target="_blank" title="facebook"></a>
+		
+		
+	</div>
+		<p class="copyright">One Step a Day © 2015 
+		
+		<a href="https://v-script.com" target="_blank" title="viscript">viscript</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+  </body>
+</html>

@@ -1,0 +1,691 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>APACHE控制、配置 | viscript</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="viscript">
+    
+    <meta name="description" content="APACHE的访问控制
+主配置文件位置
+/etc/httpd/conf/httpd.conf
+
+main server在第二部分。
+根：
+指定Document Rootapache有很多的serverserver1               server2               server">
+    
+    
+    
+    
+    
+<link href="/favicon.ico" rel="icon" type="image/x-ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="viscript" title="viscript"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="viscript">viscript</a></h1>
+				<h2 class="blog-motto">修合无人见，存心有天知。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:v-script.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/02/27/APACHE控制、配置/" title="APACHE控制、配置" itemprop="url">APACHE控制、配置</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="https://plus.google.com/https://plus.google.com/u/0/118332448986920483228?rel=author" title="viscript" target="_blank" itemprop="author">viscript</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2015-02-27T03:49:36.334Z" itemprop="datePublished">2月 27 2015</time>
+    更新日期:<time datetime="2015-02-27T03:48:56.753Z" itemprop="dateModified">2月 27 2015</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<h3 id="APACHE的访问控制">APACHE的访问控制</h3>
+<h4 id="主配置文件位置">主配置文件位置</h4>
+<figure class="highlight"><pre><div class="line">/etc/httpd/<span class="keyword">conf</span>/httpd.<span class="keyword">conf</span></div></pre></figure>
+
+<p>main server在第二部分。</p>
+<h4 id="根：">根：</h4>
+<p>指定Document Root<br>apache有很多的server<br>server1               server2               server3<br>/                         /                         /<br>虚拟目录：<strong>sina.com/</strong><br>Document Root<br>实际目录：<strong>“/var/www/html”</strong></p>
+<p><strong>实际路径要加“”</strong></p>
+<h4 id="访问目录时可以进行控制：">访问目录时可以进行控制：</h4>
+<p>其中，在里边填写的内容可以写到另外一个文件中（/var/www/html/ .htaccess）,优点：立即生效，不用重启服务。缺点：看一次页面就会读取一次文件。有额外的负载。而.htaccess的文件只允许apache自己访问。原因：</p>
+<blockquote>
+<pre><code> <span class="tag">&lt;Files ~ "^\.ht"&gt;</span>
+          <span class="keyword"><span class="common">Order</span></span> allow,deny
+          <span class="keyword"><span class="common">Deny</span></span> from <span class="literal">all</span>
+ <span class="tag">&lt;/Files&gt;</span>      <span class="keyword">__</span>基于文件的访问控制__
+</code></pre></blockquote>
+<figure class="highlight"><pre><div class="line">AllowOverride <span class="keyword">None</span> 拒绝登录控制</div><div class="line"><span class="keyword">Order</span> Allow ,deny 控制顺序</div></pre></figure>
+
+<p>可以这样添加：</p>
+<figure class="highlight"><pre><div class="line"><span class="title">Deny</span> from <span class="number">192.168.1.0</span>/<span class="number">255.255.255.0</span></div><div class="line">Allow from <span class="number">192.168.0.0</span>/<span class="number">255.255.255.0</span></div></pre></figure>
+
+<p>从而可以进行访问控制。</p>
+<p>当访问拒绝之后,显示403错误：</p>
+<figure class="highlight"><pre><div class="line"><span class="keyword">vi</span> /etc/httpd/<span class="keyword">conf</span>.<span class="keyword">d</span>/</div></pre></figure>
+
+<p>目录下的welcome.conf<br>中的一行： ErrorDocument 403   /error/noindex.html 当出现403错误的时候的页面</p>
+<p>直接</p>
+<figure class="highlight"><pre><div class="line">elinks <span class="regexp">/var/</span>www<span class="regexp">/html/</span>error<span class="regexp">/noindex.html</span></div></pre></figure>
+
+<p>就能看到</p>
+<p>如果mv掉的话，再elinks可以显示真正的403错误信息。</p>
+<figure class="highlight"><pre><div class="line"><span class="keyword">cd</span> /var/www/html</div><div class="line"><span class="keyword">vi</span> .htaccess</div></pre></figure>
+
+<p>然后书写：</p>
+<figure class="highlight"><pre><div class="line">AuthName <span class="string">"welcome to UPLOOKING web admin page"</span></div><div class="line">AuthType basic/MD5    具体什么类型可以查看：man htpasswd</div><div class="line">AuthUserFile /etc/httpd/conf/mainuser     用户名密码放在什么位置</div><div class="line">require <span class="literal">user</span></div></pre></figure>
+
+
+
+<figure class="highlight"><pre><div class="line"><span class="keyword">cat</span> .htaccess</div></pre></figure>
+
+<p>创建用户认证文件：</p>
+<figure class="highlight"><pre><div class="line">htpasswd -c <span class="regexp">/etc/</span>httpd<span class="regexp">/conf/m</span>ainuser  dro</div></pre></figure>
+
+<p>然后浏览器直接输入：192.168.0.254后认证输入用户名密码后出现错误。<br>改正：</p>
+<figure class="highlight"><pre><div class="line">require valid-<span class="literal">user</span>   允许这个文件里的所有用户</div></pre></figure>
+
+<p>这样用户过多的话效率不高。每认证一次就读取一次文件。<br>—》 把文件的四行内容加到</p>
+<figure class="highlight"><pre><div class="line">/etc/httpd/<span class="keyword">conf</span>/httpd.<span class="keyword">conf</span>的Directory去</div></pre></figure>
+
+<p>这样在用户过多的情况下，文件内容只读一次。</p>
+<h3 id="对文件类型的总结">对文件类型的总结</h3>
+<p>文件分成几部分：</p>
+<ul>
+<li><p>1.user<br> group<br> listen<br> load modules<br> 大的选项：比如prefork（性能相关）<br> ….<br> ….</p>
+</li>
+<li><p>2.DocumentRoot   /var/www/html  不做设置的话就一个web服务器<br>添加访问控制：   </p>
+<blockquote>
+<pre><code>&lt;Directory   / &gt;
+     order  allow,deny
+     deny from <span class="number">192.168</span><span class="number">.0</span><span class="number">.0</span>/<span class="number">255.255</span><span class="number">.255</span><span class="number">.0</span>
+     allow from all
+&lt;/Directory&gt;
+
+&lt;Directory <span class="string">"/var/www/html"</span>&gt;
+AuthName..
+<span class="keyword">...</span>
+<span class="keyword">...</span>
+<span class="keyword">...</span>
+&lt;/Directory&gt;
+
+AccessFileName   .htaccess  
+</code></pre><p>   若有内容自动添加到Directory目录中去，立即生效。<br>   但是要改一下：<br>   <strong>AllowOverride AuthConfig</strong></p>
+</blockquote>
+</li>
+</ul>
+<h3 id="日志格式">日志格式</h3>
+<p><strong>LogFormat</strong>  （httpd.conf中）</p>
+<p><strong>CustomLog</strong>  logs/access_log combined 日常的日志格式</p>
+<p><strong>Error_log</strong>  logs/  指定文件</p>
+<h4 id="Alias_虚拟目录">Alias 虚拟目录</h4>
+<figure class="highlight"><pre><div class="line"><span class="keyword">Alias</span> /<span class="keyword">text</span>/  <span class="string">"/www/text/"</span>   不能执行脚本</div></pre></figure>
+
+
+
+<figure class="highlight"><pre><div class="line">ScriptAlias  <span class="regexp">/script/</span>  <span class="string">"/www/script/"</span>    可以执行脚本</div></pre></figure>
+
+<p><strong>在定义之后一定要注意selinux会拒绝。</strong></p>
+<figure class="highlight"><pre><div class="line">chcon -R -t httpd_sys_content_t  <span class="regexp">/www/</span>text</div></pre></figure>
+
+<p>类型查看： </p>
+<figure class="highlight"><pre><div class="line">ls -Zd  <span class="regexp">/var/</span>www<span class="regexp">/html/</span>   <span class="regexp">/var/</span>www<span class="regexp">/cgi-bin/</span></div></pre></figure>
+
+<h3 id="PREFORK-WORKER进程线程方式">PREFORK-WORKER进程线程方式</h3>
+<blockquote>
+<p>prefork方式：纯进程的方式<br>worker方式： 进程、线程混合的方式。</p>
+</blockquote>
+<figure class="highlight"><pre><div class="line"><span class="keyword">ps</span>   查看线程数量</div><div class="line"></div><div class="line"><span class="keyword">echo</span> AAAAAAAAAAAA &gt; /var/www/html/<span class="built_in">index</span>.html</div><div class="line"></div><div class="line">service httpd restart</div><div class="line"></div><div class="line">telnet <span class="number">192.168</span>.<span class="number">0.254</span> <span class="number">80</span></div><div class="line"></div><div class="line">GET /<span class="built_in">index</span>.html</div></pre></figure>
+
+<p>配置文件具体：<br>&gt;</p>
+<blockquote>
+<pre><code>     <span class="tag">&lt;<span class="title">prefork</span>&gt;</span>
+</code></pre><p>serverlimit   25600  同时容纳几万个服务器</p>
+<p>maxclient  10000  最大同时访问人数</p>
+<p>startservers  100     应付爆发访问</p>
+<p>MinSpareServers 20  最小空闲的server</p>
+<p>MaxSpareServers  50  最大空闲的server</p>
+<p>MaxRequestPerChild 4000  </p>
+</blockquote>
+<p>压力命令：</p>
+<figure class="highlight"><pre><div class="line">ab -n <span class="number">1000</span> -<span class="built_in">c</span> <span class="number">1000</span> http:<span class="comment">//192.168.0.254/</span></div></pre></figure>
+
+<h4 id="WORKER方式">WORKER方式</h4>
+<p><strong>在apache中还有一种方式：worker方式</strong></p>
+<p>apache默认是red hat自带的。<br>httpd双击tab可以看到，httpd   和  httpd.worker<br><strong>第一种是prefork方式，第二种是worker方式</strong><br><strong>要启用worker方式，将.woker改名成httpd，然后另外一个httpd改成别的。</strong></p>
+<figure class="highlight"><pre><div class="line">&lt;ifmodule.worker.c&gt;</div><div class="line">StartServers <span class="number">10</span></div><div class="line">MaxClients   <span class="number">15000</span></div><div class="line">M<span class="keyword">in</span>SpareThreads <span class="number">25</span></div><div class="line">MaxSpareThreads <span class="number">75</span></div><div class="line">ThreadsPerChild  <span class="number">64</span>   支持<span class="number">640</span>个人同时访问。</div><div class="line">MaxRequestsPerChild <span class="number">0</span></div></pre></figure>
+
+<p><strong>IPC : 进程间通讯。 两个进程之间数据互通。</strong></p>
+<p>三种进程间通讯的方式：</p>
+<ul>
+<li>shm:共享内存</li>
+<li>sem:信号灯</li>
+<li>msq ：消息队列</li>
+</ul>
+<p>Listen  80  监听哪个端口<br>Listen 448<br>可以并排写从而达到监听两个端口的目的<br>测试： </p>
+<figure class="highlight"><pre><div class="line">netstat -antup |<span class="keyword">grep</span> httpd</div></pre></figure>
+
+<p>DSO (Dynamic Shared Object动态共享对象) Support<br>里边各种库。。</p>
+<figure class="highlight"><pre><div class="line">rpm -<span class="keyword">qa</span>|<span class="keyword">grep</span> php</div><div class="line"></div><div class="line"><span class="keyword">vi</span> /etc/httpd/<span class="keyword">conf</span>.<span class="keyword">d</span>/php.<span class="keyword">conf</span></div><div class="line"></div><div class="line">会看到  libphp5.<span class="keyword">so</span>  解析PHP语言的作用。  调用这个库。</div><div class="line"></div><div class="line">include <span class="keyword">conf</span>.<span class="keyword">d</span>/*.<span class="keyword">conf</span>   是rpm安装独有的东西，./configure编译安装是没有的</div><div class="line"></div><div class="line">如果是编译安装，是include <span class="keyword">conf</span> /extra/*.<span class="keyword">conf</span></div></pre></figure>
+
+<p>总的配置到这结束。<br>需要注意用户和组：</p>
+<figure class="highlight"><pre><div class="line"><span class="literal">user</span> apache</div><div class="line">Group apache</div></pre></figure>
+
+<h3 id="虚拟主机VHOST">虚拟主机VHOST</h3>
+<p>每当去访问一个主机的时候，elinks <a href="http://xxx" target="_blank" rel="external">http://xxx</a>   会原封不动的到apache中，然后两家公司用同一个服务器。IP地址就一个。新浪，搜狐DNS都解析到这同一个IP上去。<br>最主要的问题：什么配置参数该刚到main server 中，什么参数放到虚拟主机中</p>
+<p>eg: rd所做，主配置文件里边：</p>
+<p>文档最下边</p>
+<p>VirtualHost example:</p>
+<p>NameVirtualHost *:80   在最后7行的前边几行。</p>
+<h3 id="添加APACHE对CGI的支持">添加APACHE对CGI的支持</h3>
+<p>古老的命令格式。- -！</p>
+<p>可以在虚拟主机里边添加：</p>
+<figure class="highlight"><pre><div class="line">   ScriptAlias  /sss/     <span class="string">"/www/xiezhen/sss"</span>  </div><div class="line">&gt;      <span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span>错误，忘了在最后加/了<span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span></div></pre></figure>
+
+
+
+<figure class="highlight"><pre><div class="line"><span class="class"><span class="keyword">service</span> <span class="title">httpd</span> restart</span></div></pre></figure>
+
+<p>然后创建：</p>
+<figure class="highlight"><pre><div class="line"><span class="built_in">mkdir</span> /www/xiezhen/sss</div><div class="line"></div><div class="line"><span class="keyword">vi</span> /www/xiezhen/sss/<span class="keyword">abc</span>.<span class="keyword">sh</span></div></pre></figure>
+
+<p>写入脚本：</p>
+<figure class="highlight"><pre><div class="line"><span class="shebang">#!bin/bash</span></div><div class="line"><span class="built_in">echo</span> <span class="string">'Content-Type:Text/html'</span></div><div class="line"><span class="built_in">echo</span></div><div class="line"><span class="built_in">echo</span> <span class="string">"This is a cgi script"</span></div><div class="line">ls</div><div class="line"><span class="keyword">set</span></div></pre></figure>
+
+
+
+<figure class="highlight"><pre><div class="line">chmod a+x !$</div><div class="line"></div><div class="line">chcon -R -t httpd_script_exec_t <span class="regexp">/www/</span>xiezhen<span class="regexp">/sss/</span></div></pre></figure>
+
+<p>然后地址栏输入：</p>
+<figure class="highlight"><pre><div class="line">www.xiezhen .<span class="keyword">com</span>/sss/<span class="keyword">abc</span>.<span class="keyword">sh</span></div></pre></figure>
+
+<p>因为之前的错误，结果未能显示。</p>
+<h4 id="ＴＲＯＵＢＬＥＳＨＯＯＴＩＮＧ">ＴＲＯＵＢＬＥＳＨＯＯＴＩＮＧ</h4>
+<figure class="highlight"><pre><div class="line">tail -<span class="keyword">f</span> /var/<span class="built_in">log</span>/httpd/xiezhen_error_log</div><div class="line"></div><div class="line"><span class="keyword">vim</span> /etc/httpd/<span class="keyword">conf</span>/httpd.<span class="keyword">conf</span></div><div class="line"></div><div class="line">ScriptAlias /sss/  <span class="string">"/www/xiezhen/sss/"</span>更改。忘了加/了</div><div class="line"></div><div class="line">service httpd restart</div></pre></figure>
+
+<p>同样步骤进行。。完好。</p>
+<p>改进脚本：</p>
+<figure class="highlight"><pre><div class="line"><span class="keyword">vi</span> /www/xiezhen/sss/<span class="keyword">abc</span>.<span class="keyword">sh</span></div><div class="line">     在<span class="keyword">ls</span>上添加：</div><div class="line">     <span class="keyword">echo</span> <span class="string">'&lt;tr&gt;&lt;/tr&gt;'</span>    回车的作用。</div></pre></figure>
+
+
+
+<p><strong>总结：要让apache支持cgi，只需要ScriptAlias</strong></p>
+<h3 id="SQUID缓存服务器">SQUID缓存服务器</h3>
+<p><strong>3128端口是squid的默认端口号</strong></p>
+<figure class="highlight"><pre><div class="line"><span class="built_in">cd</span> /etc/squid</div></pre></figure>
+
+<p><strong>squid是ICP协议的服务器</strong></p>
+<p><strong>apache是HTTP协议的服务器</strong></p>
+<p><strong>cdn=智能DNS+cache</strong></p>
+<p><strong>cache服务器：squid</strong></p>
+<p>配置文件路径：<br>/etc/squid</p>
+<figure class="highlight"><pre><div class="line"><span class="keyword">vi</span> /squid.<span class="keyword">conf</span></div></pre></figure>
+
+<p>要注意版本。版本不同<strong>差异很大</strong>。</p>
+<p>TAG：auth parm  都是注释文件</p>
+<figure class="highlight"><pre><div class="line"><span class="keyword">grep</span> -<span class="keyword">v</span> <span class="string">'^#'</span> squid.<span class="keyword">conf</span> | <span class="keyword">grep</span> -<span class="keyword">v</span> <span class="string">"^$"</span> 把开头空行和开头#删掉</div></pre></figure>
+
+<p>只需要知道的几个参数：</p>
+<blockquote>
+<pre><code>    acl <span class="literal">all</span>(定义了资源名叫<span class="literal">all</span>) src（来源）  <span class="number">0.0</span>.<span class="number">0.0</span>/<span class="number">0.0</span>.<span class="number">0.0</span>  （<span class="literal">all</span>来源地址是所有的IP） 
+
+     acl to_localhost dst （目标）<span class="number">127.0</span>.<span class="number">0.0</span>/<span class="number">8</span>             
+
+     http_access deny <span class="literal">all</span>   默认情况下是拒绝所有人
+
+     前边是acl定义资源，后边是权限设置
+</code></pre><p>可以让内网的人通过服务器连接上网出去，可以在all那行下列添加：</p>
+<pre><code>     <span class="title">acl</span> companyinnet src <span class="number">192.168.0.0</span>/<span class="number">24</span>
+     acl goodguy src <span class="number">192.168.1.21</span>/<span class="number">32</span>
+     acl crackernet src <span class="number">192.168.1.0</span>/<span class="number">24</span>
+</code></pre><p>然后在下边找到权限设置的区域：<br>         http_access allow companyinnet<br>         http_access allow goodguy<br>         http_access deny crackernet</p>
+</blockquote>
+<p>端口:</p>
+<blockquote>
+<pre><code>     <span class="title">http_port</span> <span class="number">3128</span>
+</code></pre><p>内存：<br>         cache_men</p>
+<pre><code>     cache_men <span class="number">8</span>M  肯定不够，可以改成<span class="number">500</span>M
+
+     cache_dir  内存被占满后，缓存的内容放在本地。
+     cache_dir ufs（文件系统）  /<span class="keyword">var</span>/spool/squid   <span class="number">100</span>（<span class="number">100</span>M空间）  <span class="number">16</span>（子目录）  <span class="number">256</span>（孙目录）
+</code></pre></blockquote>
+<p>设置完之后：</p>
+<figure class="highlight"><pre><div class="line">service squid restart</div><div class="line"></div><div class="line">netstat -antp <span class="string">|grep squid</span></div><div class="line"></div><div class="line">telnet <span class="number">192.168</span>.<span class="number">0.254</span>  <span class="number">3128</span></div><div class="line">GET http:<span class="comment">//www.yanzhao.com</span></div></pre></figure>
+
+<pre><code>      连接被拒绝  T_T
+</code></pre><h4 id="TROUBLESHOOTING">TROUBLESHOOTING</h4>
+<p>到最后，mv /etc/httpd/conf.d/ssl.conf  .</p>
+<pre><code>      就行了。。。
+</code></pre><h4 id="基于主机名的访问控制：">基于主机名的访问控制：</h4>
+<pre><code>      在配置文件里：
+</code></pre><blockquote>
+<pre><code>    acl cname srcdomain  .example.<span class="keyword">com</span>  .aa.<span class="keyword">com</span>  
+     acl crackername srcdomain  .cracker.org
+     http_access allow cname
+     http_access allow companyinnet
+     http_access allow goodguy
+     http_access deny crackername
+</code></pre></blockquote>
+<h4 id="反向加速服务器的配置：">反向加速服务器的配置：</h4>
+<blockquote>
+<pre><code>     acl uplookingweb    dstdomain   .uplooking.<span class="keyword">com</span>  
+     http_access allow  uplookingweb
+</code></pre></blockquote>
+<pre><code> 再查找内存：
+</code></pre><blockquote>
+<pre><code>     <span class="title">cache_men</span> <span class="number">16000</span> MB  <span class="number">16G</span>的内存
+</code></pre><p><strong>最重要的就是要设置端口！</strong></p>
+</blockquote>
+<p>http_port 80  之上有各种参数注释。</p>
+<p>只有配置vhost或者vport才可以真正的做加速服务器。</p>
+<ul>
+<li>accel  加速模式运行。</li>
+<li>vhost 加速模式运行，添加虚拟主机名。（多个） </li>
+<li>vport 只有一个服务器</li>
+<li>transparent  透明代理必须要用的<br>配置：</li>
+<li>http_port 80 accel  vhost/vport=xxx   也可以给本机加速<br>最基本的squid代理服务器：</li>
+<li>http_port 3128<br>透明代理配置： </li>
+<li>http_port 3128 transparent</li>
+</ul>
+<h4 id="总结：代理服务器squid的三种功能：">总结：代理服务器squid的三种功能：</h4>
+<ul>
+<li>1.http_port 3128  最基本的访问控制</li>
+<li>2.http_port 80 accel vhost vport=   反向加速服务器。要监听80端口</li>
+<li>3.http_port 3128  transparent  透明代理方式上网。iptables的NAT链的redirect和这个联用</li>
+</ul>
+<figure class="highlight"><pre><div class="line"><span class="title">iptables</span> -t nat -A PREROUTING -s <span class="number">192.168.0.0</span>/<span class="number">24</span> -i eth1 -j REDIRECT --TO-port <span class="number">3128</span></div></pre></figure>
+
+<p>eg:</p>
+<figure class="highlight"><pre><div class="line">acl kaixin dstdom_regex -i （忽略大小写） <span class="keyword">*</span>kaixin.<span class="keyword">*</span> 不让同事上开心网。。</div><div class="line">acl mp3 url_regex -i   ^http://.<span class="keyword">*</span>\（脱意符）.mp3$  不让下载mp3。。。</div></pre></figure>
+
+<h3 id="SSL">SSL</h3>
+<figure class="highlight"><pre><div class="line">rpm -<span class="keyword">qa</span> |<span class="keyword">grep</span> ssl</div></pre></figure>
+
+<p>真正起作用的叫：<br>&gt;</p>
+<blockquote>
+<p>openssl</p>
+<p>ssl生成key，然后由mod_ssl和apache进行交互。</p>
+</blockquote>
+<p>ssl基于公私密钥对（公共密钥体系）pki   在：</p>
+<blockquote>
+<p>/etc/pki/tls/</p>
+</blockquote>
+<figure class="highlight"><pre><div class="line">/etc/pki/tls/<span class="keyword">private</span>/  这里有一个localhost.<span class="keyword">key</span>  安装的时候添加的</div><div class="line">/etc/pki/tls/certs/</div></pre></figure>
+
+
+
+<figure class="highlight"><pre><div class="line">tail -n <span class="number">3</span> /etc/<span class="built_in">shadow</span></div></pre></figure>
+
+<p>看到这个md5加密方式不是非对称加密。非对称加密要生成公私密钥对。用私钥加密，公钥解密。避免监听数据包。eg: 上淘宝，都是https 。非对称加密。和ssh是一样的。</p>
+<p>shadow里的解析：<br>tom:$1$.kwmf4Q………            $1$是md5加密的参数</p>
+<figure class="highlight"><pre><div class="line">grub-md5-crypt 加密命令</div><div class="line"></div><div class="line"><span class="built_in">echo</span> tom | md5sum  加密的数值是不同的。</div></pre></figure>
+
+<p>因此，都是md5，但是不通用。</p>
+<p>用密钥加密的时候：和用SSH一样：</p>
+<figure class="highlight"><pre><div class="line">ssh-keygen -<span class="keyword">t</span> rsa</div><div class="line"><span class="keyword">ls</span> /root/.ssh/</div></pre></figure>
+
+<p>看到 id_rsa私钥   id_rsa.pub公钥（可以添加签发地址，有效期之类的，就变成了证书）       </p>
+<p>用openssl的时候：</p>
+<figure class="highlight"><pre><div class="line">rpm -<span class="keyword">qa</span>|<span class="keyword">grep</span> ssl</div><div class="line"></div><div class="line"><span class="keyword">vi</span> /etc/httpd/<span class="keyword">conf</span>.<span class="keyword">d</span>/httpd.<span class="keyword">conf</span>   会看到load ssl模块的过程</div></pre></figure>
+
+<p>Listen 443 默认端口就是443端口。80端口是普通页面。443是加密页面。</p>
+<p>所以要为443端口单独做一个虚拟机。三种方式：</p>
+<ul>
+<li>1.不同的IP</li>
+<li>2.不同的端口</li>
+<li>3.不同的主机名</li>
+</ul>
+<figure class="highlight"><pre><div class="line"><span class="keyword">vi</span> /etc/httpd/<span class="keyword">conf</span>/httpd.<span class="keyword">conf</span>  看到：</div><div class="line">             前边加载了模块，下边写法：</div><div class="line">          &lt;IfModule mod_userdir.<span class="keyword">c</span>&gt;</div><div class="line">             如果加载这个模块，那么就有这些参数设置</div><div class="line">          &lt;/IfModule&gt;</div><div class="line">          SSLSessionCache 这些是没有这个架构的。</div></pre></figure>
+
+<p>看到虚机监听端口也有443端口。启用的话把<strong>VirtualHost *:443</strong>下边几行注释去掉</p>
+<figure class="highlight"><pre><div class="line">service httpd <span class="keyword">stop</span></div><div class="line"></div><div class="line"><span class="keyword">cd</span> /etc/pki/tls/</div><div class="line"><span class="keyword">ls</span> certs/</div><div class="line">     看到有localhost.crt</div><div class="line"><span class="keyword">ls</span> private/</div><div class="line">     看到有Localhost.key</div><div class="line"></div><div class="line"><span class="keyword">cd</span> certs/</div><div class="line">     看到有makefile ，里边有生成key文件的方法。</div></pre></figure>
+
+<p>生成私钥命令：</p>
+<figure class="highlight"><pre><div class="line">make <span class="filename">yanzhao.key</span></div><div class="line">Enter pass phrase:</div></pre></figure>
+
+<p>输入密码之后，以后<strong>每次启动httpd</strong>都要输入一次密码才能使用该密钥。<br>解决方法：</p>
+<figure class="highlight"><pre><div class="line"><span class="keyword">vi</span> makefile</div></pre></figure>
+
+<p>看到生成密钥的方法：</p>
+<blockquote>
+<p>  /usr/bin/openssl genrsa 1024 &gt; yanzhao.key   这样不需要密码</p>
+</blockquote>
+<p>mv yanzhao.key  /etc/pki/tls/private  私钥存放处<br>当前目录下再生成CRT文件：</p>
+<figure class="highlight"><pre><div class="line"><span class="keyword">make</span> yanzhao .crt</div></pre></figure>
+
+
+
+<figure class="highlight"><pre><div class="line"><span class="keyword">vi</span> /etc/httpd/<span class="keyword">conf</span>.<span class="keyword">d</span>/ssl.<span class="keyword">conf</span></div></pre></figure>
+
+<h4 id="如果是试验阶段：">如果是试验阶段：</h4>
+<p>make certreq   一条龙服务。。。创建localhost.key文件，然后创建localhost.crt文件<br>如果是命令创建，本身是带参数的。</p>
+<p>然后在ssl.conf中，把SSLCertificateFile 的路径最后改成 yanzhao.crt<br>另外SSLCertificatekeyFile后边的路径最后改成yanzhao.key<br>保存退出<br>然后：<br> service httpd restart<br> 再去访问：<br> 浏览器输入 <a href="https://192.168.1.254/" target="_blank" rel="external">https://192.168.1.254/</a>  会要求重新验证。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/AHACHE/">AHACHE</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="https://v-script.com/2015/02/27/APACHE控制、配置/" data-title="APACHE控制、配置 | viscript" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/02/27/DNS服务器BIND/" title="DNS服务器BIND">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  DNS服务器BIND</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/02/26/TCPWRAP-PAM/"  title="TCPWRAP">
+ <strong>NEXT:</strong><br/> 
+ <span>TCPWRAP
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/AHACHE/" title="AHACHE">AHACHE<sup>1</sup></a></li>
+		
+			<li><a href="/categories/DNS/" title="DNS">DNS<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Kernel/" title="Kernel">Kernel<sup>1</sup></a></li>
+		
+			<li><a href="/categories/LINUX命令/" title="LINUX命令">LINUX命令<sup>11</sup></a></li>
+		
+			<li><a href="/categories/参考/" title="参考">参考<sup>2</sup></a></li>
+		
+			<li><a href="/categories/图片BLOG/" title="图片BLOG">图片BLOG<sup>1</sup></a></li>
+		
+			<li><a href="/categories/摘录/" title="摘录">摘录<sup>4</sup></a></li>
+		
+			<li><a href="/categories/配置文件/" title="配置文件">配置文件<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/MARKDOWN/" title="MARKDOWN">MARKDOWN<sup>1</sup></a></li>
+		
+			<li><a href="/tags/auto-master/" title="auto.master">auto.master<sup>1</sup></a></li>
+		
+			<li><a href="/tags/autofs/" title="autofs">autofs<sup>1</sup></a></li>
+		
+			<li><a href="/tags/nfs/" title="nfs">nfs<sup>1</sup></a></li>
+		
+			<li><a href="/tags/好用的命令/" title="好用的命令">好用的命令<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+  <div class="archiveslist">
+    <p class="asidetitle"><a href="/archives">归档</a></p>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">February 2015</a><span class="archive-list-count">23</span></li></ul>
+  </div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+      <li><a href="http://blog.chinaunix.net/uid/30115009.html" target="_blank" title="vs">China Unix</a></li>
+      <li><a href="http://www.ibm.com/developerworks/cn/linux/" target="_blank" title="IBM Developer">IBM Developer</a></li>
+    </ul>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> o(∩_∩)o <br/>
+			Step by Step</p>
+	</section>
+	 
+	<div class="social-font clearfix">
+		
+		<a href="http://weibo.com/http://weibo.com/3597871112" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/https://github.com/viscript" target="_blank" title="github"></a>
+		
+		
+		<a href="https://www.facebook.com/https://www.facebook.com/drowingleaf" target="_blank" title="facebook"></a>
+		
+		
+	</div>
+		<p class="copyright">One Step a Day © 2015 
+		
+		<a href="https://v-script.com" target="_blank" title="viscript">viscript</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+  </body>
+</html>

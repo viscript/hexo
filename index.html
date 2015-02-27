@@ -65,6 +65,50 @@
 
   <section class="post" itemscope itemprop="blogPost">
   
+    <a href="/2015/02/27/DNS服务器BIND/" title="DNS服务器BIND" itemprop="url">
+  
+    <h1 itemprop="name">DNS服务器BIND</h1>
+    
+     
+           <p itemprop="description" >BIND的安装和基础
+rpm -qa|grep bind  bind是DNS的工具包
+
+bind的进程：
+
+named
+
+server named start rpm -qa|grep cach  这个包没有装的啊，必要的配置文件就没有。
+
+发现没装。。。
+mount /dev/</p>
+        
+    
+    <time datetime="2015-02-27T06:09:15.751Z" itemprop="datePublished">2月 27 2015</time>
+  </a>
+</section>
+
+  <section class="post" itemscope itemprop="blogPost">
+  
+    <a href="/2015/02/27/APACHE控制、配置/" title="APACHE控制、配置" itemprop="url">
+  
+    <h1 itemprop="name">APACHE控制、配置</h1>
+    
+     
+           <p itemprop="description" >APACHE的访问控制
+主配置文件位置
+/etc/httpd/conf/httpd.conf
+
+main server在第二部分。
+根：
+指定Document Rootapache有很多的serverserver1               server2           </p>
+        
+    
+    <time datetime="2015-02-27T03:49:36.334Z" itemprop="datePublished">2月 27 2015</time>
+  </a>
+</section>
+
+  <section class="post" itemscope itemprop="blogPost">
+  
     <a href="/2015/02/26/TCPWRAP-PAM/" title="TCPWRAP" itemprop="url">
   
     <h1 itemprop="name">TCPWRAP</h1>
@@ -114,45 +158,6 @@ tcpwrap是在pam之前生效。
   </a>
 </section>
 
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/2015/02/26/NGINX配置文件/" title="NGINX配置文件" itemprop="url">
-  
-    <h1 itemprop="name">NGINX配置文件</h1>
-    
-     
-           <p itemprop="description" >#运行用户user www-data;#启动进程,通常设置成和cpu的数量相等worker_processes  1;
-#全局错误日志及PID文件error_log  /var/log/nginx/error.log;pid        /var/run/nginx.pid;
-</p>
-        
-    
-    <time datetime="2015-02-26T02:20:29.369Z" itemprop="datePublished">2月 26 2015</time>
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/2015/02/25/内核编译/" title="内核编译" itemprop="url">
-  
-    <h1 itemprop="name">内核编译</h1>
-    
-     
-           <p itemprop="description" >1-LINUX源代码树
-ls /boot/
-
-vmlinuz开头的是内核文件。z表示是gz，被压缩的文档。
-ls -l /boot
-
-initrd是跟vmlinuz相配套的。后边的版本号相同。
-init：初始化  r：RAM   d:diskinitrd：初始化内存磁盘
-
-con</p>
-        
-    
-    <time datetime="2015-02-25T05:53:35.537Z" itemprop="datePublished">2月 25 2015</time>
-  </a>
-</section>
-
 
   <nav id="page-nav" class="clearfix">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -169,6 +174,10 @@ con</p>
 <div class="categorieslist">
 	<p class="asidetitle">分类</p>
 		<ul>
+		
+			<li><a href="/categories/AHACHE/" title="AHACHE">AHACHE<sup>1</sup></a></li>
+		
+			<li><a href="/categories/DNS/" title="DNS">DNS<sup>1</sup></a></li>
 		
 			<li><a href="/categories/Kernel/" title="Kernel">Kernel<sup>1</sup></a></li>
 		
@@ -208,7 +217,7 @@ con</p>
   
   <div class="archiveslist">
     <p class="asidetitle"><a href="/archives">归档</a></p>
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">February 2015</a><span class="archive-list-count">21</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">February 2015</a><span class="archive-list-count">23</span></li></ul>
   </div>
 
 
