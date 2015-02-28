@@ -4,14 +4,26 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>NGINX配置文件 | viscript</title>
+    <title>FTP | viscript</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="viscript">
     
-    <meta name="description" content="#运行用户user www-data;#启动进程,通常设置成和cpu的数量相等worker_processes  1;
-#全局错误日志及PID文件error_log  /var/log/nginx/error.log;pid        /var/run/nginx.pid;
-#工作模式及连接数上">
+    <meta name="description" content="传送文件
+
+scp
+sftp特别慢
+samba也特别慢
+
+
+nfsftprsync这仨很快。
+
+rsync同步文件很牛逼。更新过的copy一下。用ssh通道，和ssh命令差不多
+rsync -e ssh -r shrek@192.168.0.254/etc/sysconfig  /tmp
+
+
+
+vi">
     
     
     
@@ -68,75 +80,156 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/02/26/NGINX配置文件/" title="NGINX配置文件" itemprop="url">NGINX配置文件</a>
+      <a href="/2015/02/28/FTP/" title="FTP" itemprop="url">FTP</a>
   </h1>
   <p class="article-author">By
     
       <a href="https://plus.google.com/https://plus.google.com/u/0/118332448986920483228?rel=author" title="viscript" target="_blank" itemprop="author">viscript</a>
     </p>
   <p class="article-time">
-    <time datetime="2015-02-26T02:20:29.369Z" itemprop="datePublished">2月 26 2015</time>
-    更新日期:<time datetime="2015-02-26T02:20:29.364Z" itemprop="dateModified">2月 26 2015</time>
+    <time datetime="2015-02-28T06:20:42.785Z" itemprop="datePublished">2月 28 2015</time>
+    更新日期:<time datetime="2015-02-28T06:20:42.769Z" itemprop="dateModified">2月 28 2015</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
 		
-		<p>#运行用户<br>user www-data;<br>#启动进程,通常设置成和cpu的数量相等<br>worker_processes  1;</p>
-<p>#全局错误日志及PID文件<br>error_log  /var/log/nginx/error.log;<br>pid        /var/run/nginx.pid;</p>
-<p>#工作模式及连接数上限<br>events {<br>    use   epoll;             #epoll是多路复用IO(I/O Multiplexing)中的一种方式,但是仅用于linux2.6以上内核,可以大大提高nginx的性能<br>    worker_connections  1024;#单个后台worker process进程的最大并发链接数</p>
-<pre><code><span class="preprocessor"># multi_accept on; </span>
-</code></pre><p>}</p>
-<p>#设定http服务器，利用它的反向代理功能提供负载均衡支持<br>http {<br>\     #设定mime类型,类型由mime.type文件定义<br>    include       /etc/nginx/mime.types;<br>    default_type  application/octet-stream;</p>
-<pre><code><span class="preprocessor">#设定日志格式</span>
-access_log    /var/<span class="built_in">log</span>/nginx/access.<span class="built_in">log</span>;
-</code></pre><p>\    #sendfile 指令指定 nginx 是否调用 sendfile 函数（zero copy 方式）来输出文件，对于普通应用，<br>\   #必须设为 on,如果用来进行下载等应用磁盘IO重负载应用，可设置为 off，以平衡磁盘与网络I/O处理速度，降低系统的uptime.<br>    sendfile        on;<br>\   #tcp_nopush     on;</p>
-<p>\    #连接超时时间<br>\    #keepalive_timeout  0;<br>    keepalive_timeout  65;<br>    tcp_nodelay        on;</p>
-<p>\    #开启gzip压缩<br>    gzip  on;<br>    gzip_disable “MSIE [1-6].(?!.*SV1)”;</p>
-<p>\    #设定请求缓冲<br>    client_header_buffer_size    1k;<br>    large_client_header_buffers  4 4k;</p>
-<pre><code><span class="keyword">include</span> <span class="regexp">/etc/</span>nginx<span class="regexp">/conf.d/</span>*.conf;
-<span class="keyword">include</span> <span class="regexp">/etc/</span>nginx<span class="regexp">/sites-enabled/</span>*;
-</code></pre><p>\    #设定负载均衡的服务器列表<br>     upstream mysvr {<br> \   #weigth参数表示权值，权值越高被分配到的几率越大<br> \   #本机上的Squid开启3128端口<br>    server 192.168.8.1:3128 weight=5;<br>    server 192.168.8.2:80  weight=1;<br>    server 192.168.8.3:80  weight=6;<br>    }</p>
-<p>   server {<br>\    #侦听80端口<br>        listen       80;<br>\        #定义使用www.xx.com访问<br>        server_name  www.xx.com;</p>
-<p>\        #设定本虚拟主机的访问日志<br>        access_log  logs/www.xx.com.access.log  main;</p>
-<p>\    #默认请求<br>    location / {<br>          root   /root;      #定义服务器的默认网站根目录位置<br>          index index.php index.html index.htm;   #定义首页索引文件的名称</p>
-<pre><code>      <span class="title">fastcgi_pass</span>  www.xx.com;
-     <span class="title">fastcgi_param</span>  SCRIPT_FILENAME  <span class="variable">$document_root</span>/<span class="variable">$fastcgi_script_name</span>; 
-      <span class="title">include</span> /etc/nginx/fastcgi_params;
-    }
-</code></pre><p>\    # 定义错误提示页面<br>    error_page   500 502 503 504 /50x.html;<br>        location = /50x.html {<br>        root   /root;<br>    }</p>
-<p>\    #静态文件，nginx自己处理<br>    location ~ ^/(images|javascript|js|css|flash|media|static)/ {<br>        root /var/www/virtual/htdocs;</p>
-<pre><code>    <span class="comment">#过期30天，静态文件不怎么更新，过期可以设大一点，如果频繁更新，则可以设置得小一点。</span>
-    <span class="title">expires</span> <span class="number">30d</span>;
-}
-</code></pre><p>\    #PHP 脚本请求全部转发到 FastCGI处理. 使用FastCGI默认配置.<br>    location ~ .php$ {<br>        root /root;<br>        fastcgi_pass 127.0.0.1:9000;<br>        fastcgi_index index.php;<br>        fastcgi_param SCRIPT_FILENAME /home/www/www$fastcgi_script_name;<br>        include fastcgi_params;<br>    }<br>\    #设定查看Nginx状态的地址<br>    location /NginxStatus {<br>        stub_status            on;<br>        access_log              on;<br>        auth_basic              “NginxStatus”;<br>        auth_basic_user_file  conf/htpasswd;<br>    }<br>\    #禁止访问 .htxxx 文件<br>    location ~ /.ht {<br>        deny all;<br>    }</p>
-<pre><code> }
-</code></pre><p>}</p>
-<p>以上是一些基本的配置,使用Nginx最大的好处就是负载均衡</p>
-<p>如果要使用负载均衡的话,可以修改配置http节点如下：</p>
-<p>#设定http服务器，利用它的反向代理功能提供负载均衡支持<br>http {<br>\     #设定mime类型,类型由mime.type文件定义<br>    include       /etc/nginx/mime.types;<br>    default_type  application/octet-stream;<br>\    #设定日志格式<br>    access_log    /var/log/nginx/access.log;</p>
-<p>\    #省略上文有的一些配置节点</p>
-<p>\    #设定负载均衡的服务器列表<br>     upstream mysvr {<br>\    #weigth参数表示权值，权值越高被分配到的几率越大<br>    server 192.168.8.1x:3128 weight=5;#本机上的Squid开启3128端口<br>    server 192.168.8.2x:80  weight=1;<br>    server 192.168.8.3x:80  weight=6;<br>    }</p>
-<p>   upstream mysvr2 {</p>
-<pre><code><span class="comment">#weigth参数表示权值，权值越高被分配到的几率越大</span>
+		<h3 id="传送文件">传送文件</h3>
+<ul>
+<li>scp</li>
+<li>sftp特别慢</li>
+<li>samba也特别慢</li>
+</ul>
+<blockquote>
+<p>nfs<br>ftp<br>rsync<br>这仨很快。</p>
+</blockquote>
+<p><strong>rsync</strong>同步文件很牛逼。更新过的copy一下。用ssh通道，和ssh命令差不多</p>
+<figure class="highlight"><pre><div class="line"><span class="title">rsync</span> -e ssh -r shrek@<span class="number">192.168.0.254</span>/etc/sysconfig  /tmp</div></pre></figure>
 
-server <span class="number">192.168</span>.<span class="number">8</span>.x:<span class="number">80</span>  <span class="variable">weight=</span><span class="number">1</span>;
-server <span class="number">192.168</span>.<span class="number">8</span>.x:<span class="number">80</span>  <span class="variable">weight=</span><span class="number">6</span>;
-}
-</code></pre><p>\   #第一个虚拟服务器<br>   server {<br>\    #侦听192.168.8.x的80端口<br>        listen       80;<br>        server_name  192.168.8.x;</p>
-<p>\      #对aspx后缀的进行负载均衡请求<br>    location ~ .*.aspx$ {</p>
-<pre><code>     root   /root;      <span class="preprocessor">#定义服务器的默认网站根目录位置</span>
-      <span class="keyword">index</span> <span class="keyword">index</span>.php <span class="keyword">index</span>.html <span class="keyword">index</span>.htm;   <span class="preprocessor">#定义首页索引文件的名称</span>
 
-      proxy_pass  http:<span class="comment">//mysvr ;#请求转向mysvr 定义的服务器列表</span>
-</code></pre><p>\          #以下是一些反向代理的配置可删除.</p>
-<pre><code>      <span class="title">proxy_redirect</span> <span class="built_in">off</span>;
-</code></pre><p>\          #后端的Web服务器可以通过X-Forwarded-For获取用户真实IP<br>          proxy_set_header Host $host;<br>          proxy_set_header X-Real-IP $remote_addr;<br>          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;<br>          client_max_body_size 10m;    #允许客户端请求的最大单文件字节数<br>          client_body_buffer_size 128k;  #缓冲区代理缓冲用户端请求的最大字节数，<br>          proxy_connect_timeout 90;  #nginx跟后端服务器连接超时时间(代理连接超时)<br>          proxy_send_timeout 90;        #后端服务器数据回传时间(代理发送超时)<br>          proxy_read_timeout 90;         #连接成功后，后端服务器响应时间(代理接收超时)<br>          proxy_buffer_size 4k;             #设置代理服务器（nginx）保存用户头信息的缓冲区大小<br>          proxy_buffers 4 32k;               #proxy_buffers缓冲区，网页平均在32k以下的话，这样设置<br>          proxy_busy_buffers_size 64k;    #高负荷下缓冲大小（proxy_buffers*2）<br>          proxy_temp_file_write_size 64k;  #设定缓存文件夹大小，大于这个值，将从upstream服务器传</p>
-<pre><code>   }
 
- }
-</code></pre><p>}</p>
+<figure class="highlight"><pre><div class="line"><span class="keyword">vi</span> /etc/vsftpd/vsftpd.<span class="keyword">conf</span>   ftp的配置文件</div></pre></figure>
+
+<p>看到支持mysql等的认证。<br>而且支持pam</p>
+<figure class="highlight"><pre><div class="line"><span class="keyword">ls</span> /etc/pam.<span class="keyword">d</span>/vsftpd   允许帐号登录</div><div class="line"><span class="keyword">ls</span> /etc/hosts.deny  根据IP地址允许或拒绝</div></pre></figure>
+
+<blockquote>
+<p>grep ftp  /etc/passwd  看ftp的主目录</p>
+</blockquote>
+<h3 id="VSFTP">VSFTP</h3>
+<blockquote>
+<p>tftp :  简单ftp  给sql 路由器做备份，嵌入式开发，kickstart自动化安装三种作用。</p>
+</blockquote>
+<figure class="highlight"><pre><div class="line">chkconfig --<span class="keyword">list</span> |<span class="keyword">grep</span> ftp</div></pre></figure>
+
+<p>看到tftp服务器，把他on之后就打开了。</p>
+<figure class="highlight"><pre><div class="line">tail /<span class="built_in">var</span>/<span class="keyword">log</span>/xferlog</div><div class="line">service vsftpd start   失败了。怎么解决</div></pre></figure>
+
+<p>他是通过一个脚本 /etc/init.d/vsftpd</p>
+<figure class="highlight"><pre><div class="line"><span class="strong">__bash -x /etc/init.d/vsftpd start   调试脚本__</span></div></pre></figure>
+
+<p>看为什么不能执行。。</p>
+<blockquote>
+<p>/usr/sbin/vsftpd /etc/vsftpd/vsftpd.conf</p>
+</blockquote>
+<figure class="highlight"><pre><div class="line"><span class="keyword">ps</span> aux |<span class="keyword">grep</span> vsftpd</div></pre></figure>
+
+<p>如果bash 调试也看不到问题，那么将里边的命令敲上去<br>再用trace追踪这个命令。看问题出在哪里</p>
+<p>在配置信息里，一定要把普通帐号禁用。（生产环境里）<br>否则：</p>
+<blockquote>
+<p>lftp -u tom 192.168.0.254<br>password：xxx</p>
+<p>~&gt;ls<br>~&gt;cd /etc<br>~&gt;ls</p>
+</blockquote>
+<p><strong>会看到自己的真实的根目录信息。不安全</strong></p>
+<figure class="highlight"><pre><div class="line"><span class="built_in">cd</span> /var/mysql</div></pre></figure>
+
+<p>可以把数据库的信息全都读出来。</p>
+<p>如果真的要开启，那么要这么修改：</p>
+<figure class="highlight"><pre><div class="line"><span class="setting">chroot_list_enable=<span class="value"><span class="keyword">YES</span>  前边的注释去掉</span></span></div><div class="line"><span class="setting">chroot_list_file=<span class="value">/etc/vsftpd/chroot_list</span></span></div></pre></figure>
+
+<p>然后</p>
+<figure class="highlight"><pre><div class="line"><span class="title">service</span> vsftpd start</div><div class="line">lftp -u tom <span class="number">192.168.0.254</span></div></pre></figure>
+
+<p>然后登录进去。</p>
+<blockquote>
+<p>~&gt;cd /etc<br>~&gt;ls<br>还是可以。。。- -！</p>
+</blockquote>
+<figure class="highlight"><pre><div class="line"><span class="input"><span class="prompt">echo tom &gt;</span> /etc/vsftpd/chroot_list</span></div></pre></figure>
+
+<blockquote>
+<p>~&gt;cd /etc<br>~&gt;ls<br>~&gt;cd /var<br>就不行了。。</p>
+</blockquote>
+<h4 id="个人建议修改配置：">个人建议修改配置：</h4>
+<figure class="highlight"><pre><div class="line"><span class="keyword">vi</span> /etc/pam.<span class="keyword">d</span>/vsftpd</div></pre></figure>
+
+<p>里边的<strong>pam_listfile.so</strong>后边—》</p>
+<p>>sense=allow  在列表里的人才允许<br>>onerr=fail<br>然后保存退出</p>
+<figure class="highlight"><pre><div class="line"><span class="input"><span class="prompt">echo tom &gt;</span> /etc/vsftpd/user_list  只允许了tom可以登录</span></div><div class="line"><span class="input"><span class="prompt">echo tom &gt;</span> /etc/vsftpd/chroot_list  只能chroot方式登录</span></div><div class="line">vi /etc/vsfptd/vsftpd.conf  查找chroot 的两个选项，然后打开。</div><div class="line">grep tom /etc/passwd  这个用户的主目录要注意一下，要放到那个页面的目录下</div></pre></figure>
+
+<p>还有别的选项：</p>
+<figure class="highlight"><pre><div class="line"><span class="setting">tcp_wrappers=<span class="value"><span class="keyword">YES</span>  表示支持tcp-wrapper</span></span></div></pre></figure>
+
+<p>除了这些，还有anon_umask也要设置。但是里边是没有的。自己书写</p>
+<figure class="highlight"><pre><div class="line">man vsftpd.<span class="keyword">conf</span>  里边有详细的可以书写的选项。</div></pre></figure>
+
+<p>还有别的：</p>
+<blockquote>
+<p>anon_max_rate  匿名账号最高下载速率</p>
+<p>max_clents  最大客户的数量</p>
+<p>max_per_ip  同一个IP最多多少个链接</p>
+<p>max_login_fails  最大的登录失误次数</p>
+</blockquote>
+<p>也可以把用户账户密码和用户名放到数据库里，进行ftp和mysql的集成。</p>
+<h3 id="NFS网络文件系统">NFS网络文件系统</h3>
+<p><strong>nfs的版本很多。</strong></p>
+<p>配置文件：</p>
+<blockquote>
+<p>/etc/sysconfig/nfs</p>
+</blockquote>
+<p>看到v1  v2  v3  都是支持的</p>
+<p>nfs是由sun公司的rpc（远过程调用）通讯支持的。（rpc由程序portmap支持）</p>
+<figure class="highlight"><pre><div class="line">chkconfig nfs <span class="command"><span class="keyword">on</span></span></div><div class="line">chkconfig ypserv <span class="command"><span class="keyword">on</span></span></div><div class="line">chkconfig ypbind <span class="command"><span class="keyword">on</span>   <span class="title">ypserv</span>的客户端</span></div><div class="line">chkconfig portmap <span class="command"><span class="keyword">on</span>  必须打开。是基础和前提</span></div></pre></figure>
+
+<p>nfs配置文件里，默认情况下版本情况都是no.<br>能看到TCP UDP MOUNT的端口情况和设置。</p>
+<p>NFS主配置文件：</p>
+<blockquote>
+<p>/etc/exports</p>
+<p>man exports</p>
+</blockquote>
+<figure class="highlight"><pre><div class="line"><span class="keyword">vi</span> /etc/exports</div></pre></figure>
+
+<p>然后里边写：</p>
+<blockquote>
+<p>/var/ftp           192.168.0.0/24(rw,sync，no_root_squash就可以不用更改文件权限也能让客户端的root帐号拥有root权限了)<br>*.uplooking.com (rw,intr,soft,async/sync这两个必须要写其中一个，同步还是异步  )</p>
+</blockquote>
+<figure class="highlight"><pre><div class="line"><span class="class"><span class="keyword">service</span> <span class="title">nfs</span> restart</span></div><div class="line">然后客户端上就可以mount了。</div></pre></figure>
+
+
+
+<figure class="highlight"><pre><div class="line">mount <span class="number">192.168</span>.<span class="number">0</span>.<span class="number">254</span><span class="symbol">:/var/ftp/pub</span>   /mnt</div><div class="line">ls /mnt</div><div class="line">cp /etc/passwd  /mnt</div></pre></figure>
+
+<p>会发生：</p>
+<blockquote>
+<p>permission denied</p>
+</blockquote>
+<p>涉及到NFS的权限的问题：</p>
+<figure class="highlight"><pre><div class="line"><span class="keyword">vi</span> /etc/ftp/exports</div><div class="line">mount的时候会把客户端的帐号变成普通帐号。</div></pre></figure>
+
+<p><strong>在NFS SERVER上：</strong></p>
+<figure class="highlight"><pre><div class="line">chmod -R <span class="number">777</span> /<span class="keyword">var</span>/ftp</div></pre></figure>
+
+<p>客户端上就可以：</p>
+<figure class="highlight"><pre><div class="line"><span class="keyword">cp</span> /etc/passwd  /mnt</div></pre></figure>
+
+<p>在SERVER 上，</p>
+<figure class="highlight"><pre><div class="line">ls -l <span class="regexp">/var/</span>ftp<span class="regexp">/pub/</span></div><div class="line">会看到有信息</div></pre></figure>
+
+<p>还有一个配置文件：</p>
+<blockquote>
+<p>all_squash  所有人都是nobody权限</p>
+<p>mount -o rsize=8192(一次操作8K的数据)，wsize=8192，intr，soft 192.168.0.254:/var/ftp/pub   /mnt</p>
+</blockquote>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -144,14 +237,14 @@ server <span class="number">192.168</span>.<span class="number">8</span>.x:<span
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/配置文件/">配置文件</a>
+  <a class="article-category-link" href="/categories/LINUX命令/">LINUX命令</a>
 </div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="https://v-script.com/2015/02/26/NGINX配置文件/" data-title="NGINX配置文件 | viscript" data-tsina="null" class="share clearfix">
+  <div data-url="https://v-script.com/2015/02/28/FTP/" data-title="FTP | viscript" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -160,19 +253,11 @@ server <span class="number">192.168</span>.<span class="number">8</span>.x:<span
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/02/26/运维安全基础/" title="运维安全基础">
-  <strong>PREVIOUS:</strong><br/>
-  <span>
-  运维安全基础</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/02/25/内核编译/"  title="内核编译">
+<a href="/2015/02/27/DNS服务器BIND/"  title="DNS服务器BIND">
  <strong>NEXT:</strong><br/> 
- <span>内核编译
+ <span>DNS服务器BIND
 </span>
 </a>
 </div>
