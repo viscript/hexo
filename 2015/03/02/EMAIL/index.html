@@ -1,0 +1,716 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>EMAIL | viscript</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="viscript">
+    
+    <meta name="description" content="MIAL的体系结构
+
+1.SMTP协议
+2.EMAIL体系结构：
+
+MUAMTAMDAMAA
+
+
+3.LINUX平台SENDMAIL
+
+4.RHEL平台MTA的切换
+5.LINUX平台POSTFIX
+6.RHEL平台的WEBMAIL
+
+SMTP
+cat /etc/redhat-release   看">
+    
+    
+    
+    
+    
+<link href="/favicon.ico" rel="icon" type="image/x-ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="viscript" title="viscript"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="viscript">viscript</a></h1>
+				<h2 class="blog-motto">修合无人见，存心有天知。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:v-script.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/03/02/EMAIL/" title="EMAIL" itemprop="url">EMAIL</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="https://plus.google.com/https://plus.google.com/u/0/118332448986920483228?rel=author" title="viscript" target="_blank" itemprop="author">viscript</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2015-03-02T05:42:46.406Z" itemprop="datePublished">3月 2 2015</time>
+    更新日期:<time datetime="2015-03-02T05:42:46.406Z" itemprop="dateModified">3月 2 2015</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<h3 id="MIAL的体系结构">MIAL的体系结构</h3>
+<ul>
+<li>1.SMTP协议</li>
+<li><p>2.EMAIL体系结构：</p>
+<blockquote>
+<p>MUA<br>MTA<br>MDA<br>MAA</p>
+</blockquote>
+</li>
+<li><p>3.LINUX平台SENDMAIL</p>
+</li>
+<li>4.RHEL平台MTA的切换</li>
+<li>5.LINUX平台POSTFIX</li>
+<li>6.RHEL平台的WEBMAIL</li>
+</ul>
+<h3 id="SMTP">SMTP</h3>
+<figure class="highlight"><pre><div class="line"><span class="keyword">cat</span> /etc/redhat-release   看版本。。</div></pre></figure>
+
+
+
+<figure class="highlight"><pre><div class="line"><span class="built_in">echo</span> aaaa | mail <span class="operator">-s</span> <span class="string">"uplinux"</span>  shrek</div></pre></figure>
+
+<p>alt+f4</p>
+<p>shrek<br>password:</p>
+<p>—》看到自己的主机名和1个新的信息</p>
+<p>直接输入1<br>能看到mail的信息<br>d1  能删除<br>p 看到没有文件了<br>q退出</p>
+<blockquote>
+<p>其实，UNIX的sendmail构筑了以后的SMTP协议的基础。它在整个互联网邮件系统产生之前就有了。一开始它就是做内部通讯用的。</p>
+</blockquote>
+<figure class="highlight"><pre><div class="line"><span class="keyword">cat</span> /etc/passwd  | mail -<span class="keyword">s</span> <span class="string">"AAAAAA"</span>  <span class="number">123456</span>@qq.<span class="keyword">com</span></div></pre></figure>
+
+<p><strong>流程</strong>：</p>
+<p>shrek —&gt;  sendmail —&gt; smtp —&gt; QQ.com</p>
+<figure class="highlight"><pre><div class="line"><span class="built_in">hostname</span></div><div class="line">通过这个服务器之后，邮件名字就是以这个为名。   垃圾邮件的产生。。。</div></pre></figure>
+
+
+
+<figure class="highlight"><pre><div class="line"><span class="title">netstat</span> -antup |grep <span class="number">25</span></div><div class="line">看到只监听<span class="number">127.0.0.1</span>，这个只有自己能访问到自己。没有监听公网的端口。因此别人不能给自己发邮件。</div></pre></figure>
+
+
+
+<figure class="highlight"><pre><div class="line">telnet <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>  <span class="number">25</span></div><div class="line"></div><div class="line">helo uplooking.com   来自于哪里</div><div class="line">mail <span class="keyword">from</span>:shrek<span class="decorator">@uplooking.com  是谁寄送的</span></div><div class="line">     然后返回sender ok</div><div class="line">rcpt to:root直接发给本机的root</div><div class="line">rcpt to:root<span class="decorator">@uplooking.com和上边的是一样的</span></div><div class="line">rcpt to:root<span class="decorator">@sina.com  要求打开转发，发给sina</span></div><div class="line">data</div><div class="line">     返回：以独立的  .  表示内容结束</div><div class="line"></div><div class="line">  返回：accepted <span class="keyword">for</span> delivery</div><div class="line">quit 退出</div></pre></figure>
+
+<p><strong>这是整个SMTP协议的过程。但是没有经过任何的配置。不安全。</strong></p>
+<h4 id="要求：提供反向解析，提供帐号密码">要求：提供反向解析，提供帐号密码</h4>
+<figure class="highlight"><pre><div class="line"><span class="title">su</span> root</div><div class="line">mail</div></pre></figure>
+
+<p>看到列表：内部的通讯机制。看到刚才发送的信息。</p>
+<figure class="highlight"><pre><div class="line">telnet smtp.sina.com  <span class="number">25</span></div><div class="line">helo <span class="keyword">aaa</span>.com</div><div class="line">ping smtp.sina.com 不行。。没有配置DNS</div><div class="line">vi /etc/resolv.conf  查DNS服务器</div><div class="line">ping smtp.sohu.com</div><div class="line">telnet smtp.sohu.com  <span class="number">25</span></div><div class="line">helo <span class="preprocessor">up</span>.com</div><div class="line">     返回：<span class="number">250</span> <span class="number">95.62</span>  没有别的返回值。是被改过。不是标准的SMTP</div><div class="line">mail from:<span class="keyword">aaa</span>@<span class="keyword">aaa</span>.com</div><div class="line">看到返回值：authentication required  需要认证</div><div class="line">ehlo <span class="keyword">aaa</span>.com  认证</div><div class="line">     返回值：支持PLAIN LOGIN两种认证方法。</div><div class="line">auth login</div><div class="line">     看到发给一串字符。把自己的用户名密码加密之后发过去。</div><div class="line">quit</div></pre></figure>
+
+<h3 id="EMAIL体系结构">EMAIL体系结构</h3>
+<p>自带的：<strong>OE   FOXMAIL</strong></p>
+<p>eg:A 是sina的邮箱，B是sohu的邮箱。A发送邮件到B的过程：<br>发送一封邮件： b@sohu.com<br>mail from  a@sina.com<br>都是由MUA写出来的。<br>统一叫做MUA。  Mail User Agent.</p>
+<h4 id="步骤：">步骤：</h4>
+<ul>
+<li><p>1.先去DNS服务器，查看A记录。</p>
+</li>
+<li><p>2.然后A会连接到sina.com的25端口。标准的SMTP协议。</p>
+</li>
+<li><p>3.sina发现不是给自己的服务器的人发送，而是给其他人发送，叫做：relay  中转</p>
+<pre><code>    连接的组件叫：MTA   Mail Transfer Agent
+</code></pre></li>
+<li><p>4.sina将邮件放到自己的队列当中，而且去DNS服务器查sohu的IP地址。此时sina查看的是MX记录。邮件交换记录。如果没有：公司是小公司，邮件服务器和EMAIL服务器是同一台，那么就是没有MX记录。此时是查A记录。</p>
+</li>
+<li><p>5.sina通过SMTP协议连接到sohu的MTA。</p>
+</li>
+<li><p>6.然后放到MDA：EMAIL的分发代理。（Delivery）</p>
+</li>
+<li><p>7.然后B通过MUA，去查DNS服务器，查看PORT3，A记录。查询到sohu.com收邮件的服务器。     PS：收邮件的服务器和MTA不一样，是POP3协议或者IMAP协议或者HTTP协议。</p>
+</li>
+<li><p>8.连接110端口（POP3的端口）</p>
+</li>
+<li><p>9.SOHU的POP3服务器会去邮件存的地方拿回邮件给B。</p>
+</li>
+</ul>
+<p><strong>所以说，这个过程，发送和收完全是两个不同的步骤。能收邮件不一定表示你SOHU服务器配置就对了。能接受不一定能发送。</strong></p>
+<h3 id="SENDMAIL监听IP">SENDMAIL监听IP</h3>
+<figure class="highlight"><pre><div class="line">rpm -<span class="keyword">qa</span> | <span class="keyword">grep</span> mail</div><div class="line"></div><div class="line">看到sendmail-<span class="number">8.13</span>.<span class="number">8</span>-<span class="number">2</span>.e15</div><div class="line">还有sendmail-<span class="keyword">cf</span>-xxx   这两个必须都得有</div></pre></figure>
+
+<blockquote>
+<p>sendmail是鼻祖<br>postfix是新秀，是IBM资助的EMAIL系统。<br>exim是GNU配置的邮件系统。</p>
+<p>编译器：rpm -qa|grep m4</p>
+<p>-cf是M4所需要的，用来转换sendmail的配置文件。</p>
+</blockquote>
+<p><strong>太复杂。。</strong></p>
+<figure class="highlight"><pre><div class="line"><span class="keyword">vi</span> /etc/mail/sendmail.<span class="keyword">cf</span>  它不只是配置，还有控制的内容。</div></pre></figure>
+
+<p>通常是改：</p>
+<figure class="highlight"><pre><div class="line"><span class="keyword">vi</span> /etc/mail/sendmail.mc  </div><div class="line"></div><div class="line">service sendmail status</div><div class="line"></div><div class="line">netstat -antup |<span class="keyword">grep</span> <span class="number">25</span></div><div class="line">看到监听的是<span class="number">127.0</span>.<span class="number">0.1</span>的<span class="number">25</span>端口。只能发送不能接收。</div><div class="line"></div><div class="line"><span class="keyword">cd</span> /etc/mail</div><div class="line"><span class="keyword">vi</span> sendmail.mc</div><div class="line"></div><div class="line">找<span class="number">127</span></div><div class="line"></div><div class="line">dnl是注释的意思。</div><div class="line"></div><div class="line">DAEMON那行是真正起作用的。注释掉。</div><div class="line"></div><div class="line"> 默认mc不起作用，为了稳妥起见（RHCE必须做）：</div><div class="line"></div><div class="line">m4 sendmail.mc &gt; sendmail.<span class="keyword">cf</span></div><div class="line"></div><div class="line">service sendmail restart</div><div class="line"></div><div class="line">netstat -antup|<span class="keyword">grep</span> <span class="number">25</span></div><div class="line"></div><div class="line">看到<span class="number">0.0</span>.<span class="number">0.0</span>：<span class="number">25</span></div></pre></figure>
+
+<p>成功。</p>
+<h3 id="SENDMAIL-LOCALHOSTNAMES">SENDMAIL-LOCALHOSTNAMES</h3>
+<p>配置好监听IP之后，有个问题。在发送接受流程中：<br>sina通过MTA传送邮件到SOHU。两者的行为不一样。一个是relay的过程，一个是MTA到MDA的过程。<br>都是MTA，行为不同。原因是：</p>
+<blockquote>
+<p>sina发现要发送的邮件不是自己的：sina的域名可能有好几个。vip.sina.com和sina.com<br>绑定多个域在同一个主机：要接受自己邮件的时候必须要告诉MTA哪些是自己的域。</p>
+</blockquote>
+<figure class="highlight"><pre><div class="line"><span class="keyword">cd</span> /etc/mail</div><div class="line"><span class="keyword">vi</span> local-host-names</div></pre></figure>
+
+<p>默认是什么都没有。</p>
+<p>FQDN：完全合格域名。必须和DNS里的域名一致。<br>mail.uplooking.com<br>uplooking.com</p>
+<blockquote>
+<p>是唯一一个sendmail配置文件里边不需要转换格式的！</p>
+</blockquote>
+<p>添加进去，重启立刻生效。</p>
+<h3 id="SENDMAIL-ALIASES－组邮箱功能">SENDMAIL-ALIASES－组邮箱功能</h3>
+<p>给一个邮箱地址发送的时候，很多人都能收到。</p>
+<figure class="highlight"><pre><div class="line">useradd tom</div><div class="line"></div><div class="line">useradd mary</div><div class="line"></div><div class="line"><span class="keyword">cd</span> /etc</div><div class="line"></div><div class="line"><span class="keyword">vi</span> /etc/aliases  是sendmail。postfix公用的配置文件。</div></pre></figure>
+
+<p>看到给左列发的邮件给右边。</p>
+<p>都给了root，但是root不能登录服务。所以不能收root的邮件。</p>
+<p>用mail可以查看，但是邮件服务器在机房的时候，想通过foxmail。outlook之类的接收邮件的时候，拒绝。</p>
+<p>ROOT默认能用的服务：只有SSH服务。<br>所以在配置文件里：</p>
+<p>root:          shrek<br>是用shrek接收邮件。用其他用户代替。</p>
+<p>developers:      tom,mary  组邮箱功能~左边是组的名字，右边是成员名或其他域的名字<br>保存退出</p>
+<figure class="highlight"><pre><div class="line">newaliases  会生成aliases.db 哈希化。读取速度快很多。</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">service</span> <span class="title">sendmail</span> restart</span></div></pre></figure>
+
+<p>m4编译的时候，其实是哈希化。文本文件很大的时候，读取很慢。哈希化之后会变得很快。一般软件自带功能，但是sendmail不带。</p>
+<p>测试：</p>
+<figure class="highlight"><pre><div class="line"><span class="built_in">echo</span> AAAAAAAAAA | mail <span class="operator">-s</span> tttt developers</div><div class="line"></div><div class="line">ls /var/spool/mail/</div><div class="line"></div><div class="line"><span class="built_in">cd</span> !$</div></pre></figure>
+
+<p>是用mailbox的方式将很多邮件放到里边。</p>
+<p>cat tom </p>
+<p>cat mary</p>
+<p>成功~~</p>
+<p>但是这个并不是虚拟邮箱。是和系统成为一体的。</p>
+<p>多数公司用虚拟邮箱。</p>
+<h3 id="转发功能">转发功能</h3>
+<figure class="highlight"><pre><div class="line"><span class="title">telnet</span> <span class="number">192.168.0.231</span>  <span class="number">25</span>   另外一台机器的<span class="number">25</span>端口</div><div class="line"></div><div class="line">mail from:aaa<span class="variable">@uplooking</span>-II.com</div><div class="line">rcpt to : shrek<span class="variable">@uplooking</span>.com</div><div class="line">data</div><div class="line">     asdasd</div><div class="line">     .</div><div class="line"></div><div class="line">quit</div></pre></figure>
+
+<p>然后另外一端：</p>
+<figure class="highlight"><pre><div class="line"><span class="keyword">pwd</span></div><div class="line"></div><div class="line">     /var/spool/mail</div><div class="line"></div><div class="line"><span class="keyword">cat</span> shrek</div></pre></figure>
+
+<p>看到内容顺利发过来。</p>
+<p>然后：</p>
+<figure class="highlight"><pre><div class="line"><span class="title">telnet</span> <span class="number">192.168.0.231</span>  <span class="number">25</span></div><div class="line">helo uplooking-II.com</div><div class="line">mail from:aaa<span class="variable">@uplooking</span>.com</div><div class="line">rcpt to:root<span class="variable">@uplooking</span>-II.com  那台服务器的localnames配置列表里没有</div><div class="line">直接超时了。。</div></pre></figure>
+
+<p>再：</p>
+<figure class="highlight"><pre><div class="line">helo uplooking-II.com  写什么都没问题</div><div class="line">mail <span class="keyword">from</span>  aaa<span class="decorator">@uplooking-II.com</span></div><div class="line">rcpt to:root<span class="decorator">@uplooking.com  返回：550   relaying denied  中转被拒接</span></div></pre></figure>
+
+<p>默认中转不能匿名转发。</p>
+<p>配置某个网段可以进行转发：</p>
+<figure class="highlight"><pre><div class="line"><span class="keyword">vi</span> /etc/mail/access</div></pre></figure>
+
+<p>添加最后那行。</p>
+<p>make access.db  哈希化</p>
+<figure class="highlight"><pre><div class="line"><span class="keyword">ls</span> Makefile</div><div class="line"></div><div class="line">其实有个makemap的命令，是将文本文档转换成哈希表的功能。</div><div class="line"></div><div class="line"><span class="keyword">vi</span> Makefile </div><div class="line"></div><div class="line">nakemap hash access.db &lt; access   如果Makefile丢失，也可以用这个哈希化。</div><div class="line">和<span class="keyword">make</span> access.db是一样的</div><div class="line"></div><div class="line">service sendmail restart</div></pre></figure>
+
+<p>然后。。。</p>
+<blockquote>
+<p>telnet xxx<br>helo xxx<br>mail from:xxx<br>rcpt to: xxx</p>
+</blockquote>
+<p>返回： 250   成功。<br>data<br>xxx<br>.</p>
+<p>成功~</p>
+<p>但是自己查看的话是看不到的。需要和以前一样更改。</p>
+<blockquote>
+<p>vi /etc/mail/sendmail.mc   /127  注释  —》 哈希化—》restart</p>
+</blockquote>
+<p>还是没来：</p>
+<h4 id="TROUBLESHOOTING">TROUBLESHOOTING</h4>
+<p>在邮件服务器：<br>mailq看邮件队列。<br>看到被拒绝。<br>是流程中在第二步和第四步之间还有一个去DNS服务器查找的一个过程。</p>
+<p>vi /etc/hosts<br>添加：<br>     192.168.0.232     uplooking-II.com<br>很有可能不行。因为sendmail有可能不会查这个。</p>
+<p>sendmail -q 立刻发送邮件队列中的邮件。<br>mailq<br>看到还是没有解析出来<br>service sendmail restart</p>
+<h3 id="BIND-DNS">BIND-DNS</h3>
+<p>之前的项目，DNS服务器要再配一下。</p>
+<figure class="highlight"><pre><div class="line">Ping www.sina.<span class="keyword">com</span>.<span class="keyword">cn</span></div></pre></figure>
+
+<p>看到的是公网的IP</p>
+<p>之所以配置表里的uplooking-II不生效，是因为sendmail不会去查。<br><strong>所以 需要自己配置bind</strong></p>
+<figure class="highlight"><pre><div class="line">rpm -<span class="keyword">qa</span>|<span class="keyword">grep</span> bind</div><div class="line"></div><div class="line"><span class="keyword">cd</span> /etc/named/chroot/</div></pre></figure>
+
+<p>再配置<strong>named.caching-namedserver.conf</strong></p>
+<blockquote>
+<p>IPV6端口去掉。<br>view localhost_resolver注释掉</p>
+</blockquote>
+<p>只留下监听的端口</p>
+<p>加上zone</p>
+<figure class="highlight"><pre><div class="line"><span class="title">zone</span> <span class="string">"uplooking.com"</span> IN  {</div><div class="line">     <span class="title">type</span> master;</div><div class="line">     <span class="title">file</span> <span class="string">"/var/named/aaa.zone"</span></div><div class="line">      };</div><div class="line"></div><div class="line"><span class="title">cat</span> etc/named.rfc1912.zones</div><div class="line"></div><div class="line"></div><div class="line">cd /var/named/chroot/var/named/</div><div class="line">cp localhost.zone  aaa.zone</div><div class="line">cp localhost.zone  bbb.zone</div><div class="line"></div><div class="line">vi aaa.zone</div></pre></figure>
+
+<p>MX 数字10是优先级</p>
+<p>然后cp aaa.zone bbb.zone<br>vi bbb.zone  这个是打算给  -II的zone 用的</p>
+<p>uplooking.com.  同时给两台主机服务</p>
+<p>同时-II也被解析成uplooking.com.<br>所以这个也是-II的DNS服务器。</p>
+<p>A记录指向0.232</p>
+<p>—》  WEB服务器是232   DNS服务器是231   -II的EMAIL服务器是232</p>
+<p>然后看一下selinux是否打开</p>
+<p>getenforce</p>
+<p>ls -Z  看一下aaa和bbb的context上下文是否一样。<br>然后chcon改一下。    可以让named读取</p>
+<p>vi /etc/var/chroot/etc/named.caching-namedserver.conf<br>这里边不仅要解析uplooking.com 也要解析-II</p>
+<p>service named restart</p>
+<p>发现第十五行有问题</p>
+<p>修改之后。发现还有问题</p>
+<p>少两个分号</p>
+<p>netstat -antup |grep 53</p>
+<p>看到53端口没有打开</p>
+<p>把0.0.0.0再去掉</p>
+<p>然后server named restart</p>
+<p>看到启动是成功，但是不一定是成功的。</p>
+<p>需要看一下：</p>
+<p>tail /var/log/messages</p>
+<p>看日志是否有问题</p>
+<p>permission denied  可能是selinux造成的，也有可能是文件权限造成的</p>
+<p>解决：</p>
+<p>pwd</p>
+<p>ls -l *.zone</p>
+<p>chgrp named aaa.zone  bbb.zone  </p>
+<p>service named restart</p>
+<p>tail /var/log/messages  看到返回值是 serial  42  序列号。才表示是成功的。</p>
+<p>netstat -antup |grep 53</p>
+<p>没有看到53。。。。。。</p>
+<p>vi /var/named/chroot/etc/named.caching-namedserver.conf</p>
+<p>man named.conf<br>     /listen<br>看一下监听端口相关的东西</p>
+<p>再重启一下</p>
+<p>netstat -antup|grep 53</p>
+<p>看到有53端口的监听。IP有0.0.1也有0.0.231</p>
+<p>vi /etc/resolv.conf</p>
+<p>nameserver  192.168.0.231  改成自己用自己的DNS服务器</p>
+<p>整体流程：</p>
+<blockquote>
+<p>vi /var/named/chroot/etc/named.caching-nameserver.conf<br>vi bbb.zone<br>chgrp named aaa.zone bbb.zone<br>server named restart<br>tail /var/log/messages</p>
+</blockquote>
+<p><strong>最后再改resolv.conf</strong></p>
+<p>host uplooking.com<br>返回值：   192.168.0.231</p>
+<p>host uplooking-II.com<br>返回值：192.168.0.232</p>
+<p>则证明成功</p>
+<h3 id="SENDMAIL-VIRTUALTABLE-虚拟用户">SENDMAIL-VIRTUALTABLE-虚拟用户</h3>
+<figure class="highlight"><pre><div class="line"><span class="keyword">vi</span> /etc/syslog.<span class="keyword">conf</span>  看到所有关于邮件的日志都在maillog里边。所以才会那么详细。</div></pre></figure>
+
+<p>一个机器维护多个域的时候，有个虚拟用户的概念。</p>
+<figure class="highlight"><pre><div class="line"><span class="keyword">cd</span> /etc/mail</div><div class="line"><span class="keyword">vi</span> local-host-names可以添加多个域名。</div></pre></figure>
+
+<p>虚拟用户：</p>
+<figure class="highlight"><pre><div class="line"><span class="keyword">vi</span> virtusertable</div></pre></figure>
+
+<p>域里用户太多的话：</p>
+<figure class="highlight"><pre><div class="line"><span class="variable">@uplook</span>.com           <span class="variable">%1</span></div><div class="line"><span class="variable">@upup</span>.com            upup-<span class="variable">%1</span>    域名和系统帐号不对应就这么写  。</div></pre></figure>
+
+<p>保存退出之后：</p>
+<figure class="highlight"><pre><div class="line"><span class="keyword">make</span> virtusertable.db</div><div class="line"></div><div class="line">server sendmail restart</div></pre></figure>
+
+<h3 id="SENDMAIL-SASL认证relay">SENDMAIL-SASL认证relay</h3>
+<figure class="highlight"><pre><div class="line"><span class="keyword">vi</span> access   可以根据IP地址进行relay</div></pre></figure>
+
+<blockquote>
+<p>需求：公司200人，一个员工给客户写个邮件。要通过公司服务器进行发送。一般不同过IP地址进行relay的控制。是通过用户名密码进行控制。</p>
+</blockquote>
+<figure class="highlight"><pre><div class="line"><span class="keyword">make</span> access.db</div><div class="line"></div><div class="line">rpm -<span class="keyword">qa</span> |<span class="keyword">grep</span> sendmail</div></pre></figure>
+
+<p>要进行relay控制，要安装别的插件。</p>
+<figure class="highlight"><pre><div class="line">rpm -<span class="keyword">qa</span> |<span class="keyword">grep</span> sasl</div></pre></figure>
+
+<p>安装sasl（login认证）和sasl-plain(明文)。安装其他包就有其他的加密认证方式了。</p>
+<figure class="highlight"><pre><div class="line"><span class="keyword">pwd</span></div><div class="line">     /etc/mail</div><div class="line"><span class="keyword">vi</span> sendmail.mc</div></pre></figure>
+
+<p>改成：(auth段的注释去掉，详情见印象笔记43-11)</p>
+<p>将access里的IP地址段删除掉：</p>
+<figure class="highlight"><pre><div class="line">m4 sendmail.mc &gt; sendmail.<span class="keyword">cf</span>          rhel5之后已经不需要了。。。</div><div class="line">service sendmail restart</div><div class="line"></div><div class="line"><span class="keyword">vi</span> /usr/lib/sasl2/Sendmail.<span class="keyword">conf</span></div></pre></figure>
+
+<p>看到</p>
+<p>守护进程。</p>
+<p>所以有这么个服务。。。</p>
+<figure class="highlight"><pre><div class="line">chkconfig saslauthd <span class="keyword">on</span></div><div class="line"></div><div class="line">service saslauthd start</div><div class="line"></div><div class="line"><span class="keyword">cat</span> /etc/sysconfig/saslauthd    看到有saslauthd的配置文件，所以要先chkconfig.</div></pre></figure>
+
+<p>确认是pam</p>
+<figure class="highlight"><pre><div class="line"><span class="class"><span class="keyword">service</span> <span class="title">saslauthd</span> start</span></div></pre></figure>
+
+<p>整体流程：</p>
+<figure class="highlight"><pre><div class="line"><span class="keyword">vi</span> sendmail.mc</div><div class="line"></div><div class="line">m4 sendmail.mc &gt; sendmail.<span class="keyword">cf</span></div><div class="line"></div><div class="line">service sendmail restart </div><div class="line"></div><div class="line">telnet <span class="number">192.168</span>.<span class="number">0.231</span>  <span class="number">25</span></div><div class="line">     ehlo aaa.<span class="keyword">com</span></div><div class="line">          看有没有plain和login的字样。有就表示支持。</div><div class="line"></div><div class="line">rpm -<span class="keyword">qa</span> |<span class="keyword">grep</span> sasl</div><div class="line"><span class="keyword">vi</span>/usr/lib/sasl2/Sendmail.<span class="keyword">conf</span></div><div class="line">     看到saslauthd</div><div class="line">chkconfig --<span class="keyword">list</span> saslauthd</div><div class="line">chkconfig saslauthd <span class="keyword">on</span></div><div class="line"><span class="keyword">cat</span> /etc/sysconfig/saslauthd</div><div class="line">     看认证方式：MECH=pam</div><div class="line">service saslauthd start</div></pre></figure>
+
+<p>然后测试：</p>
+<p>在客户端处的邮箱这么设置。</p>
+<p>用户名密码绝对不能用root、原因已说</p>
+<p>因为发送太慢了。。。打开POP3服务：</p>
+<p>vi /etc/dovecot.conf    POP3 和 IMAP 。</p>
+<p>将protocols的注释取消掉就可以了。</p>
+<p>service dovcot restart</p>
+<h3 id="DOVECOT">DOVECOT</h3>
+<figure class="highlight"><pre><div class="line">rpm -<span class="keyword">qa</span>|<span class="keyword">grep</span> dovecot</div><div class="line"></div><div class="line"><span class="keyword">vi</span> /etc/dovecot.<span class="keyword">conf</span></div><div class="line">  protocol = <span class="keyword">imap</span> imaps pop3 pop3s</div><div class="line"></div><div class="line">service dovacot restart</div><div class="line"></div><div class="line">netstat -antup|<span class="keyword">grep</span> dovecot</div></pre></figure>
+
+<p>还需要其他的辅助性的配置：</p>
+<p>在这个配置文件里：</p>
+<p>ssl_disable=no   这里注释去掉</p>
+<p>下边的ssl_cert_file注释也去掉  。证书。<br>ssl_key_file这行注释也去掉。私钥的位置。<br>ssl_parameters_regenerate   秘钥内容参数多长时间重新生成一次<br>verbose_ssl   协议级别的SSL（ERROR）要不要显示</p>
+<figure class="highlight"><pre><div class="line">cd <span class="regexp">/etc/</span>pki<span class="regexp">/dovecot/</span><span class="keyword">private</span></div><div class="line"></div><div class="line">ls</div><div class="line">     dovecot.pem</div><div class="line">如果要更新：</div><div class="line"></div><div class="line"><span class="regexp">/usr/</span>share<span class="regexp">/doc/</span>dovecot-<span class="number">1.0</span>.<span class="number">7</span><span class="regexp">/examples/m</span>kcert.sh    就能更新那个pem文件</div></pre></figure>
+
+<h3 id="Postfix">Postfix</h3>
+<figure class="highlight"><pre><div class="line">service sendmail <span class="keyword">stop</span></div><div class="line"></div><div class="line">chkconfig  sendmail off</div><div class="line"></div><div class="line">alternatives    --&gt;是<span class="keyword">red</span> hat配的一个程序。为了切换系统中相同功能的程序。</div><div class="line"></div><div class="line">alternatives --config mta</div><div class="line"></div><div class="line">  选择<span class="number">2</span></div><div class="line"></div><div class="line"><span class="keyword">ls</span> /etc/alternatives/</div><div class="line">     目录下有MTA的字样。都改成了postfix的了</div><div class="line"></div><div class="line"><span class="keyword">ls</span> -<span class="keyword">l</span> /etc/alternatives/mta</div><div class="line"></div><div class="line"></div><div class="line">chkconfig postfix <span class="keyword">on</span></div><div class="line">service postfix start</div></pre></figure>
+
+<p>就完成了sendmail切换到postfix 的过程。</p>
+<p>在alternatives目录下，还有JAR，JAVA等的，都是可以切换的。<br>eg:</p>
+<figure class="highlight"><pre><div class="line"><span class="comment">alternative</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">config</span> <span class="comment">java</span></div><div class="line"><span class="comment">会切换多个JAVA的版本。</span></div><div class="line"></div><div class="line"><span class="comment">alternative</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">config</span> <span class="comment">print</span></div><div class="line"><span class="comment">alternative</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">config</span> <span class="comment">xinputrc</span>   <span class="comment">输入法</span></div></pre></figure>
+
+<h3 id="postfix监听IP并接收外网邮件">postfix监听IP并接收外网邮件</h3>
+<figure class="highlight"><pre><div class="line"><span class="keyword">ls</span> /etc/postfix/</div><div class="line"></div><div class="line"><span class="keyword">ps</span> aux |<span class="keyword">grep</span> postfix</div><div class="line">看到相关的程序是很多的。</div></pre></figure>
+
+<p>一般配置的话，是配置<strong>main.cf</strong>    （/etc/postfix）</p>
+<p>在ps aux看到的postfix进程后边的命令的参数，是master.cf决定的</p>
+<figure class="highlight"><pre><div class="line">netstat -antup|<span class="keyword">grep</span> <span class="number">25</span></div><div class="line">看到postfix监听的<span class="number">25</span>端口是自己的IP。<span class="number">127.0</span>.<span class="number">0.1</span></div><div class="line"></div><div class="line"><span class="keyword">vi</span> main.<span class="keyword">cf</span></div></pre></figure>
+
+<p>改成这样。。</p>
+<blockquote>
+<p>inet_interfaces = all</p>
+<h1 id="inet_interfaces_=_xxx">inet_interfaces = xxx</h1>
+<h1 id="inet_interfaces_=_xxx-1">inet_interfaces = xxx</h1>
+<h1 id="inet_interfaces_=_xxx-1">inet_interfaces = xxx</h1>
+</blockquote>
+<figure class="highlight"><pre><div class="line">如果只想监听某个端口，<span class="keyword">all</span>改成IP</div><div class="line">通常改的时候，同样也要该：</div><div class="line">mydomain=domain.tld    默认情况下要接收那些地方的邮件</div><div class="line">--&gt;mydomain=uplooking.<span class="keyword">com</span></div><div class="line">通常，myhostname也会改一下。</div><div class="line">myhostname=uplooking.<span class="keyword">com</span></div><div class="line">保存退出</div></pre></figure>
+
+
+
+<figure class="highlight"><pre><div class="line"><span class="class"><span class="keyword">service</span> <span class="title">postfix</span> restart</span></div><div class="line">netstat -antup|grep 25</div></pre></figure>
+
+<h3 id="postfix-SMTP身份认证配置">postfix-SMTP身份认证配置</h3>
+<figure class="highlight"><pre><div class="line"><span class="keyword">vi</span> /main.<span class="keyword">cf</span></div><div class="line">里边其实都是筛选过的。有更多的配置信息。</div><div class="line"></div><div class="line"><span class="keyword">ls</span> /etc/pam.<span class="keyword">d</span>/smtp</div><div class="line"></div><div class="line">看到三个文件。。</div><div class="line"></div><div class="line">chkconfig saslauthd <span class="keyword">on</span></div><div class="line">service saslauthd start</div><div class="line"></div><div class="line"><span class="keyword">cd</span> /etc/postfix/</div><div class="line"><span class="keyword">vi</span> main.<span class="keyword">cf</span></div></pre></figure>
+
+<p>要添加好多行的。。。<br>大部分的辅助文件，帮助文件：</p>
+<figure class="highlight"><pre><div class="line"><span class="keyword">cd</span> /usr/share/doc/</div><div class="line"></div><div class="line"><span class="keyword">vi</span> psotfix-<span class="number">2.3</span>.<span class="number">3</span>/REAME-Postfix-.......</div></pre></figure>
+
+<p>看到里边有各种的需求步骤。</p>
+<p>这七行是要复制到main.cf里边的。</p>
+<blockquote>
+<p>smtp_sasl_auth_enable = yes<br>…<br>reject_unauth_destination<br>到main.cf的最后，复制。</p>
+</blockquote>
+<p><strong>保存退出之后，</strong></p>
+<figure class="highlight"><pre><div class="line">service postfix restart</div><div class="line">rpm -<span class="keyword">qa</span> |<span class="keyword">grep</span> sasl</div><div class="line"><span class="keyword">cat</span> /ust/lib.sasl2/smtpd.<span class="keyword">conf</span></div><div class="line">看到saslatuthd的认证方式</div><div class="line"><span class="keyword">cat</span> /etc/sysconfig/saslauthd </div><div class="line">看是pam进行认证</div><div class="line"><span class="keyword">ls</span> /etc/pam.<span class="keyword">d</span>/smtp</div><div class="line">看有没有smtp的文件</div><div class="line">service saslauthd start</div><div class="line">chkconfig saslauthd <span class="keyword">on</span></div><div class="line">然后只要需要身份认证的时候，就会调用sasl</div></pre></figure>
+
+<h3 id="squirrelmail-WebMail">squirrelmail-WebMail</h3>
+<p>需要安装一个软件：</p>
+<figure class="highlight"><pre><div class="line">rpm -<span class="keyword">qa</span> |<span class="keyword">grep</span> squirr</div></pre></figure>
+
+<p>是用PHP写的一个web邮箱。</p>
+<figure class="highlight"><pre><div class="line"><span class="title">cd</span> /mnt/Server/</div><div class="line"></div><div class="line">rpm -ivh squirrelmail-<span class="number">1.4.8.5</span>-<span class="number">5</span>.e15_3.<span class="number">7</span>.noarch.rpm</div><div class="line"></div><div class="line">rpm -ivh php-mbstring-<span class="number">5</span>.<span class="number">1</span>.<span class="number">6</span>-<span class="number">23</span>.<span class="number">2</span>.e15_3.i386. rpm</div><div class="line"></div><div class="line">rpm -qpl squirrlmail.......</div></pre></figure>
+
+<p>是看到 /usr/share/squirrelmail/………</p>
+<figure class="highlight"><pre><div class="line"><span class="keyword">vi</span> /etc/httpd/<span class="keyword">conf</span>.<span class="keyword">d</span>/squirrel....<span class="keyword">conf</span></div><div class="line"></div><div class="line">看到是ALIAS 定义了一个别名。</div><div class="line"></div><div class="line">service httpd start</div></pre></figure>
+
+<p>连接的时候服务器是有问题的。</p>
+<figure class="highlight"><pre><div class="line"><span class="keyword">vi</span> /etc/dovecot 把IMAP协议支持打开</div><div class="line"></div><div class="line">netstat -antup |<span class="keyword">grep</span> dovecot</div></pre></figure>
+
+<p>然后网页刷新重试一下。就可以了。</p>
+<p>想把网页做成中文：</p>
+<figure class="highlight"><pre><div class="line"><span class="keyword">cd</span> /usr/share/squirrelmail/</div><div class="line"><span class="keyword">ls</span></div><div class="line"><span class="keyword">cd</span> config/</div><div class="line"><span class="keyword">ls</span></div><div class="line">看到有一个pl的文件。</div><div class="line"></div><div class="line">浏览器输入：</div><div class="line"><span class="number">192.168</span>.<span class="number">0.1</span>/webmail/config</div><div class="line">发现不行。。。</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">pwd</span></div><div class="line">     /usr/share/squerrelmail/config</div><div class="line">./<span class="keyword">conf</span>.pl  是一个pord（不知道咋写）..脚本</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">选择</div><div class="line">&gt;<span class="number">10</span>   </div><div class="line">&gt;<span class="number">1</span>    </div><div class="line">&gt;zh_CN      </div><div class="line">&gt;<span class="number">2</span>    </div><div class="line">&gt;UTF-<span class="number">8</span>       </div><div class="line">&gt;S         </div><div class="line">&gt;Q</div></pre></figure>
+
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/LINUX-MAIL/">LINUX-MAIL</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="https://v-script.com/2015/03/02/EMAIL/" data-title="EMAIL | viscript" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2015/03/02/436高可用与高可用集群/"  title="436高可用与高可用集群">
+ <strong>NEXT:</strong><br/> 
+ <span>436高可用与高可用集群
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/AHACHE/" title="AHACHE">AHACHE<sup>1</sup></a></li>
+		
+			<li><a href="/categories/DNS/" title="DNS">DNS<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Kernel/" title="Kernel">Kernel<sup>1</sup></a></li>
+		
+			<li><a href="/categories/LINUX-MAIL/" title="LINUX-MAIL">LINUX-MAIL<sup>1</sup></a></li>
+		
+			<li><a href="/categories/LINUX命令/" title="LINUX命令">LINUX命令<sup>12</sup></a></li>
+		
+			<li><a href="/categories/RHCA/" title="RHCA">RHCA<sup>1</sup></a></li>
+		
+			<li><a href="/categories/参考/" title="参考">参考<sup>2</sup></a></li>
+		
+			<li><a href="/categories/图片BLOG/" title="图片BLOG">图片BLOG<sup>1</sup></a></li>
+		
+			<li><a href="/categories/摘录/" title="摘录">摘录<sup>4</sup></a></li>
+		
+			<li><a href="/categories/配置文件/" title="配置文件">配置文件<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/MARKDOWN/" title="MARKDOWN">MARKDOWN<sup>1</sup></a></li>
+		
+			<li><a href="/tags/auto-master/" title="auto.master">auto.master<sup>1</sup></a></li>
+		
+			<li><a href="/tags/autofs/" title="autofs">autofs<sup>1</sup></a></li>
+		
+			<li><a href="/tags/nfs/" title="nfs">nfs<sup>1</sup></a></li>
+		
+			<li><a href="/tags/好用的命令/" title="好用的命令">好用的命令<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+  <div class="archiveslist">
+    <p class="asidetitle"><a href="/archives">归档</a></p>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">February 2015</a><span class="archive-list-count">24</span></li></ul>
+  </div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+      <li><a href="http://blog.chinaunix.net/uid/30115009.html" target="_blank" title="vs">China Unix</a></li>
+      <li><a href="http://www.ibm.com/developerworks/cn/linux/" target="_blank" title="IBM Developer">IBM Developer</a></li>
+    </ul>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> o(∩_∩)o <br/>
+			Step by Step</p>
+	</section>
+	 
+	<div class="social-font clearfix">
+		
+		<a href="http://weibo.com/http://weibo.com/3597871112" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/https://github.com/viscript" target="_blank" title="github"></a>
+		
+		
+		<a href="https://www.facebook.com/https://www.facebook.com/drowingleaf" target="_blank" title="facebook"></a>
+		
+		
+	</div>
+		<p class="copyright">One Step a Day © 2015 
+		
+		<a href="https://v-script.com" target="_blank" title="viscript">viscript</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+  </body>
+</html>
