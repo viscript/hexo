@@ -65,116 +65,102 @@
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/2015/02/25/内核编译/" title="内核编译" itemprop="url">
+    <a href="/2015/02/27/DNS服务器BIND/" title="DNS服务器BIND" itemprop="url">
   
-    <h1 itemprop="name">内核编译</h1>
+    <h1 itemprop="name">DNS服务器BIND</h1>
     
      
-           <p itemprop="description" >1-LINUX源代码树
-ls /boot/
+           <p itemprop="description" >BIND的安装和基础
+rpm -qa|grep bind  bind是DNS的工具包
 
-vmlinuz开头的是内核文件。z表示是gz，被压缩的文档。
-ls -l /boot
+bind的进程：
 
-initrd是跟vmlinuz相配套的。后边的版本号相同。
-init：初始化  r：RAM   d:diskinitrd：初始化内存磁盘
+named
 
-con</p>
+server named start rpm -qa|grep cach  这个包没有装的啊，必要的配置文件就没有。
+
+发现没装。。。
+mount /dev/</p>
         
     
-    <time datetime="2015-02-25T05:53:35.537Z" itemprop="datePublished">2月 25 2015</time>
+    <time datetime="2015-02-27T06:09:15.751Z" itemprop="datePublished">2月 27 2015</time>
   </a>
 </section>
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/2015/02/25/SWAP分区基础/" title="SWAP分区基础" itemprop="url">
+    <a href="/2015/02/27/APACHE控制、配置/" title="APACHE控制、配置" itemprop="url">
   
-    <h1 itemprop="name">SWAP分区基础</h1>
+    <h1 itemprop="name">APACHE控制、配置</h1>
     
      
-           <p itemprop="description" >swap到底用到哪个swap空间
-swapon -s    /dev/sda3                   partition           1052248    0         -1
+           <p itemprop="description" >APACHE的访问控制
+主配置文件位置
+/etc/httpd/conf/httpd.conf
 
-想再去添加swap或者删掉这个swap
-dd&amp;lt;/dev/zero&amp;g</p>
+main server在第二部分。
+根：
+指定Document Rootapache有很多的serverserver1               server2           </p>
         
     
-    <time datetime="2015-02-25T02:55:44.800Z" itemprop="datePublished">2月 25 2015</time>
+    <time datetime="2015-02-27T03:49:36.334Z" itemprop="datePublished">2月 27 2015</time>
   </a>
 </section>
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/2015/02/25/MOUNT进阶/" title="MOUNT进阶" itemprop="url">
+    <a href="/2015/02/26/TCPWRAP-PAM/" title="TCPWRAP" itemprop="url">
   
-    <h1 itemprop="name">MOUNT进阶</h1>
+    <h1 itemprop="name">TCPWRAP</h1>
     
      
-           <p itemprop="description" >FUSER命令
-mount -o iso9660 /aaa/rhe15u3.iso /tmp
+           <p itemprop="description" >ldd /usr/sbin/sshd |grep wrapldd /usr/sbin/vsftp |grep wrapldd /bin/login |grep wrapldd /usr/sbin/httpd |grep wrap
 
-
-
-fuser -v /bbb   查看连接在bbb上的所有进程的名字
-
-
-
-fuser -km /bbb 把这个加载点下的进程全部干掉。。。
-
-sync   把缓存的数据全部同步到磁</p>
+得出结论：tcp-wrapper用在需求速度不是</p>
         
     
-    <time datetime="2015-02-25T02:51:40.573Z" itemprop="datePublished">2月 25 2015</time>
+    <time datetime="2015-02-26T06:45:42.291Z" itemprop="datePublished">2月 26 2015</time>
   </a>
 </section>
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/2015/02/25/FDISK-FSCK/" title="FDISK-FSCK" itemprop="url">
+    <a href="/2015/02/26/IPTABLES/" title="IPTABLES" itemprop="url">
   
-    <h1 itemprop="name">FDISK-FSCK</h1>
+    <h1 itemprop="name">IPTABLES</h1>
     
      
-           <p itemprop="description" >正常流程：
-fdisk mount
+           <p itemprop="description" >IPTABLES简介
+iptables在最前端，如果还需要加固，需要硬件防火墙。先是以太网接受数据包，往上层区传：IP层（内嵌iptables）。调用的iptables感染了整个TCP/IP处理的各个环节。
 
-分区： 
-fdisk或者   parted
+是在tcpwrap之前生效。
 
+tcpwrap是在pam之前生效。
 
-
-fdisk -l  列出已经装上的fdisk -l /dev/sdafdisk /dev/sda 分区
-
-fdisk里的 n  d  p  w  l  t分别代表什么。
-partprobe  </p>
+</p>
         
     
-    <time datetime="2015-02-25T02:24:17.143Z" itemprop="datePublished">2月 25 2015</time>
+    <time datetime="2015-02-26T05:57:11.505Z" itemprop="datePublished">2月 26 2015</time>
   </a>
 </section>
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/2015/02/25/NFS分布式管理/" title="NFS分布式管理" itemprop="url">
+    <a href="/2015/02/26/运维安全基础/" title="运维安全基础" itemprop="url">
   
-    <h1 itemprop="name">NFS分布式管理</h1>
+    <h1 itemprop="name">运维安全基础</h1>
     
      
-           <p itemprop="description" >ls /etc/auto.*
-.master和.misc能完全达到功能
-mount /dev/cdrom    /misc/cd   这样是可以的。但是需求在公司里需要自动加载。
-autofs
-vi /etc/auto.master  在里边加上 /misc   让他监视这个目录</p>
+           <p itemprop="description" >cd /vi /etc/initab      进程为3chkconfig --list   系统中运行的进程chkconfig --list |grep 3:onchkconfig cups offinit 6ps aux 看看有没有不认识的进程。。netstat -antup</p>
         
     
-    <time datetime="2015-02-25T02:18:49.722Z" itemprop="datePublished">2月 25 2015</time>
+    <time datetime="2015-02-26T05:25:20.531Z" itemprop="datePublished">2月 26 2015</time>
   </a>
 </section>
 
 
   <nav id="page-nav" class="clearfix">
-    <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
+    <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
   </nav>
 
 </div>
@@ -189,7 +175,7 @@ vi /etc/auto.master  在里边加上 /misc   让他监视这个目录</p>
 	<p class="asidetitle">分类</p>
 		<ul>
 		
-			<li><a href="/categories/AHACHE/" title="AHACHE">AHACHE<sup>1</sup></a></li>
+			<li><a href="/categories/AHACHE/" title="AHACHE">AHACHE<sup>3</sup></a></li>
 		
 			<li><a href="/categories/DNS/" title="DNS">DNS<sup>1</sup></a></li>
 		
@@ -197,7 +183,9 @@ vi /etc/auto.master  在里边加上 /misc   让他监视这个目录</p>
 		
 			<li><a href="/categories/LINUX-MAIL/" title="LINUX-MAIL">LINUX-MAIL<sup>1</sup></a></li>
 		
-			<li><a href="/categories/LINUX命令/" title="LINUX命令">LINUX命令<sup>12</sup></a></li>
+			<li><a href="/categories/LINUX命令/" title="LINUX命令">LINUX命令<sup>13</sup></a></li>
+		
+			<li><a href="/categories/NGINX/" title="NGINX">NGINX<sup>1</sup></a></li>
 		
 			<li><a href="/categories/RHCA/" title="RHCA">RHCA<sup>1</sup></a></li>
 		
@@ -220,6 +208,8 @@ vi /etc/auto.master  在里边加上 /misc   让他监视这个目录</p>
 		
 			<li><a href="/tags/MARKDOWN/" title="MARKDOWN">MARKDOWN<sup>1</sup></a></li>
 		
+			<li><a href="/tags/NGINX/" title="NGINX">NGINX<sup>1</sup></a></li>
+		
 			<li><a href="/tags/auto-master/" title="auto.master">auto.master<sup>1</sup></a></li>
 		
 			<li><a href="/tags/autofs/" title="autofs">autofs<sup>1</sup></a></li>
@@ -235,7 +225,7 @@ vi /etc/auto.master  在里边加上 /misc   让他监视这个目录</p>
   
   <div class="archiveslist">
     <p class="asidetitle"><a href="/archives">归档</a></p>
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">February 2015</a><span class="archive-list-count">24</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">February 2015</a><span class="archive-list-count">24</span></li></ul>
   </div>
 
 

@@ -4,27 +4,32 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>FDISK-FSCK | viscript</title>
+    <title>APACHE-RHEL7安装配置 | viscript</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="viscript">
     
-    <meta name="description" content="正常流程：
-fdisk mount
-
-分区： 
-fdisk或者   parted
+    <meta name="description" content="一．基本服务配置
 
 
-
-fdisk -l  列出已经装上的fdisk -l /dev/sdafdisk /dev/sda 分区
-
-fdisk里的 n  d  p  w  l  t分别代表什么。
-partprobe   分区表更新
+安装apache
 
 
 
-">
+yum -y install httpd
+
+
+
+查看配置文件位置
+
+
+
+rpm -qc httpd
+
+
+
+
+修改配置文件：/etc/httpd/conf/httpd.conf去掉以下两行的注释：DocumentRoot “/var/www/html”  ">
     
     
     
@@ -81,56 +86,159 @@ partprobe   分区表更新
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/02/25/FDISK-FSCK/" title="FDISK-FSCK" itemprop="url">FDISK-FSCK</a>
+      <a href="/2015/03/12/APACHE-RHEL7安装配置/" title="APACHE-RHEL7安装配置" itemprop="url">APACHE-RHEL7安装配置</a>
   </h1>
   <p class="article-author">By
     
       <a href="https://plus.google.com/https://plus.google.com/u/0/118332448986920483228?rel=author" title="viscript" target="_blank" itemprop="author">viscript</a>
     </p>
   <p class="article-time">
-    <time datetime="2015-02-25T02:24:17.143Z" itemprop="datePublished">2月 25 2015</time>
-    更新日期:<time datetime="2015-02-25T02:24:17.132Z" itemprop="dateModified">2月 25 2015</time>
+    <time datetime="2015-03-12T04:05:54.283Z" itemprop="datePublished">3月 12 2015</time>
+    更新日期:<time datetime="2015-03-12T04:05:54.277Z" itemprop="dateModified">3月 12 2015</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
 		
-		<h3 id="正常流程：">正常流程：</h3>
-<figure class="highlight"><pre><div class="line"><span class="title">fdisk</span> </div><div class="line">mount</div></pre></figure>
+		<h3 id="一．基本服务配置">一．基本服务配置</h3>
+<ul>
+<li><ol>
+<li>安装apache</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight"><pre><div class="line">yum -y <span class="operator"><span class="keyword">install</span> httpd</span></div></pre></figure>
 
-<p>分区： </p>
-<figure class="highlight"><pre><div class="line">fdisk或者   parted</div></pre></figure>
+<ul>
+<li><ol>
+<li>查看配置文件位置</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight"><pre><div class="line"><span class="title">rpm</span> -qc httpd</div></pre></figure>
 
+<ul>
+<li><ol>
+<li><blockquote>
+<p>修改配置文件：/etc/httpd/conf/httpd.conf<br>去掉以下两行的注释：<br>DocumentRoot “/var/www/html”  //定义web文件存放的根<br>   DirectoryIndex index.html   //定义默认页的名称</p>
+</blockquote>
+</li>
+</ol>
+</li>
+<li><ol>
+<li>给默认页添加内容：</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight"><pre><div class="line"><span class="keyword">echo</span> Hello &gt; /<span class="keyword">var</span>/www/html/index.html  <span class="comment">//也可是标准HTML此处省略。</span></div></pre></figure>
 
+<ul>
+<li><ol>
+<li>启动httpd服务：</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight"><pre><div class="line">systemctl start httpd.<span class="keyword">service</span></div><div class="line">systemctl status httpd.<span class="keyword">service</span>   <span class="comment">//查看状态</span></div><div class="line">systemctl enable httpd.<span class="keyword">service</span>  <span class="comment">//设置为开机启动</span></div></pre></figure>
 
-<figure class="highlight"><pre><div class="line">fdisk <span class="operator">-l</span>  列出已经装上的</div><div class="line">fdisk <span class="operator">-l</span> /dev/sda</div><div class="line">fdisk /dev/sda 分区</div></pre></figure>
+<ul>
+<li><ol>
+<li>打开防火墙设置并查看状态</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight"><pre><div class="line"><span class="comment">firewall</span><span class="literal">-</span><span class="comment">cmd</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">permanent</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">add</span><span class="literal">-</span><span class="comment">service=http</span></div><div class="line"><span class="comment">firewall</span><span class="literal">-</span><span class="comment">cmd</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">reload</span></div></pre></figure>
 
-<h4 id="fdisk里的_n_d_p_w_l_t分别代表什么。">fdisk里的 n  d  p  w  l  t分别代表什么。</h4>
-<figure class="highlight"><pre><div class="line"><span class="title">partprobe</span>   分区表更新</div></pre></figure>
+<ul>
+<li><ol>
+<li><blockquote>
+<p>测试：<br>7.1    web浏览器<br>7.2    curl</p>
+</blockquote>
+</li>
+</ol>
+</li>
+</ul>
+<h3 id="二．虚拟主机配置">二．虚拟主机配置</h3>
+<ul>
+<li><ol>
+<li><blockquote>
+<p>查看虚拟主机配置文件：<br>1.1 rpm -ql httpd | grep httpd-vhost<br>输出如下：</p>
+</blockquote>
+</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight"><pre><div class="line">/&gt;[root@dns www]# rpm -ql httpd | <span class="keyword">grep</span> httpd-vhost</div><div class="line">/usr/share/doc/httpd-<span class="number">2.4</span>.<span class="number">6</span>/httpd-vhosts.<span class="keyword">conf</span></div></pre></figure>
 
+<blockquote>
+<p>1.2 拷贝配置文件到：/etc/httpd/conf.d （Apache子配置文件存放路径）<br>       cp /usr/share/doc/httpd-2.4.6/httpd-vhosts.conf /etc/httpd/conf.d<br>1.4 修改/etc/hosts文件：vi /etc/hosts<br>       127.0.0.1 localhost localhost.localdomain localhost4 localhost4.localdomain4<br>::1         localhost localhost.localdomain localhost6 localhost6.localdomain6<br>192.168.232.131         www.openlab.com         www.redhat.com<br>注：192.168.232.131为本机IP<br>1.3 修改配置文件：vim /etc/httpd/conf.d/httpd-vhosts.conf<br>       <virtualhost 192.168.232.131=""><br>               ServerName 192.168.232.131<br></virtualhost></p>
+<virtualhost www.openlab.com=""><br>   ServerAdmin webmaster@openlab.com<br>   DocumentRoot “/var/www/openlab”<br>   ServerName www.openlab.com<br>   ErrorLog “/var/log/httpd/openlab.com-error_log”<br>   CustomLog “/var/log/httpd/openlab.com-access_log” common<br></virtualhost>
 
+<virtualhost www.redhat.com=""><br>   ServerAdmin webmaster@redhat.com<br>   DocumentRoot “/var/www/redhat”<br>   ServerName www.RedHat.com<br>   ErrorLog “/var/log/httpd/redhat.com-error_log”<br>   CustomLog “/var/log/httpd/redhat.com-access_log” common<br></virtualhost>
 
-<figure class="highlight"><pre><div class="line"><span class="title">mkfs</span>.ext3 /dev/sda5</div><div class="line"><span class="title">mount</span> /dev/sda5 /<span class="typedef"><span class="keyword">data</span></span></div></pre></figure>
+</blockquote>
+<ul>
+<li><ol>
+<li>创建虚拟主机目录：</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight"><pre><div class="line">mkdir /<span class="keyword">var</span>/www/{openlab,RedHat}</div></pre></figure>
 
+<ul>
+<li><ol>
+<li>创建主页</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight"><pre><div class="line"><span class="keyword">echo</span> Welcome <span class="keyword">to</span> Openlab &gt; /var/www/openlab/<span class="built_in">index</span>.html</div><div class="line"><span class="keyword">echo</span> Welcome <span class="keyword">to</span> RedHat &gt; /var/www/RedHat/<span class="built_in">index</span>.html</div></pre></figure>
 
+<ul>
+<li><ol>
+<li>重启服务</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight"><pre><div class="line">systemctl restart httpd.<span class="keyword">service</span></div></pre></figure>
 
-<figure class="highlight"><pre><div class="line"><span class="title">vi</span> /etc/fstab </div><div class="line">   /dev/sda5   /<span class="typedef"><span class="keyword">data</span>   ext3   defaults  1 1     第一个数字：每多少天dump一次    第二个数字:1表示第二个检查这个磁盘。很多数字的时候按照数字顺序检查。</span></div></pre></figure>
-
-<h4 id="fstab是由rc-sysint_调用的。">fstab是由rc.sysint 调用的。</h4>
-<figure class="highlight"><pre><div class="line">tune2fs -j <span class="regexp">/dev/</span>sda2      将ext2文件系统立即升级成ext3</div><div class="line">调整文件系统的属性</div></pre></figure>
-
-<p>调整属性前一定要：</p>
-<figure class="highlight"><pre><div class="line">umount或者mount -o ro,<span class="comment">remount /xxx</span></div></pre></figure>
-
-
-
-<figure class="highlight"><pre><div class="line">dumpe2fs 查看分区的<span class="keyword">super</span> block   </div><div class="line">fsck.ext3  <span class="regexp">/dev/</span>sda1  检测分区</div></pre></figure>
-
-<p>fsck之前一定要umount或者mount -o ro,remount /xxx</p>
-<p>事先一定要把数据拷贝到另外一个磁盘上。写详细的报告。</p>
-<figure class="highlight"><pre><div class="line">fsck.ext3 -yf   f:强制以ext2的方式修复，如果不f的话，就只检查journal。检测每一个inode和<span class="keyword">block</span>的关系。</div></pre></figure>
-
+<ul>
+<li><ol>
+<li>测试</li>
+</ol>
+</li>
+</ul>
+<ul>
+<li><ol>
+<li><blockquote>
+<p>修改主配置文件：vi /etc/httpd/conf/httpd.conf<br>AllowOverride All</p>
+</blockquote>
+</li>
+</ol>
+</li>
+<li><ol>
+<li>在/var/www/html新建.htaccess文件： touch .htaccess</li>
+</ol>
+</li>
+<li><ol>
+<li><blockquote>
+<p>编辑.htaccess文件：<br>AuthName “Please input your name and password”<br>AuthType basic<br>AuthUserFile /var/www/html/user.txt<br>require valid-user</p>
+</blockquote>
+</li>
+</ol>
+</li>
+<li><ol>
+<li>在/var/www/html新建user.txt文件</li>
+</ol>
+</li>
+<li><ol>
+<li>运行命令：htpasswd –b /var/www/html/use.txt hanhan 12345</li>
+</ol>
+</li>
+<li><ol>
+<li>重启服务</li>
+</ol>
+</li>
+</ul>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -138,14 +246,14 @@ partprobe   分区表更新
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/LINUX命令/">LINUX命令</a>
+  <a class="article-category-link" href="/categories/AHACHE/">AHACHE</a>
 </div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="https://v-script.com/2015/02/25/FDISK-FSCK/" data-title="FDISK-FSCK | viscript" data-tsina="null" class="share clearfix">
+  <div data-url="https://v-script.com/2015/03/12/APACHE-RHEL7安装配置/" data-title="APACHE-RHEL7安装配置 | viscript" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -155,18 +263,18 @@ partprobe   分区表更新
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/02/25/MOUNT进阶/" title="MOUNT进阶">
+ <a href="/2015/03/12/APACHE-HTTPS/" title="APACHE-HTTPS">
   <strong>PREVIOUS:</strong><br/>
   <span>
-  MOUNT进阶</span>
+  APACHE-HTTPS</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2015/02/25/NFS分布式管理/"  title="NFS分布式管理">
+<a href="/2015/03/12/NGINX安装配置及VHOST/"  title="NGINX安装配置及VHOST">
  <strong>NEXT:</strong><br/> 
- <span>NFS分布式管理
+ <span>NGINX安装配置及VHOST
 </span>
 </a>
 </div>

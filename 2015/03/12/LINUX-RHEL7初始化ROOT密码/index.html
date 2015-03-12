@@ -4,27 +4,20 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>FDISK-FSCK | viscript</title>
+    <title>viscript</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="viscript">
     
-    <meta name="description" content="正常流程：
-fdisk mount
+    <meta name="description" content="title: LINUX-RHEL7初始化ROOT密码categories:LINUX命令tags:重置ROOT密码
 
-分区： 
-fdisk或者   parted
+步骤：
 
-
-
-fdisk -l  列出已经装上的fdisk -l /dev/sdafdisk /dev/sda 分区
-
-fdisk里的 n  d  p  w  l  t分别代表什么。
-partprobe   分区表更新
+开机，第一行按e
+在linux16行按ctrl-e光标放置最后一段，输入rd.break  console=tty0ctrl-x启动
 
 
-
-">
+提示符出现：switch_roo">
     
     
     
@@ -81,71 +74,51 @@ partprobe   分区表更新
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/02/25/FDISK-FSCK/" title="FDISK-FSCK" itemprop="url">FDISK-FSCK</a>
+      <a href="/2015/03/12/LINUX-RHEL7初始化ROOT密码/" title="" itemprop="url"></a>
   </h1>
   <p class="article-author">By
     
       <a href="https://plus.google.com/https://plus.google.com/u/0/118332448986920483228?rel=author" title="viscript" target="_blank" itemprop="author">viscript</a>
     </p>
   <p class="article-time">
-    <time datetime="2015-02-25T02:24:17.143Z" itemprop="datePublished">2月 25 2015</time>
-    更新日期:<time datetime="2015-02-25T02:24:17.132Z" itemprop="dateModified">2月 25 2015</time>
+    <time datetime="2015-03-12T03:29:52.573Z" itemprop="datePublished">3月 12 2015</time>
+    更新日期:<time datetime="2015-03-12T03:29:52.564Z" itemprop="dateModified">3月 12 2015</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
 		
-		<h3 id="正常流程：">正常流程：</h3>
-<figure class="highlight"><pre><div class="line"><span class="title">fdisk</span> </div><div class="line">mount</div></pre></figure>
+		<p>title: LINUX-RHEL7初始化ROOT密码<br>categories:LINUX命令<br>tags:重置ROOT密码</p>
+<hr>
+<h3 id="步骤：">步骤：</h3>
+<ul>
+<li>开机，第一行按e<blockquote>
+<p>在linux16行按ctrl-e光标放置最后一段，输入rd.break  console=tty0<br>ctrl-x启动</p>
+</blockquote>
+</li>
+<li>提示符出现：switch_root:/#<blockquote>
+<p>命令行输入：</p>
+</blockquote>
+</li>
+</ul>
+<figure class="highlight"><pre><div class="line">mount |<span class="keyword">grep</span> xfs查看信息</div><div class="line">mount -o remount,rw /sysroot</div><div class="line"><span class="keyword">chroot</span> /sysroot</div><div class="line">passwd root</div></pre></figure>
 
-<p>分区： </p>
-<figure class="highlight"><pre><div class="line">fdisk或者   parted</div></pre></figure>
-
-
-
-<figure class="highlight"><pre><div class="line">fdisk <span class="operator">-l</span>  列出已经装上的</div><div class="line">fdisk <span class="operator">-l</span> /dev/sda</div><div class="line">fdisk /dev/sda 分区</div></pre></figure>
-
-<h4 id="fdisk里的_n_d_p_w_l_t分别代表什么。">fdisk里的 n  d  p  w  l  t分别代表什么。</h4>
-<figure class="highlight"><pre><div class="line"><span class="title">partprobe</span>   分区表更新</div></pre></figure>
-
-
-
-<figure class="highlight"><pre><div class="line"><span class="title">mkfs</span>.ext3 /dev/sda5</div><div class="line"><span class="title">mount</span> /dev/sda5 /<span class="typedef"><span class="keyword">data</span></span></div></pre></figure>
-
-
-
-<figure class="highlight"><pre><div class="line"><span class="title">vi</span> /etc/fstab </div><div class="line">   /dev/sda5   /<span class="typedef"><span class="keyword">data</span>   ext3   defaults  1 1     第一个数字：每多少天dump一次    第二个数字:1表示第二个检查这个磁盘。很多数字的时候按照数字顺序检查。</span></div></pre></figure>
-
-<h4 id="fstab是由rc-sysint_调用的。">fstab是由rc.sysint 调用的。</h4>
-<figure class="highlight"><pre><div class="line">tune2fs -j <span class="regexp">/dev/</span>sda2      将ext2文件系统立即升级成ext3</div><div class="line">调整文件系统的属性</div></pre></figure>
-
-<p>调整属性前一定要：</p>
-<figure class="highlight"><pre><div class="line">umount或者mount -o ro,<span class="comment">remount /xxx</span></div></pre></figure>
-
-
-
-<figure class="highlight"><pre><div class="line">dumpe2fs 查看分区的<span class="keyword">super</span> block   </div><div class="line">fsck.ext3  <span class="regexp">/dev/</span>sda1  检测分区</div></pre></figure>
-
-<p>fsck之前一定要umount或者mount -o ro,remount /xxx</p>
-<p>事先一定要把数据拷贝到另外一个磁盘上。写详细的报告。</p>
-<figure class="highlight"><pre><div class="line">fsck.ext3 -yf   f:强制以ext2的方式修复，如果不f的话，就只检查journal。检测每一个inode和<span class="keyword">block</span>的关系。</div></pre></figure>
+<blockquote>
+<p>提示输入新密码并确认</p>
+</blockquote>
+<figure class="highlight"><pre><div class="line">touch /.autorelabel</div><div class="line"><span class="keyword">exit</span></div><div class="line"><span class="keyword">exit</span></div></pre></figure>
 
   
 	</div>
 		<footer class="article-footer clearfix">
 
 
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/LINUX命令/">LINUX命令</a>
-</div>
-
 
 
 <div class="article-share" id="share">
 
-  <div data-url="https://v-script.com/2015/02/25/FDISK-FSCK/" data-title="FDISK-FSCK | viscript" data-tsina="null" class="share clearfix">
+  <div data-url="https://v-script.com/2015/03/12/LINUX-RHEL7初始化ROOT密码/" data-title="viscript" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -155,18 +128,18 @@ partprobe   分区表更新
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/02/25/MOUNT进阶/" title="MOUNT进阶">
+ <a href="/2015/03/12/ISCSI配置/" title="">
   <strong>PREVIOUS:</strong><br/>
   <span>
-  MOUNT进阶</span>
+  (no title)</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2015/02/25/NFS分布式管理/"  title="NFS分布式管理">
+<a href="/2015/03/05/LSOF/"  title="LSOF">
  <strong>NEXT:</strong><br/> 
- <span>NFS分布式管理
+ <span>LSOF
 </span>
 </a>
 </div>

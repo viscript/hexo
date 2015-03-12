@@ -65,140 +65,57 @@
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/2015/03/12/APACHE-HTTPS/" title="APACHE-HTTPS" itemprop="url">
+    <a href="/2015/02/24/Linux里的瑞士军刀/" title="Linux里的瑞士军刀" itemprop="url">
   
-    <h1 itemprop="name">APACHE-HTTPS</h1>
+    <h1 itemprop="name">Linux里的瑞士军刀</h1>
     
      
-           <p itemprop="description" >一．服务器端openssl配置
-
-
-安装openssl ：
-
-
-
-yum install openssl*
-
-
-
-生成私钥：
-
-
-
-openssl  genrsa  -out  server.key  1024
-
-
-
-查看：
-
-
-
-openssl  rsa  -noout  -t</p>
+           <p itemprop="description" >一、通过sort/uniq获取文件内容的交集、合集和不同之处：
+假设有a、b两个文本文件，文件本身已经去除了重复内容。下面是效率最高的方法，可以处理任何体积的文件，甚至几个G的文件。(Sort对内存没有要求，但也许你需要用 -T 参数。)可以试着比较一下，你可以看看如果用Java</p>
         
     
-    <time datetime="2015-03-12T05:25:51.551Z" itemprop="datePublished">3月 12 2015</time>
+    <time datetime="2015-02-24T10:16:47.744Z" itemprop="datePublished">2月 24 2015</time>
   </a>
 </section>
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/2015/03/12/APACHE-RHEL7安装配置/" title="APACHE-RHEL7安装配置" itemprop="url">
+    <a href="/2015/02/24/LINUX比IFCONFIG更好用的IP命令/" title="比IFCONFIG更好用的IP命令" itemprop="url">
   
-    <h1 itemprop="name">APACHE-RHEL7安装配置</h1>
+    <h1 itemprop="name">比IFCONFIG更好用的IP命令</h1>
     
      
-           <p itemprop="description" >一．基本服务配置
+           <p itemprop="description" >ip命令比ifconfig命令更加强大
+ip是iproute2软件包里面的一个强大的网络配置工具，它能够替代一些传统的网络管理工具，例如ifconfig、route等，使用权限为超级用户。几乎所有的Linux发行版本都支持该命令。
 
-
-安装apache
-
-
-
-yum -y install httpd
-
-
-
-查看配置文件位置
-
-
-
-rpm -qc httpd
-
-
-
-
-修改配置文件：/etc/httpd/conf/httpd.conf去掉以下两行的注释：DocumentRoot “/var/w</p>
+ip ad sh   ad：address  </p>
         
     
-    <time datetime="2015-03-12T04:05:54.283Z" itemprop="datePublished">3月 12 2015</time>
+    <time datetime="2015-02-24T10:16:47.743Z" itemprop="datePublished">2月 24 2015</time>
   </a>
 </section>
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/2015/03/12/NGINX安装配置及VHOST/" title="NGINX安装配置及VHOST" itemprop="url">
+    <a href="/2015/02/24/LINUX-IP命令文摘/" title="LINUX IP命令文摘" itemprop="url">
   
-    <h1 itemprop="name">NGINX安装配置及VHOST</h1>
+    <h1 itemprop="name">LINUX IP命令文摘</h1>
     
      
-           <p itemprop="description" >NGINX安装
-
-
-安装所需软件包：
-
-
-
-yum install -y make apr* autoconf automake gcc gcc-c++     //编译环境yum install -y zlib-devel pcre-devel openssl openssl-</p>
+           <p itemprop="description" >ip
+1.作用
+ip是iproute2软件包里面的一个强大的网络配置工具，它能够替代一些传统的网络管理工具，例如ifconfig、route等，使用权限为超级用户。几乎所有的Linux发行版本都支持该命令。
+2.格式
+ip [OPTIONS] OBJECT [COMMAND [A</p>
         
     
-    <time datetime="2015-03-12T03:52:04.509Z" itemprop="datePublished">3月 12 2015</time>
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/2015/03/12/ISCSI配置/" title="" itemprop="url">
-  
-    <h1 itemprop="name"></h1>
-    
-     
-           <p itemprop="description" >title: ISCSI配置categories: ISCSItags:ISCSI
-
-iqn（iSCSI Qualified Name）
-格式：
-
-iqn.yyyy-mm.[:identifier]iqn.2014-12.cn.openlab:storage001iqn：表示“i</p>
-        
-    
-    <time datetime="2015-03-12T03:42:28.569Z" itemprop="datePublished">3月 12 2015</time>
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/2015/03/12/LINUX-RHEL7初始化ROOT密码/" title="" itemprop="url">
-  
-    <h1 itemprop="name"></h1>
-    
-     
-           <p itemprop="description" >title: LINUX-RHEL7初始化ROOT密码categories:LINUX命令tags:重置ROOT密码
-
-步骤：
-
-开机，第一行按e
-在linux16行按ctrl-e光标放置最后一段，输入rd.break  console=tty0ctrl-x启动
-
-
-提示符出现：</p>
-        
-    
-    <time datetime="2015-03-12T03:29:52.573Z" itemprop="datePublished">3月 12 2015</time>
+    <time datetime="2015-02-24T10:16:47.742Z" itemprop="datePublished">2月 24 2015</time>
   </a>
 </section>
 
 
   <nav id="page-nav" class="clearfix">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+    <a class="extend prev" rel="prev" href="/page/6/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span>
   </nav>
 
 </div>

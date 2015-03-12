@@ -4,27 +4,35 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>FDISK-FSCK | viscript</title>
+    <title>APACHE-HTTPS | viscript</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="viscript">
     
-    <meta name="description" content="正常流程：
-fdisk mount
-
-分区： 
-fdisk或者   parted
+    <meta name="description" content="一．服务器端openssl配置
 
 
-
-fdisk -l  列出已经装上的fdisk -l /dev/sdafdisk /dev/sda 分区
-
-fdisk里的 n  d  p  w  l  t分别代表什么。
-partprobe   分区表更新
+安装openssl ：
 
 
 
-">
+yum install openssl*
+
+
+
+生成私钥：
+
+
+
+openssl  genrsa  -out  server.key  1024
+
+
+
+查看：
+
+
+
+openssl  rsa  -noout  -text  -in s">
     
     
     
@@ -81,56 +89,109 @@ partprobe   分区表更新
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/02/25/FDISK-FSCK/" title="FDISK-FSCK" itemprop="url">FDISK-FSCK</a>
+      <a href="/2015/03/12/APACHE-HTTPS/" title="APACHE-HTTPS" itemprop="url">APACHE-HTTPS</a>
   </h1>
   <p class="article-author">By
     
       <a href="https://plus.google.com/https://plus.google.com/u/0/118332448986920483228?rel=author" title="viscript" target="_blank" itemprop="author">viscript</a>
     </p>
   <p class="article-time">
-    <time datetime="2015-02-25T02:24:17.143Z" itemprop="datePublished">2月 25 2015</time>
-    更新日期:<time datetime="2015-02-25T02:24:17.132Z" itemprop="dateModified">2月 25 2015</time>
+    <time datetime="2015-03-12T05:25:51.551Z" itemprop="datePublished">3月 12 2015</time>
+    更新日期:<time datetime="2015-03-12T05:25:51.545Z" itemprop="dateModified">3月 12 2015</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
 		
-		<h3 id="正常流程：">正常流程：</h3>
-<figure class="highlight"><pre><div class="line"><span class="title">fdisk</span> </div><div class="line">mount</div></pre></figure>
+		<h3 id="一．服务器端openssl配置">一．服务器端openssl配置</h3>
+<ul>
+<li><ol>
+<li>安装openssl ：</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight"><pre><div class="line">yum install openssl<span class="keyword">*</span></div></pre></figure>
 
-<p>分区： </p>
-<figure class="highlight"><pre><div class="line">fdisk或者   parted</div></pre></figure>
+<ul>
+<li><ol>
+<li>生成私钥：</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight"><pre><div class="line">openssl  genrsa  -<span class="keyword">out</span>  server.key  <span class="number">1024</span></div></pre></figure>
 
+<ul>
+<li><ol>
+<li>查看：</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight"><pre><div class="line">openssl  rsa  -noout  -<span class="keyword">text</span>  -<span class="keyword">in</span> server.<span class="keyword">key</span></div></pre></figure>
 
+<ul>
+<li><ol>
+<li>使用 server.key 生成证书签署请求 CSR：</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight"><pre><div class="line">openssl req -<span class="keyword">new</span> -<span class="keyword">key</span> server.<span class="keyword">key</span> -out server.csr</div><div class="line">Country Name (<span class="number">2</span> letter code) [XX]:CN</div><div class="line">State <span class="keyword">or</span> Province Name (full name) []:BJ</div><div class="line">Locality Name (eg, city) [<span class="keyword">Default</span> City]:BJ</div><div class="line">Organization Name (eg, company) [<span class="keyword">Default</span> Company Ltd]:OPENLAB</div><div class="line">Organizational Unit Name (eg, section) []:IT     </div><div class="line">Common Name (eg, your name <span class="keyword">or</span> your server<span class="comment">'s hostname) []:www.ol.com</span></div><div class="line">Email Address []:wuys@openlab.cn</div><div class="line"></div><div class="line">Please enter the following <span class="comment">'extra' attributes</span></div><div class="line"><span class="keyword">to</span> be sent <span class="keyword">with</span> your certificate request</div><div class="line">A challenge password []:<span class="number">123456</span></div><div class="line">An <span class="keyword">optional</span> company name []:openlab</div></pre></figure>
 
-<figure class="highlight"><pre><div class="line">fdisk <span class="operator">-l</span>  列出已经装上的</div><div class="line">fdisk <span class="operator">-l</span> /dev/sda</div><div class="line">fdisk /dev/sda 分区</div></pre></figure>
+<ul>
+<li><ol>
+<li>生成证书：</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight"><pre><div class="line">openssl x509 -req -days <span class="number">365</span> -<span class="keyword">in</span> <span class="built_in">server</span>.csr -signkey <span class="built_in">server</span>.key -out <span class="built_in">server</span>.crt</div></pre></figure>
 
-<h4 id="fdisk里的_n_d_p_w_l_t分别代表什么。">fdisk里的 n  d  p  w  l  t分别代表什么。</h4>
-<figure class="highlight"><pre><div class="line"><span class="title">partprobe</span>   分区表更新</div></pre></figure>
+<h3 id="二．配置apache服务">二．配置apache服务</h3>
+<p>需要先安装mod_ssl模块：</p>
+<ul>
+<li>1.<br>修改机器名：</li>
+</ul>
+<figure class="highlight"><pre><div class="line">hostnamectl <span class="keyword">set</span>-<span class="built_in">hostname</span>  www.<span class="keyword">ol</span>.<span class="keyword">com</span></div></pre></figure>
 
+<ul>
+<li>2.<br>修改默认网页：</li>
+</ul>
+<figure class="highlight"><pre><div class="line"><span class="input"><span class="prompt">echo https demo！ &gt;</span> /var/www/html/index.html</span></div></pre></figure>
 
+<ul>
+<li>3.<br>查看并修改配置文件：</li>
+</ul>
+<figure class="highlight"><pre><div class="line"><span class="keyword">vi</span> /etc/httpd/<span class="keyword">conf</span>.<span class="keyword">d</span>/ssl.<span class="keyword">conf</span></div><div class="line">SSLCertificateFile /etc/pki/tls/certs/server.crt</div><div class="line">SSLCertificateKeyFile /etc/pki/tls/private/server.key</div></pre></figure>
 
-<figure class="highlight"><pre><div class="line"><span class="title">mkfs</span>.ext3 /dev/sda5</div><div class="line"><span class="title">mount</span> /dev/sda5 /<span class="typedef"><span class="keyword">data</span></span></div></pre></figure>
+<ul>
+<li>4.拷贝证书和私钥到配置文件位置并设置权限：</li>
+</ul>
+<figure class="highlight"><pre><div class="line">cp <span class="keyword">server</span>.crt /etc/pki/tls/certs/<span class="keyword">server</span>.crt</div><div class="line">chmod o+r /etc/pki/tls/certs/<span class="keyword">server</span>.crt</div><div class="line">cp <span class="keyword">server</span>.key /etc/pki/tls/<span class="keyword">private</span>/<span class="keyword">server</span>.key</div><div class="line">chmod o+r /etc/pki/tls/<span class="keyword">private</span>/<span class="keyword">server</span>.key</div></pre></figure>
 
+<ul>
+<li><ol>
+<li></li>
+</ol>
+</li>
+</ul>
+<figure class="highlight"><pre><div class="line"><span class="comment">firewall</span><span class="literal">-</span><span class="comment">cmd</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">permanent</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">add</span><span class="literal">-</span><span class="comment">service=https</span></div><div class="line"><span class="comment">firewalld</span> <span class="comment">–</span><span class="literal">-</span><span class="comment">reload</span></div></pre></figure>
 
+<ul>
+<li><ol>
+<li>启动服务：</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight"><pre><div class="line"><span class="title">systemctl</span> restart httpd</div></pre></figure>
 
-<figure class="highlight"><pre><div class="line"><span class="title">vi</span> /etc/fstab </div><div class="line">   /dev/sda5   /<span class="typedef"><span class="keyword">data</span>   ext3   defaults  1 1     第一个数字：每多少天dump一次    第二个数字:1表示第二个检查这个磁盘。很多数字的时候按照数字顺序检查。</span></div></pre></figure>
-
-<h4 id="fstab是由rc-sysint_调用的。">fstab是由rc.sysint 调用的。</h4>
-<figure class="highlight"><pre><div class="line">tune2fs -j <span class="regexp">/dev/</span>sda2      将ext2文件系统立即升级成ext3</div><div class="line">调整文件系统的属性</div></pre></figure>
-
-<p>调整属性前一定要：</p>
-<figure class="highlight"><pre><div class="line">umount或者mount -o ro,<span class="comment">remount /xxx</span></div></pre></figure>
-
-
-
-<figure class="highlight"><pre><div class="line">dumpe2fs 查看分区的<span class="keyword">super</span> block   </div><div class="line">fsck.ext3  <span class="regexp">/dev/</span>sda1  检测分区</div></pre></figure>
-
-<p>fsck之前一定要umount或者mount -o ro,remount /xxx</p>
-<p>事先一定要把数据拷贝到另外一个磁盘上。写详细的报告。</p>
-<figure class="highlight"><pre><div class="line">fsck.ext3 -yf   f:强制以ext2的方式修复，如果不f的话，就只检查journal。检测每一个inode和<span class="keyword">block</span>的关系。</div></pre></figure>
-
+<ul>
+<li><ol>
+<li>测试：<blockquote>
+<p><a href="https://www.openlab.cn" target="_blank" rel="external">https://www.openlab.cn</a></p>
+</blockquote>
+</li>
+</ol>
+</li>
+</ul>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -138,14 +199,14 @@ partprobe   分区表更新
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/LINUX命令/">LINUX命令</a>
+  <a class="article-category-link" href="/categories/AHACHE/">AHACHE</a>
 </div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="https://v-script.com/2015/02/25/FDISK-FSCK/" data-title="FDISK-FSCK | viscript" data-tsina="null" class="share clearfix">
+  <div data-url="https://v-script.com/2015/03/12/APACHE-HTTPS/" data-title="APACHE-HTTPS | viscript" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -154,19 +215,11 @@ partprobe   分区表更新
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/02/25/MOUNT进阶/" title="MOUNT进阶">
-  <strong>PREVIOUS:</strong><br/>
-  <span>
-  MOUNT进阶</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/02/25/NFS分布式管理/"  title="NFS分布式管理">
+<a href="/2015/03/12/APACHE-RHEL7安装配置/"  title="APACHE-RHEL7安装配置">
  <strong>NEXT:</strong><br/> 
- <span>NFS分布式管理
+ <span>APACHE-RHEL7安装配置
 </span>
 </a>
 </div>
