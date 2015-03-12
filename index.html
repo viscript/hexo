@@ -65,6 +65,82 @@
 
   <section class="post" itemscope itemprop="blogPost">
   
+    <a href="/2015/03/12/LINUX-RHEL7初始化ROOT密码/" title="LINUX-RHEL7初始化ROOT密码" itemprop="url">
+  
+    <h1 itemprop="name">LINUX-RHEL7初始化ROOT密码</h1>
+    
+     
+           <p itemprop="description" >步骤：
+
+开机，第一行按e
+在linux16行按ctrl-e光标放置最后一段，输入rd.break  console=tty0ctrl-x启动
+
+
+提示符出现：switch_root:/#
+命令行输入：
+
+
+
+mount |grep xfs查看信息mount -o remount</p>
+        
+    
+    <time datetime="2015-03-12T05:52:52.272Z" itemprop="datePublished">3月 12 2015</time>
+  </a>
+</section>
+
+  <section class="post" itemscope itemprop="blogPost">
+  
+    <a href="/2015/03/12/APACHE-RHEL7安装配置/" title="APACHE-RHEL7安装配置" itemprop="url">
+  
+    <h1 itemprop="name">APACHE-RHEL7安装配置</h1>
+    
+     
+           <p itemprop="description" >一．基本服务配置
+
+
+安装apache
+
+
+
+yum -y install httpd
+
+
+
+查看配置文件位置
+
+
+
+rpm -qc httpd
+
+
+
+
+修改配置文件：/etc/httpd/conf/httpd.conf去掉以下两行的注释：DocumentRoot “/var/w</p>
+        
+    
+    <time datetime="2015-03-12T05:52:38.462Z" itemprop="datePublished">3月 12 2015</time>
+  </a>
+</section>
+
+  <section class="post" itemscope itemprop="blogPost">
+  
+    <a href="/2015/03/12/ISCSI配置/" title="ISCSI配置" itemprop="url">
+  
+    <h1 itemprop="name">ISCSI配置</h1>
+    
+     
+           <p itemprop="description" >iqn（iSCSI Qualified Name）
+格式：
+
+iqn.yyyy-mm.[:identifier]iqn.2014-12.cn.openlab:storage001iqn：表示“iSCSI Qualified Name”，简称iqn。yyyy-mm：表示年份-月份。</p>
+        
+    
+    <time datetime="2015-03-12T05:51:57.218Z" itemprop="datePublished">3月 12 2015</time>
+  </a>
+</section>
+
+  <section class="post" itemscope itemprop="blogPost">
+  
     <a href="/2015/03/12/APACHE-HTTPS/" title="APACHE-HTTPS" itemprop="url">
   
     <h1 itemprop="name">APACHE-HTTPS</h1>
@@ -102,40 +178,6 @@ openssl  rsa  -noout  -t</p>
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/2015/03/12/APACHE-RHEL7安装配置/" title="APACHE-RHEL7安装配置" itemprop="url">
-  
-    <h1 itemprop="name">APACHE-RHEL7安装配置</h1>
-    
-     
-           <p itemprop="description" >一．基本服务配置
-
-
-安装apache
-
-
-
-yum -y install httpd
-
-
-
-查看配置文件位置
-
-
-
-rpm -qc httpd
-
-
-
-
-修改配置文件：/etc/httpd/conf/httpd.conf去掉以下两行的注释：DocumentRoot “/var/w</p>
-        
-    
-    <time datetime="2015-03-12T04:05:54.283Z" itemprop="datePublished">3月 12 2015</time>
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
     <a href="/2015/03/12/NGINX安装配置及VHOST/" title="NGINX安装配置及VHOST" itemprop="url">
   
     <h1 itemprop="name">NGINX安装配置及VHOST</h1>
@@ -152,47 +194,6 @@ yum install -y make apr* autoconf automake gcc gcc-c++     //编译环境yum ins
         
     
     <time datetime="2015-03-12T03:52:04.509Z" itemprop="datePublished">3月 12 2015</time>
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/2015/03/12/ISCSI配置/" title="" itemprop="url">
-  
-    <h1 itemprop="name"></h1>
-    
-     
-           <p itemprop="description" >title: ISCSI配置categories: ISCSItags:ISCSI
-
-iqn（iSCSI Qualified Name）
-格式：
-
-iqn.yyyy-mm.[:identifier]iqn.2014-12.cn.openlab:storage001iqn：表示“i</p>
-        
-    
-    <time datetime="2015-03-12T03:42:28.569Z" itemprop="datePublished">3月 12 2015</time>
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/2015/03/12/LINUX-RHEL7初始化ROOT密码/" title="" itemprop="url">
-  
-    <h1 itemprop="name"></h1>
-    
-     
-           <p itemprop="description" >title: LINUX-RHEL7初始化ROOT密码categories:LINUX命令tags:重置ROOT密码
-
-步骤：
-
-开机，第一行按e
-在linux16行按ctrl-e光标放置最后一段，输入rd.break  console=tty0ctrl-x启动
-
-
-提示符出现：</p>
-        
-    
-    <time datetime="2015-03-12T03:29:52.573Z" itemprop="datePublished">3月 12 2015</time>
   </a>
 </section>
 
@@ -217,11 +218,13 @@ iqn.yyyy-mm.[:identifier]iqn.2014-12.cn.openlab:storage001iqn：表示“i</p>
 		
 			<li><a href="/categories/DNS/" title="DNS">DNS<sup>1</sup></a></li>
 		
+			<li><a href="/categories/ISCSI/" title="ISCSI">ISCSI<sup>1</sup></a></li>
+		
 			<li><a href="/categories/Kernel/" title="Kernel">Kernel<sup>1</sup></a></li>
 		
 			<li><a href="/categories/LINUX-MAIL/" title="LINUX-MAIL">LINUX-MAIL<sup>1</sup></a></li>
 		
-			<li><a href="/categories/LINUX命令/" title="LINUX命令">LINUX命令<sup>13</sup></a></li>
+			<li><a href="/categories/LINUX命令/" title="LINUX命令">LINUX命令<sup>14</sup></a></li>
 		
 			<li><a href="/categories/NGINX/" title="NGINX">NGINX<sup>1</sup></a></li>
 		
@@ -244,6 +247,8 @@ iqn.yyyy-mm.[:identifier]iqn.2014-12.cn.openlab:storage001iqn：表示“i</p>
 	<p class="asidetitle">标签</p>
 		<ul class="clearfix">
 		
+			<li><a href="/tags/ISCSI/" title="ISCSI">ISCSI<sup>1</sup></a></li>
+		
 			<li><a href="/tags/MARKDOWN/" title="MARKDOWN">MARKDOWN<sup>1</sup></a></li>
 		
 			<li><a href="/tags/NGINX/" title="NGINX">NGINX<sup>1</sup></a></li>
@@ -255,6 +260,8 @@ iqn.yyyy-mm.[:identifier]iqn.2014-12.cn.openlab:storage001iqn：表示“i</p>
 			<li><a href="/tags/nfs/" title="nfs">nfs<sup>1</sup></a></li>
 		
 			<li><a href="/tags/好用的命令/" title="好用的命令">好用的命令<sup>1</sup></a></li>
+		
+			<li><a href="/tags/重置ROOT密码/" title="重置ROOT密码">重置ROOT密码<sup>1</sup></a></li>
 		
 		</ul>
 </div>

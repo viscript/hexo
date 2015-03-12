@@ -4,20 +4,23 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>viscript</title>
+    <title>LINUX-RHEL7初始化ROOT密码 | viscript</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="viscript">
     
-    <meta name="description" content="title: LINUX-RHEL7初始化ROOT密码categories:LINUX命令tags:重置ROOT密码
-
-步骤：
+    <meta name="description" content="步骤：
 
 开机，第一行按e
 在linux16行按ctrl-e光标放置最后一段，输入rd.break  console=tty0ctrl-x启动
 
 
-提示符出现：switch_roo">
+提示符出现：switch_root:/#
+命令行输入：
+
+
+
+mount |grep xfs查看信息mount -o remount,rw /sysro">
     
     
     
@@ -74,24 +77,22 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/03/12/LINUX-RHEL7初始化ROOT密码/" title="" itemprop="url"></a>
+      <a href="/2015/03/12/LINUX-RHEL7初始化ROOT密码/" title="LINUX-RHEL7初始化ROOT密码" itemprop="url">LINUX-RHEL7初始化ROOT密码</a>
   </h1>
   <p class="article-author">By
     
       <a href="https://plus.google.com/https://plus.google.com/u/0/118332448986920483228?rel=author" title="viscript" target="_blank" itemprop="author">viscript</a>
     </p>
   <p class="article-time">
-    <time datetime="2015-03-12T03:29:52.573Z" itemprop="datePublished">3月 12 2015</time>
-    更新日期:<time datetime="2015-03-12T03:29:52.564Z" itemprop="dateModified">3月 12 2015</time>
+    <time datetime="2015-03-12T05:52:52.272Z" itemprop="datePublished">3月 12 2015</time>
+    更新日期:<time datetime="2015-03-12T05:52:52.256Z" itemprop="dateModified">3月 12 2015</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
 		
-		<p>title: LINUX-RHEL7初始化ROOT密码<br>categories:LINUX命令<br>tags:重置ROOT密码</p>
-<hr>
-<h3 id="步骤：">步骤：</h3>
+		<h3 id="步骤：">步骤：</h3>
 <ul>
 <li>开机，第一行按e<blockquote>
 <p>在linux16行按ctrl-e光标放置最后一段，输入rd.break  console=tty0<br>ctrl-x启动</p>
@@ -113,12 +114,22 @@
 	</div>
 		<footer class="article-footer clearfix">
 
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/重置ROOT密码/">重置ROOT密码</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/LINUX命令/">LINUX命令</a>
+</div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="https://v-script.com/2015/03/12/LINUX-RHEL7初始化ROOT密码/" data-title="viscript" data-tsina="null" class="share clearfix">
+  <div data-url="https://v-script.com/2015/03/12/LINUX-RHEL7初始化ROOT密码/" data-title="LINUX-RHEL7初始化ROOT密码 | viscript" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -127,19 +138,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/03/12/ISCSI配置/" title="">
-  <strong>PREVIOUS:</strong><br/>
-  <span>
-  (no title)</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/03/05/LSOF/"  title="LSOF">
+<a href="/2015/03/12/APACHE-RHEL7安装配置/"  title="APACHE-RHEL7安装配置">
  <strong>NEXT:</strong><br/> 
- <span>LSOF
+ <span>APACHE-RHEL7安装配置
 </span>
 </a>
 </div>
@@ -163,11 +166,13 @@
 		
 			<li><a href="/categories/DNS/" title="DNS">DNS<sup>1</sup></a></li>
 		
+			<li><a href="/categories/ISCSI/" title="ISCSI">ISCSI<sup>1</sup></a></li>
+		
 			<li><a href="/categories/Kernel/" title="Kernel">Kernel<sup>1</sup></a></li>
 		
 			<li><a href="/categories/LINUX-MAIL/" title="LINUX-MAIL">LINUX-MAIL<sup>1</sup></a></li>
 		
-			<li><a href="/categories/LINUX命令/" title="LINUX命令">LINUX命令<sup>13</sup></a></li>
+			<li><a href="/categories/LINUX命令/" title="LINUX命令">LINUX命令<sup>14</sup></a></li>
 		
 			<li><a href="/categories/NGINX/" title="NGINX">NGINX<sup>1</sup></a></li>
 		
@@ -190,6 +195,8 @@
 	<p class="asidetitle">标签</p>
 		<ul class="clearfix">
 		
+			<li><a href="/tags/ISCSI/" title="ISCSI">ISCSI<sup>1</sup></a></li>
+		
 			<li><a href="/tags/MARKDOWN/" title="MARKDOWN">MARKDOWN<sup>1</sup></a></li>
 		
 			<li><a href="/tags/NGINX/" title="NGINX">NGINX<sup>1</sup></a></li>
@@ -201,6 +208,8 @@
 			<li><a href="/tags/nfs/" title="nfs">nfs<sup>1</sup></a></li>
 		
 			<li><a href="/tags/好用的命令/" title="好用的命令">好用的命令<sup>1</sup></a></li>
+		
+			<li><a href="/tags/重置ROOT密码/" title="重置ROOT密码">重置ROOT密码<sup>1</sup></a></li>
 		
 		</ul>
 </div>
