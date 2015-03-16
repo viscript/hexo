@@ -65,141 +65,119 @@
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/2015/03/12/LINUX-RHEL7初始化ROOT密码/" title="LINUX-RHEL7初始化ROOT密码" itemprop="url">
+    <a href="/2015/03/16/俄罗斯方块/" title="俄罗斯方块" itemprop="url">
   
-    <h1 itemprop="name">LINUX-RHEL7初始化ROOT密码</h1>
+    <h1 itemprop="name">俄罗斯方块</h1>
     
      
-           <p itemprop="description" >步骤：
-
-开机，第一行按e
-在linux16行按ctrl-e光标放置最后一段，输入rd.break  console=tty0ctrl-x启动
-
-
-提示符出现：switch_root:/#
-命令行输入：
-
-
-
-mount |grep xfs查看信息mount -o remount</p>
+           <p itemprop="description" >#!/bin/shaBox0_0=(0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1 1 1 0 0 0 0 0 0)aBox0_1=(0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 1 1 0</p>
         
     
-    <time datetime="2015-03-12T05:52:52.272Z" itemprop="datePublished">3月 12 2015</time>
+    <time datetime="2015-03-16T09:53:41.168Z" itemprop="datePublished">3月 16 2015</time>
   </a>
 </section>
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/2015/03/12/APACHE-RHEL7安装配置/" title="APACHE-RHEL7安装配置" itemprop="url">
+    <a href="/2015/03/14/SAMBA基本配置和双虚机实验/" title="SAMBA基本配置和双虚机实验" itemprop="url">
   
-    <h1 itemprop="name">APACHE-RHEL7安装配置</h1>
+    <h1 itemprop="name">SAMBA基本配置和双虚机实验</h1>
     
      
-           <p itemprop="description" >一．基本服务配置
+           <p itemprop="description" >服务端配置：
 
 
-安装apache
-
-
-
-yum -y install httpd
+添加测试用户：
 
 
 
-查看配置文件位置
-
-
-
-rpm -qc httpd
+useradd andy &amp;&amp; echo andy | passwd --stdin andy
 
 
 
 
-修改配置文件：/etc/httpd/conf/httpd.conf去掉以下两行的注释：DocumentRoot “/var/w</p>
+
+
+
+yum install samba samba-client –y
+
+
+
+建共享目录并设置selinux：
+
+
+
+mkdir /c</p>
         
     
-    <time datetime="2015-03-12T05:52:38.462Z" itemprop="datePublished">3月 12 2015</time>
+    <time datetime="2015-03-14T07:12:35.541Z" itemprop="datePublished">3月 14 2015</time>
   </a>
 </section>
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/2015/03/12/ISCSI配置/" title="ISCSI配置" itemprop="url">
+    <a href="/2015/03/14/SAMBA安装配置/" title="SAMBA安装配置" itemprop="url">
   
-    <h1 itemprop="name">ISCSI配置</h1>
+    <h1 itemprop="name">SAMBA安装配置</h1>
     
      
-           <p itemprop="description" >iqn（iSCSI Qualified Name）
-格式：
+           <p itemprop="description" >一．服务器端设置
 
-iqn.yyyy-mm.[:identifier]iqn.2014-12.cn.openlab:storage001iqn：表示“iSCSI Qualified Name”，简称iqn。yyyy-mm：表示年份-月份。</p>
+
+安装：
+
+
+
+yum -y install samba samba-client samba-common
+
+
+
+添加系统用户：
+
+
+
+useradd harry &amp;amp;&amp;amp; echo harry | passwd —stdin harryuser</p>
         
     
-    <time datetime="2015-03-12T05:51:57.218Z" itemprop="datePublished">3月 12 2015</time>
+    <time datetime="2015-03-14T07:08:29.942Z" itemprop="datePublished">3月 14 2015</time>
   </a>
 </section>
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/2015/03/12/APACHE-HTTPS/" title="APACHE-HTTPS" itemprop="url">
+    <a href="/2015/03/14/端口转发/" title="端口转发" itemprop="url">
   
-    <h1 itemprop="name">APACHE-HTTPS</h1>
+    <h1 itemprop="name">端口转发</h1>
     
      
-           <p itemprop="description" >一．服务器端openssl配置
-
-
-安装openssl ：
-
-
-
-yum install openssl*
-
-
-
-生成私钥：
-
-
-
-openssl  genrsa  -out  server.key  1024
-
-
-
-查看：
-
-
-
-openssl  rsa  -noout  -t</p>
+           <p itemprop="description" >达到目的：
+firefox —&amp;gt;主机A 5423端口自动转到主机B的80端口或者A的自身的80端口命令：
+&amp;gt;firewall-config&amp;gt;configuration:Permanent&amp;gt;Ports添加5423TCP端口&amp;gt;目的：5423端口转向自己的</p>
         
     
-    <time datetime="2015-03-12T05:25:51.551Z" itemprop="datePublished">3月 12 2015</time>
+    <time datetime="2015-03-14T07:04:16.754Z" itemprop="datePublished">3月 14 2015</time>
   </a>
 </section>
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/2015/03/12/NGINX安装配置及VHOST/" title="NGINX安装配置及VHOST" itemprop="url">
+    <a href="/2015/03/14/NGINX配置文件/" title="NGINX配置文件" itemprop="url">
   
-    <h1 itemprop="name">NGINX安装配置及VHOST</h1>
+    <h1 itemprop="name">NGINX配置文件</h1>
     
      
-           <p itemprop="description" >NGINX安装
-
-
-安装所需软件包：
-
-
-
-yum install -y make apr* autoconf automake gcc gcc-c++     //编译环境yum install -y zlib-devel pcre-devel openssl openssl-</p>
+           <p itemprop="description" >#运行用户user www-data;#启动进程,通常设置成和cpu的数量相等worker_processes  1;
+#全局错误日志及PID文件error_log  /var/log/nginx/error.log;pid        /var/run/nginx.pid;
+</p>
         
     
-    <time datetime="2015-03-12T03:52:04.509Z" itemprop="datePublished">3月 12 2015</time>
+    <time datetime="2015-03-14T07:03:40.097Z" itemprop="datePublished">3月 14 2015</time>
   </a>
 </section>
 
 
   <nav id="page-nav" class="clearfix">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
   </nav>
 
 </div>
@@ -214,11 +192,11 @@ yum install -y make apr* autoconf automake gcc gcc-c++     //编译环境yum ins
 	<p class="asidetitle">分类</p>
 		<ul>
 		
-			<li><a href="/categories/AHACHE/" title="AHACHE">AHACHE<sup>3</sup></a></li>
+			<li><a href="/categories/AHACHE/" title="AHACHE">AHACHE<sup>2</sup></a></li>
 		
 			<li><a href="/categories/DNS/" title="DNS">DNS<sup>1</sup></a></li>
 		
-			<li><a href="/categories/ISCSI/" title="ISCSI">ISCSI<sup>1</sup></a></li>
+			<li><a href="/categories/ISCSI/" title="ISCSI">ISCSI<sup>0</sup></a></li>
 		
 			<li><a href="/categories/Kernel/" title="Kernel">Kernel<sup>1</sup></a></li>
 		
@@ -226,7 +204,7 @@ yum install -y make apr* autoconf automake gcc gcc-c++     //编译环境yum ins
 		
 			<li><a href="/categories/LINUX命令/" title="LINUX命令">LINUX命令<sup>14</sup></a></li>
 		
-			<li><a href="/categories/NGINX/" title="NGINX">NGINX<sup>1</sup></a></li>
+			<li><a href="/categories/NGINX/" title="NGINX">NGINX<sup>0</sup></a></li>
 		
 			<li><a href="/categories/RHCA/" title="RHCA">RHCA<sup>1</sup></a></li>
 		
@@ -235,6 +213,10 @@ yum install -y make apr* autoconf automake gcc gcc-c++     //编译环境yum ins
 			<li><a href="/categories/图片BLOG/" title="图片BLOG">图片BLOG<sup>1</sup></a></li>
 		
 			<li><a href="/categories/摘录/" title="摘录">摘录<sup>4</sup></a></li>
+		
+			<li><a href="/categories/服务配置/" title="服务配置">服务配置<sup>6</sup></a></li>
+		
+			<li><a href="/categories/游戏/" title="游戏">游戏<sup>1</sup></a></li>
 		
 			<li><a href="/categories/配置文件/" title="配置文件">配置文件<sup>2</sup></a></li>
 		
@@ -247,17 +229,25 @@ yum install -y make apr* autoconf automake gcc gcc-c++     //编译环境yum ins
 	<p class="asidetitle">标签</p>
 		<ul class="clearfix">
 		
+			<li><a href="/tags/AHACHE/" title="AHACHE">AHACHE<sup>3</sup></a></li>
+		
 			<li><a href="/tags/ISCSI/" title="ISCSI">ISCSI<sup>1</sup></a></li>
 		
 			<li><a href="/tags/MARKDOWN/" title="MARKDOWN">MARKDOWN<sup>1</sup></a></li>
 		
-			<li><a href="/tags/NGINX/" title="NGINX">NGINX<sup>1</sup></a></li>
+			<li><a href="/tags/NGINX/" title="NGINX">NGINX<sup>2</sup></a></li>
+		
+			<li><a href="/tags/SAMBA/" title="SAMBA">SAMBA<sup>2</sup></a></li>
 		
 			<li><a href="/tags/auto-master/" title="auto.master">auto.master<sup>1</sup></a></li>
 		
 			<li><a href="/tags/autofs/" title="autofs">autofs<sup>1</sup></a></li>
 		
+			<li><a href="/tags/firewall/" title="firewall">firewall<sup>1</sup></a></li>
+		
 			<li><a href="/tags/nfs/" title="nfs">nfs<sup>1</sup></a></li>
+		
+			<li><a href="/tags/代码/" title="代码">代码<sup>1</sup></a></li>
 		
 			<li><a href="/tags/好用的命令/" title="好用的命令">好用的命令<sup>1</sup></a></li>
 		
@@ -270,7 +260,7 @@ yum install -y make apr* autoconf automake gcc gcc-c++     //编译环境yum ins
   
   <div class="archiveslist">
     <p class="asidetitle"><a href="/archives">归档</a></p>
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">February 2015</a><span class="archive-list-count">24</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">February 2015</a><span class="archive-list-count">22</span></li></ul>
   </div>
 
 

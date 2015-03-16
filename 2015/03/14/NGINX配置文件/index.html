@@ -1,0 +1,451 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>NGINX配置文件 | viscript</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="viscript">
+    
+    <meta name="description" content="#运行用户user www-data;#启动进程,通常设置成和cpu的数量相等worker_processes  1;
+#全局错误日志及PID文件error_log  /var/log/nginx/error.log;pid        /var/run/nginx.pid;
+#工作模式及连接数上">
+    
+    
+    
+    
+    
+<link href="/favicon.ico" rel="icon" type="image/x-ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="viscript" title="viscript"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="viscript">viscript</a></h1>
+				<h2 class="blog-motto">修合无人见，存心有天知。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:v-script.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/03/14/NGINX配置文件/" title="NGINX配置文件" itemprop="url">NGINX配置文件</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="https://plus.google.com/https://plus.google.com/u/0/118332448986920483228?rel=author" title="viscript" target="_blank" itemprop="author">viscript</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2015-03-14T07:03:40.097Z" itemprop="datePublished">3月 14 2015</time>
+    更新日期:<time datetime="2015-03-14T07:03:40.081Z" itemprop="dateModified">3月 14 2015</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<p>#运行用户<br>user www-data;<br>#启动进程,通常设置成和cpu的数量相等<br>worker_processes  1;</p>
+<p>#全局错误日志及PID文件<br>error_log  /var/log/nginx/error.log;<br>pid        /var/run/nginx.pid;</p>
+<p>#工作模式及连接数上限<br>events {<br>    use   epoll;             #epoll是多路复用IO(I/O Multiplexing)中的一种方式,但是仅用于linux2.6以上内核,可以大大提高nginx的性能<br>    worker_connections  1024;#单个后台worker process进程的最大并发链接数</p>
+<pre><code><span class="preprocessor"># multi_accept on; </span>
+</code></pre><p>}</p>
+<p>#设定http服务器，利用它的反向代理功能提供负载均衡支持<br>http {<br>\     #设定mime类型,类型由mime.type文件定义<br>    include       /etc/nginx/mime.types;<br>    default_type  application/octet-stream;</p>
+<pre><code><span class="preprocessor">#设定日志格式</span>
+access_log    /var/<span class="built_in">log</span>/nginx/access.<span class="built_in">log</span>;
+</code></pre><p>\    #sendfile 指令指定 nginx 是否调用 sendfile 函数（zero copy 方式）来输出文件，对于普通应用，<br>\   #必须设为 on,如果用来进行下载等应用磁盘IO重负载应用，可设置为 off，以平衡磁盘与网络I/O处理速度，降低系统的uptime.<br>    sendfile        on;<br>\   #tcp_nopush     on;</p>
+<p>\    #连接超时时间<br>\    #keepalive_timeout  0;<br>    keepalive_timeout  65;<br>    tcp_nodelay        on;</p>
+<p>\    #开启gzip压缩<br>    gzip  on;<br>    gzip_disable “MSIE [1-6].(?!.*SV1)”;</p>
+<p>\    #设定请求缓冲<br>    client_header_buffer_size    1k;<br>    large_client_header_buffers  4 4k;</p>
+<pre><code><span class="keyword">include</span> <span class="regexp">/etc/</span>nginx<span class="regexp">/conf.d/</span>*.conf;
+<span class="keyword">include</span> <span class="regexp">/etc/</span>nginx<span class="regexp">/sites-enabled/</span>*;
+</code></pre><p>\    #设定负载均衡的服务器列表<br>     upstream mysvr {<br> \   #weigth参数表示权值，权值越高被分配到的几率越大<br> \   #本机上的Squid开启3128端口<br>    server 192.168.8.1:3128 weight=5;<br>    server 192.168.8.2:80  weight=1;<br>    server 192.168.8.3:80  weight=6;<br>    }</p>
+<p>   server {<br>\    #侦听80端口<br>        listen       80;<br>\        #定义使用www.xx.com访问<br>        server_name  www.xx.com;</p>
+<p>\        #设定本虚拟主机的访问日志<br>        access_log  logs/www.xx.com.access.log  main;</p>
+<p>\    #默认请求<br>    location / {<br>          root   /root;      #定义服务器的默认网站根目录位置<br>          index index.php index.html index.htm;   #定义首页索引文件的名称</p>
+<pre><code>      <span class="title">fastcgi_pass</span>  www.xx.com;
+     <span class="title">fastcgi_param</span>  SCRIPT_FILENAME  <span class="variable">$document_root</span>/<span class="variable">$fastcgi_script_name</span>; 
+      <span class="title">include</span> /etc/nginx/fastcgi_params;
+    }
+</code></pre><p>\    # 定义错误提示页面<br>    error_page   500 502 503 504 /50x.html;<br>        location = /50x.html {<br>        root   /root;<br>    }</p>
+<p>\    #静态文件，nginx自己处理<br>    location ~ ^/(images|javascript|js|css|flash|media|static)/ {<br>        root /var/www/virtual/htdocs;</p>
+<pre><code>    <span class="comment">#过期30天，静态文件不怎么更新，过期可以设大一点，如果频繁更新，则可以设置得小一点。</span>
+    <span class="title">expires</span> <span class="number">30d</span>;
+}
+</code></pre><p>\    #PHP 脚本请求全部转发到 FastCGI处理. 使用FastCGI默认配置.<br>    location ~ .php$ {<br>        root /root;<br>        fastcgi_pass 127.0.0.1:9000;<br>        fastcgi_index index.php;<br>        fastcgi_param SCRIPT_FILENAME /home/www/www$fastcgi_script_name;<br>        include fastcgi_params;<br>    }<br>\    #设定查看Nginx状态的地址<br>    location /NginxStatus {<br>        stub_status            on;<br>        access_log              on;<br>        auth_basic              “NginxStatus”;<br>        auth_basic_user_file  conf/htpasswd;<br>    }<br>\    #禁止访问 .htxxx 文件<br>    location ~ /.ht {<br>        deny all;<br>    }</p>
+<pre><code> }
+</code></pre><p>}</p>
+<p>以上是一些基本的配置,使用Nginx最大的好处就是负载均衡</p>
+<p>如果要使用负载均衡的话,可以修改配置http节点如下：</p>
+<p>#设定http服务器，利用它的反向代理功能提供负载均衡支持<br>http {<br>\     #设定mime类型,类型由mime.type文件定义<br>    include       /etc/nginx/mime.types;<br>    default_type  application/octet-stream;<br>\    #设定日志格式<br>    access_log    /var/log/nginx/access.log;</p>
+<p>\    #省略上文有的一些配置节点</p>
+<p>\    #设定负载均衡的服务器列表<br>     upstream mysvr {<br>\    #weigth参数表示权值，权值越高被分配到的几率越大<br>    server 192.168.8.1x:3128 weight=5;#本机上的Squid开启3128端口<br>    server 192.168.8.2x:80  weight=1;<br>    server 192.168.8.3x:80  weight=6;<br>    }</p>
+<p>   upstream mysvr2 {</p>
+<pre><code><span class="comment">#weigth参数表示权值，权值越高被分配到的几率越大</span>
+
+server <span class="number">192.168</span>.<span class="number">8</span>.x:<span class="number">80</span>  <span class="variable">weight=</span><span class="number">1</span>;
+server <span class="number">192.168</span>.<span class="number">8</span>.x:<span class="number">80</span>  <span class="variable">weight=</span><span class="number">6</span>;
+}
+</code></pre><p>\   #第一个虚拟服务器<br>   server {<br>\    #侦听192.168.8.x的80端口<br>        listen       80;<br>        server_name  192.168.8.x;</p>
+<p>\      #对aspx后缀的进行负载均衡请求<br>    location ~ .*.aspx$ {</p>
+<pre><code>     root   /root;      <span class="preprocessor">#定义服务器的默认网站根目录位置</span>
+      <span class="keyword">index</span> <span class="keyword">index</span>.php <span class="keyword">index</span>.html <span class="keyword">index</span>.htm;   <span class="preprocessor">#定义首页索引文件的名称</span>
+
+      proxy_pass  http:<span class="comment">//mysvr ;#请求转向mysvr 定义的服务器列表</span>
+</code></pre><p>\          #以下是一些反向代理的配置可删除.</p>
+<pre><code>      <span class="title">proxy_redirect</span> <span class="built_in">off</span>;
+</code></pre><p>\          #后端的Web服务器可以通过X-Forwarded-For获取用户真实IP<br>          proxy_set_header Host $host;<br>          proxy_set_header X-Real-IP $remote_addr;<br>          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;<br>          client_max_body_size 10m;    #允许客户端请求的最大单文件字节数<br>          client_body_buffer_size 128k;  #缓冲区代理缓冲用户端请求的最大字节数，<br>          proxy_connect_timeout 90;  #nginx跟后端服务器连接超时时间(代理连接超时)<br>          proxy_send_timeout 90;        #后端服务器数据回传时间(代理发送超时)<br>          proxy_read_timeout 90;         #连接成功后，后端服务器响应时间(代理接收超时)<br>          proxy_buffer_size 4k;             #设置代理服务器（nginx）保存用户头信息的缓冲区大小<br>          proxy_buffers 4 32k;               #proxy_buffers缓冲区，网页平均在32k以下的话，这样设置<br>          proxy_busy_buffers_size 64k;    #高负荷下缓冲大小（proxy_buffers*2）<br>          proxy_temp_file_write_size 64k;  #设定缓存文件夹大小，大于这个值，将从upstream服务器传</p>
+<pre><code>   }
+
+ }
+</code></pre><p>}</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/NGINX/">NGINX</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/配置文件/">配置文件</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="https://v-script.com/2015/03/14/NGINX配置文件/" data-title="NGINX配置文件 | viscript" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/03/14/端口转发/" title="端口转发">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  端口转发</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/03/14/NGINX安装配置及VHOST/"  title="NGINX安装配置及VHOST">
+ <strong>NEXT:</strong><br/> 
+ <span>NGINX安装配置及VHOST
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/AHACHE/" title="AHACHE">AHACHE<sup>2</sup></a></li>
+		
+			<li><a href="/categories/DNS/" title="DNS">DNS<sup>1</sup></a></li>
+		
+			<li><a href="/categories/ISCSI/" title="ISCSI">ISCSI<sup>0</sup></a></li>
+		
+			<li><a href="/categories/Kernel/" title="Kernel">Kernel<sup>1</sup></a></li>
+		
+			<li><a href="/categories/LINUX-MAIL/" title="LINUX-MAIL">LINUX-MAIL<sup>1</sup></a></li>
+		
+			<li><a href="/categories/LINUX命令/" title="LINUX命令">LINUX命令<sup>14</sup></a></li>
+		
+			<li><a href="/categories/NGINX/" title="NGINX">NGINX<sup>0</sup></a></li>
+		
+			<li><a href="/categories/RHCA/" title="RHCA">RHCA<sup>1</sup></a></li>
+		
+			<li><a href="/categories/参考/" title="参考">参考<sup>2</sup></a></li>
+		
+			<li><a href="/categories/图片BLOG/" title="图片BLOG">图片BLOG<sup>1</sup></a></li>
+		
+			<li><a href="/categories/摘录/" title="摘录">摘录<sup>4</sup></a></li>
+		
+			<li><a href="/categories/服务配置/" title="服务配置">服务配置<sup>6</sup></a></li>
+		
+			<li><a href="/categories/游戏/" title="游戏">游戏<sup>1</sup></a></li>
+		
+			<li><a href="/categories/配置文件/" title="配置文件">配置文件<sup>2</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/AHACHE/" title="AHACHE">AHACHE<sup>3</sup></a></li>
+		
+			<li><a href="/tags/ISCSI/" title="ISCSI">ISCSI<sup>1</sup></a></li>
+		
+			<li><a href="/tags/MARKDOWN/" title="MARKDOWN">MARKDOWN<sup>1</sup></a></li>
+		
+			<li><a href="/tags/NGINX/" title="NGINX">NGINX<sup>2</sup></a></li>
+		
+			<li><a href="/tags/SAMBA/" title="SAMBA">SAMBA<sup>2</sup></a></li>
+		
+			<li><a href="/tags/auto-master/" title="auto.master">auto.master<sup>1</sup></a></li>
+		
+			<li><a href="/tags/autofs/" title="autofs">autofs<sup>1</sup></a></li>
+		
+			<li><a href="/tags/firewall/" title="firewall">firewall<sup>1</sup></a></li>
+		
+			<li><a href="/tags/nfs/" title="nfs">nfs<sup>1</sup></a></li>
+		
+			<li><a href="/tags/代码/" title="代码">代码<sup>1</sup></a></li>
+		
+			<li><a href="/tags/好用的命令/" title="好用的命令">好用的命令<sup>1</sup></a></li>
+		
+			<li><a href="/tags/重置ROOT密码/" title="重置ROOT密码">重置ROOT密码<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+  <div class="archiveslist">
+    <p class="asidetitle"><a href="/archives">归档</a></p>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">February 2015</a><span class="archive-list-count">22</span></li></ul>
+  </div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+      <li><a href="http://blog.chinaunix.net/uid/30115009.html" target="_blank" title="vs">China Unix</a></li>
+      <li><a href="http://www.ibm.com/developerworks/cn/linux/" target="_blank" title="IBM Developer">IBM Developer</a></li>
+    </ul>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> o(∩_∩)o <br/>
+			Step by Step</p>
+	</section>
+	 
+	<div class="social-font clearfix">
+		
+		<a href="http://weibo.com/http://weibo.com/3597871112" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/https://github.com/viscript" target="_blank" title="github"></a>
+		
+		
+		<a href="https://www.facebook.com/https://www.facebook.com/drowingleaf" target="_blank" title="facebook"></a>
+		
+		
+	</div>
+		<p class="copyright">One Step a Day © 2015 
+		
+		<a href="https://v-script.com" target="_blank" title="viscript">viscript</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+  </body>
+</html>

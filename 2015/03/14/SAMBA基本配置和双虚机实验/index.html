@@ -4,15 +4,35 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>ISCSI配置 | viscript</title>
+    <title>SAMBA基本配置和双虚机实验 | viscript</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="viscript">
     
-    <meta name="description" content="iqn（iSCSI Qualified Name）
-格式：
+    <meta name="description" content="服务端配置：
 
-iqn.yyyy-mm.[:identifier]iqn.2014-12.cn.openlab:storage001iqn：表示“iSCSI Qualified Name”，简称iqn。yyyy-mm：表示年份-月份。这里是2014-12">
+
+添加测试用户：
+
+
+
+useradd andy &amp;&amp; echo andy | passwd --stdin andy
+
+
+
+
+
+
+
+yum install samba samba-client –y
+
+
+
+建共享目录并设置selinux：
+
+
+
+mkdir /common &amp;&amp; t">
     
     
     
@@ -69,123 +89,134 @@ iqn.yyyy-mm.[:identifier]iqn.2014-12.cn.openlab:storage001iqn：表示“iSCSI Q
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/03/12/ISCSI配置/" title="ISCSI配置" itemprop="url">ISCSI配置</a>
+      <a href="/2015/03/14/SAMBA基本配置和双虚机实验/" title="SAMBA基本配置和双虚机实验" itemprop="url">SAMBA基本配置和双虚机实验</a>
   </h1>
   <p class="article-author">By
     
       <a href="https://plus.google.com/https://plus.google.com/u/0/118332448986920483228?rel=author" title="viscript" target="_blank" itemprop="author">viscript</a>
     </p>
   <p class="article-time">
-    <time datetime="2015-03-12T05:51:57.218Z" itemprop="datePublished">3月 12 2015</time>
-    更新日期:<time datetime="2015-03-12T05:51:57.210Z" itemprop="dateModified">3月 12 2015</time>
+    <time datetime="2015-03-14T07:12:35.541Z" itemprop="datePublished">3月 14 2015</time>
+    更新日期:<time datetime="2015-03-14T07:12:35.526Z" itemprop="dateModified">3月 14 2015</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
 		
-		<h3 id="iqn（iSCSI_Qualified_Name）">iqn（iSCSI Qualified Name）</h3>
-<p><strong>格式：</strong></p>
+		<h3 id="服务端配置：">服务端配置：</h3>
+<ul>
+<li><ol>
+<li>添加测试用户：</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight"><pre><div class="line">useradd andy && <span class="built_in">echo</span> andy | passwd --stdin andy</div></pre></figure>
+
+<ul>
+<li><ol>
+<li></li>
+</ol>
+</li>
+</ul>
+<figure class="highlight"><pre><div class="line">yum <span class="operator"><span class="keyword">install</span> samba samba-client –y</span></div></pre></figure>
+
+<ul>
+<li><ol>
+<li>建共享目录并设置selinux：</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight"><pre><div class="line">mkdir /<span class="built_in">common</span> && touch <span class="keyword">test</span>.txt</div><div class="line">chcon -R -t samba_share_t /<span class="built_in">common</span></div></pre></figure>
+
+<ul>
+<li><ol>
+<li></li>
+</ol>
+</li>
+</ul>
+<figure class="highlight"><pre><div class="line">ls -ldZ /<span class="keyword">common</span>  <span class="comment">//查看修改上下文是否成功。</span></div></pre></figure>
+
+<ul>
+<li><ol>
+<li></li>
+</ol>
+</li>
+</ul>
+<figure class="highlight"><pre><div class="line">vim /etc/samba/smb.conf</div><div class="line"><span class="number">4.1</span>将<span class="number">89</span>行<span class="variable">workgroup =</span> MYGROUP改为：<span class="variable">workgroup =</span> STAFF</div><div class="line"><span class="number">4.2</span>在配置文件最后添加：</div><div class="line">[common]</div><div class="line"> <span class="variable">path =</span> /common</div><div class="line"> hosts <span class="variable">allow =</span> <span class="number">192.168</span>.<span class="number">107</span>.</div><div class="line"> <span class="variable">browseable =</span> yes</div></pre></figure>
+
+<ul>
+<li><ol>
+<li>测试配置参数： </li>
+</ol>
+</li>
+</ul>
+<figure class="highlight"><pre><div class="line">testparm</div></pre></figure>
+
+<ul>
+<li><ol>
+<li>把andy变为samba用户：</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight"><pre><div class="line">smbpasswd  <span class="operator">-a</span> andy</div></pre></figure>
+
+<ul>
+<li><ol>
+<li>配置服务：</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight"><pre><div class="line"><span class="title">systemctl</span> restart smb nmb</div><div class="line">systemctl enable smb nmb</div></pre></figure>
+
+<ul>
+<li><ol>
+<li>防火墙配置：</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight"><pre><div class="line"><span class="comment">firewall</span><span class="literal">-</span><span class="comment">cmd</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">permanent</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">add</span><span class="literal">-</span><span class="comment">service=samba</span></div><div class="line"><span class="comment">firewall</span><span class="literal">-</span><span class="comment">cmd</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">permanent</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">add</span><span class="literal">-</span><span class="comment">service=mountd</span></div><div class="line"><span class="comment">firewall</span><span class="literal">-</span><span class="comment">cmd</span> <span class="comment">–reload</span></div><div class="line"><span class="comment">firewall</span><span class="literal">-</span><span class="comment">cmd</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">list</span><span class="literal">-</span><span class="comment">all</span></div></pre></figure>
+
+<h3 id="客户端配置：">客户端配置：</h3>
+<ul>
+<li><ol>
+<li></li>
+</ol>
+</li>
+</ul>
+<figure class="highlight"><pre><div class="line">yum <span class="operator"><span class="keyword">install</span> samba-client cifs-utils –y</span></div></pre></figure>
+
+<ul>
+<li><ol>
+<li>测试：</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight"><pre><div class="line"><span class="title">smbclient</span> -L //<span class="number">192.168.107.147</span> -U andy%andy</div></pre></figure>
+
 <blockquote>
-<p>iqn.yyyy-mm.<reversed domain="" name="">[:identifier]<br>iqn.2014-12.cn.openlab:storage001<br>iqn：表示“iSCSI Qualified Name”，简称iqn。<br>yyyy-mm：表示年份-月份。这里是2014-12。<br>reversed domain name：倒过来的域名:cn.openlab。<br>identifier：表示识别代码:storage001。</reversed></p>
+<p>//以下部分仅参考：<br>   smbclient -c ‘ls’ //192.168.107.147/common -U andy%andy<br>    mount  -o username=andy,passwd=andy //192.168.107.147/common /test</p>
 </blockquote>
-<h3 id="ISCSI配置">ISCSI配置</h3>
-<h4 id="一．服务器端target（192-168-100-100）">一．服务器端target（192.168.100.100）</h4>
-<ul>
-<li><ol>
-<li>安装软件：</li>
-</ol>
-</li>
-</ul>
-<figure class="highlight"><pre><div class="line">yum <span class="operator"><span class="keyword">install</span> targetd targetcli</span></div></pre></figure>
-
-<ul>
-<li>2.修改机器名：</li>
-</ul>
-<figure class="highlight"><pre><div class="line">hostnamectl <span class="keyword">set</span>-<span class="built_in">hostname</span> storage001</div><div class="line"><span class="keyword">echo</span> <span class="number">192.168</span>.<span class="number">100.100</span> storage001 &gt;&gt; /etc/hosts</div></pre></figure>
-
-<ul>
-<li><ol>
-<li>添加磁盘，创建分区：(无需格式化, 需要partprobe)</li>
-</ol>
-</li>
-</ul>
-<figure class="highlight"><pre><div class="line">fdisk <span class="regexp">/dev/</span>sdb</div></pre></figure>
-
-<ul>
-<li>4.启动服务：（根据错误日志添加密码）</li>
-</ul>
-<figure class="highlight"><pre><div class="line">systemctl <span class="operator"><span class="keyword">start</span> targetd</span></div><div class="line">systemctl enable targetd</div><div class="line">systemctl <span class="keyword">status</span> targetd</div></pre></figure>
-
-<ul>
-<li><ol>
-<li>配置target端： <blockquote>
-<p>5.1 targetcli进入内部命令模式：<br>5.2 设置SCSI服务器<br>5.2.1建立block<br>/&gt; /backstores/block create storage001 /dev/sdb1<br>Created block storage object storage001 using /dev/sdb1.<br>5.2.2建立IQN<br>/&gt; /iscsi create iqn.2014-12.cn.openlab:storage001<br>Created target iqn.2014-12.cn.openlab:storage001.<br>Created TPG 1.<br>5.2.3建立LUN号<br>/&gt; /iscsi/iqn.2014-12.cn.openlab:storage001/tpg1/luns create /backstores/block/storage001<br>Created LUN 0.<br>5.2.4建立ACL （此处添加客户端IQN）<br>/&gt; iscsi/iqn.2014-12.cn.openlab:storage001/tpg1/acls create iqn.2014-12.cn.openlab:client001<br>Created Node ACL for iqn.2014-12.cn.openlab:client001<br>Created mapped LUN 0.<br>5.2.4建立portal (此处为服务器IP)<br>/&gt;/iscsi/iqn.2014-12.cn.openlab:storage001/tpg1/portals create 192.168.232.134<br>Using default IP port 3260<br>Created network portal 192.168.232.134:3260.<br>5.2.4 查看并退出<br>1.ls 查看<br>2.exit退出<br>Global pref auto_save_on_exit=true<br>Last 10 configs saved in /etc/target/backup.<br>Configuration saved to /etc/target/saveconfig.json</p>
-</blockquote>
-</li>
-</ol>
-</li>
-<li><ol>
-<li>修改防火墙</li>
-</ol>
-</li>
-</ul>
-<figure class="highlight"><pre><div class="line"><span class="comment">firewall</span><span class="literal">-</span><span class="comment">cmd</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">permanent</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">add</span><span class="literal">-</span><span class="comment">port=3260/tcp</span></div><div class="line"><span class="comment">firewall</span><span class="literal">-</span><span class="comment">cmd</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">reload</span></div></pre></figure>
-
-<h4 id="二．客户端端配置initiator">二．客户端端配置initiator</h4>
-<ul>
-<li>1.安装：yum install iscsi-initiator-utils</li>
-<li>2.修改配置文件 </li>
-</ul>
-<figure class="highlight"><pre><div class="line">/etc/iscsi/initiatorname.iscsi</div><div class="line">InitiatorName= iqn.<span class="number">2014</span>-<span class="number">12</span>.<span class="keyword">cn</span>.openla<span class="variable">b:client001</span></div></pre></figure>
-
-<ul>
-<li>3.启动服务：</li>
-</ul>
-<figure class="highlight"><pre><div class="line">systemctl <span class="operator"><span class="keyword">start</span> iscsid</span></div><div class="line">systemctl enable iscsid</div><div class="line">systemctl <span class="keyword">status</span> iscsid</div></pre></figure>
-
-<ul>
-<li><ol>
-<li></li>
-</ol>
-</li>
-</ul>
-<figure class="highlight"><pre><div class="line">iscsiadm -<span class="keyword">m</span> discovery -<span class="keyword">t</span> <span class="keyword">st</span> –<span class="keyword">p</span> <span class="number">192.168</span>.<span class="number">100.100</span></div><div class="line">iscsiadm -<span class="keyword">m</span> node -T iqn.<span class="number">2014</span>-<span class="number">12</span>.<span class="keyword">cn</span>.openla<span class="variable">b:</span> storage001 -<span class="keyword">p</span> <span class="number">192.168</span>.<span class="number">100.100</span> -<span class="keyword">l</span></div></pre></figure>
-
-<ul>
-<li><ol>
-<li></li>
-</ol>
-</li>
-</ul>
-<figure class="highlight"><pre><div class="line">fdisk <span class="operator">-l</span> | grep sd</div></pre></figure>
-
-<ul>
-<li><ol>
-<li>分区，格式化，挂载，开机启动设置</li>
-</ol>
-</li>
-</ul>
   
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/ISCSI/">ISCSI</a>
+  <span></span> <a href="/tags/SAMBA/">SAMBA</a>
   </div>
 
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/ISCSI/">ISCSI</a>
+  <a class="article-category-link" href="/categories/服务配置/">服务配置</a>
 </div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="https://v-script.com/2015/03/12/ISCSI配置/" data-title="ISCSI配置 | viscript" data-tsina="null" class="share clearfix">
+  <div data-url="https://v-script.com/2015/03/14/SAMBA基本配置和双虚机实验/" data-title="SAMBA基本配置和双虚机实验 | viscript" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -195,18 +226,18 @@ iqn.yyyy-mm.[:identifier]iqn.2014-12.cn.openlab:storage001iqn：表示“iSCSI Q
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/03/12/APACHE-RHEL7安装配置/" title="APACHE-RHEL7安装配置">
+ <a href="/2015/03/16/俄罗斯方块/" title="俄罗斯方块">
   <strong>PREVIOUS:</strong><br/>
   <span>
-  APACHE-RHEL7安装配置</span>
+  俄罗斯方块</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2015/03/12/APACHE-HTTPS/"  title="APACHE-HTTPS">
+<a href="/2015/03/14/SAMBA安装配置/"  title="SAMBA安装配置">
  <strong>NEXT:</strong><br/> 
- <span>APACHE-HTTPS
+ <span>SAMBA安装配置
 </span>
 </a>
 </div>
@@ -226,11 +257,11 @@ iqn.yyyy-mm.[:identifier]iqn.2014-12.cn.openlab:storage001iqn：表示“iSCSI Q
 	<p class="asidetitle">分类</p>
 		<ul>
 		
-			<li><a href="/categories/AHACHE/" title="AHACHE">AHACHE<sup>3</sup></a></li>
+			<li><a href="/categories/AHACHE/" title="AHACHE">AHACHE<sup>2</sup></a></li>
 		
 			<li><a href="/categories/DNS/" title="DNS">DNS<sup>1</sup></a></li>
 		
-			<li><a href="/categories/ISCSI/" title="ISCSI">ISCSI<sup>1</sup></a></li>
+			<li><a href="/categories/ISCSI/" title="ISCSI">ISCSI<sup>0</sup></a></li>
 		
 			<li><a href="/categories/Kernel/" title="Kernel">Kernel<sup>1</sup></a></li>
 		
@@ -238,7 +269,7 @@ iqn.yyyy-mm.[:identifier]iqn.2014-12.cn.openlab:storage001iqn：表示“iSCSI Q
 		
 			<li><a href="/categories/LINUX命令/" title="LINUX命令">LINUX命令<sup>14</sup></a></li>
 		
-			<li><a href="/categories/NGINX/" title="NGINX">NGINX<sup>1</sup></a></li>
+			<li><a href="/categories/NGINX/" title="NGINX">NGINX<sup>0</sup></a></li>
 		
 			<li><a href="/categories/RHCA/" title="RHCA">RHCA<sup>1</sup></a></li>
 		
@@ -247,6 +278,10 @@ iqn.yyyy-mm.[:identifier]iqn.2014-12.cn.openlab:storage001iqn：表示“iSCSI Q
 			<li><a href="/categories/图片BLOG/" title="图片BLOG">图片BLOG<sup>1</sup></a></li>
 		
 			<li><a href="/categories/摘录/" title="摘录">摘录<sup>4</sup></a></li>
+		
+			<li><a href="/categories/服务配置/" title="服务配置">服务配置<sup>6</sup></a></li>
+		
+			<li><a href="/categories/游戏/" title="游戏">游戏<sup>1</sup></a></li>
 		
 			<li><a href="/categories/配置文件/" title="配置文件">配置文件<sup>2</sup></a></li>
 		
@@ -259,17 +294,25 @@ iqn.yyyy-mm.[:identifier]iqn.2014-12.cn.openlab:storage001iqn：表示“iSCSI Q
 	<p class="asidetitle">标签</p>
 		<ul class="clearfix">
 		
+			<li><a href="/tags/AHACHE/" title="AHACHE">AHACHE<sup>3</sup></a></li>
+		
 			<li><a href="/tags/ISCSI/" title="ISCSI">ISCSI<sup>1</sup></a></li>
 		
 			<li><a href="/tags/MARKDOWN/" title="MARKDOWN">MARKDOWN<sup>1</sup></a></li>
 		
-			<li><a href="/tags/NGINX/" title="NGINX">NGINX<sup>1</sup></a></li>
+			<li><a href="/tags/NGINX/" title="NGINX">NGINX<sup>2</sup></a></li>
+		
+			<li><a href="/tags/SAMBA/" title="SAMBA">SAMBA<sup>2</sup></a></li>
 		
 			<li><a href="/tags/auto-master/" title="auto.master">auto.master<sup>1</sup></a></li>
 		
 			<li><a href="/tags/autofs/" title="autofs">autofs<sup>1</sup></a></li>
 		
+			<li><a href="/tags/firewall/" title="firewall">firewall<sup>1</sup></a></li>
+		
 			<li><a href="/tags/nfs/" title="nfs">nfs<sup>1</sup></a></li>
+		
+			<li><a href="/tags/代码/" title="代码">代码<sup>1</sup></a></li>
 		
 			<li><a href="/tags/好用的命令/" title="好用的命令">好用的命令<sup>1</sup></a></li>
 		
@@ -282,7 +325,7 @@ iqn.yyyy-mm.[:identifier]iqn.2014-12.cn.openlab:storage001iqn：表示“iSCSI Q
   
   <div class="archiveslist">
     <p class="asidetitle"><a href="/archives">归档</a></p>
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">February 2015</a><span class="archive-list-count">24</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">February 2015</a><span class="archive-list-count">22</span></li></ul>
   </div>
 
 

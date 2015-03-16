@@ -4,32 +4,27 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>APACHE-RHEL7安装配置 | viscript</title>
+    <title>SAMBA安装配置 | viscript</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="viscript">
     
-    <meta name="description" content="一．基本服务配置
+    <meta name="description" content="一．服务器端设置
 
 
-安装apache
-
-
-
-yum -y install httpd
+安装：
 
 
 
-查看配置文件位置
+yum -y install samba samba-client samba-common
 
 
 
-rpm -qc httpd
+添加系统用户：
 
 
 
-
-修改配置文件：/etc/httpd/conf/httpd.conf去掉以下两行的注释：DocumentRoot “/var/www/html”  ">
+useradd harry &amp;amp;&amp;amp; echo harry | passwd —stdin harryuseradd potter">
     
     
     
@@ -86,174 +81,87 @@ rpm -qc httpd
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/03/12/APACHE-RHEL7安装配置/" title="APACHE-RHEL7安装配置" itemprop="url">APACHE-RHEL7安装配置</a>
+      <a href="/2015/03/14/SAMBA安装配置/" title="SAMBA安装配置" itemprop="url">SAMBA安装配置</a>
   </h1>
   <p class="article-author">By
     
       <a href="https://plus.google.com/https://plus.google.com/u/0/118332448986920483228?rel=author" title="viscript" target="_blank" itemprop="author">viscript</a>
     </p>
   <p class="article-time">
-    <time datetime="2015-03-12T05:52:38.462Z" itemprop="datePublished">3月 12 2015</time>
-    更新日期:<time datetime="2015-03-12T05:52:38.454Z" itemprop="dateModified">3月 12 2015</time>
+    <time datetime="2015-03-14T07:08:29.942Z" itemprop="datePublished">3月 14 2015</time>
+    更新日期:<time datetime="2015-03-14T07:08:29.942Z" itemprop="dateModified">3月 14 2015</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
 		
-		<h3 id="一．基本服务配置">一．基本服务配置</h3>
+		<h3 id="一．服务器端设置">一．服务器端设置</h3>
 <ul>
 <li><ol>
-<li>安装apache</li>
+<li>安装：</li>
 </ol>
 </li>
 </ul>
-<figure class="highlight"><pre><div class="line">yum -y <span class="operator"><span class="keyword">install</span> httpd</span></div></pre></figure>
+<figure class="highlight"><pre><div class="line">yum -y install samba samba-<span class="keyword">client</span> samba-<span class="keyword">common</span></div></pre></figure>
 
 <ul>
 <li><ol>
-<li>查看配置文件位置</li>
+<li>添加系统用户：</li>
 </ol>
 </li>
 </ul>
-<figure class="highlight"><pre><div class="line"><span class="title">rpm</span> -qc httpd</div></pre></figure>
+<p>useradd harry &amp;&amp; echo harry | passwd —stdin harry<br>useradd potter &amp;&amp; echo potter | passwd —stdin potter</p>
+<figure class="highlight"><pre><div class="line"><span class="deletion">- 3.	在Samba中添加harry用户：</span></div></pre></figure>
 
-<ul>
-<li><ol>
-<li><blockquote>
-<p>修改配置文件：/etc/httpd/conf/httpd.conf<br>去掉以下两行的注释：<br>DocumentRoot “/var/www/html”  //定义web文件存放的根<br>   DirectoryIndex index.html   //定义默认页的名称</p>
-</blockquote>
-</li>
-</ol>
-</li>
-<li><ol>
-<li>给默认页添加内容：</li>
-</ol>
-</li>
-</ul>
-<figure class="highlight"><pre><div class="line"><span class="keyword">echo</span> Hello &gt; /<span class="keyword">var</span>/www/html/index.html  <span class="comment">//也可是标准HTML此处省略。</span></div></pre></figure>
+<p>smbpasswd –a harry   </p>
+<figure class="highlight"><pre><div class="line"><span class="deletion">- 4.	查看是否添加成功：</span></div></pre></figure>
 
-<ul>
-<li><ol>
-<li>启动httpd服务：</li>
-</ol>
-</li>
-</ul>
-<figure class="highlight"><pre><div class="line">systemctl start httpd.<span class="keyword">service</span></div><div class="line">systemctl status httpd.<span class="keyword">service</span>   <span class="comment">//查看状态</span></div><div class="line">systemctl enable httpd.<span class="keyword">service</span>  <span class="comment">//设置为开机启动</span></div></pre></figure>
+<p>pdbedit –L</p>
+<figure class="highlight"><pre><div class="line"><span class="deletion">- 5.	创建共享目录：</span></div></pre></figure>
 
-<ul>
-<li><ol>
-<li>打开防火墙设置并查看状态</li>
-</ol>
-</li>
-</ul>
-<figure class="highlight"><pre><div class="line"><span class="comment">firewall</span><span class="literal">-</span><span class="comment">cmd</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">permanent</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">add</span><span class="literal">-</span><span class="comment">service=http</span></div><div class="line"><span class="comment">firewall</span><span class="literal">-</span><span class="comment">cmd</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">reload</span></div></pre></figure>
+<p>mkdir /samba_share</p>
+<figure class="highlight"><pre><div class="line"><span class="deletion">- 6.	设置ACL权限</span></div></pre></figure>
 
-<ul>
-<li><ol>
-<li><blockquote>
-<p>测试：<br>7.1    web浏览器<br>7.2    curl</p>
-</blockquote>
-</li>
-</ol>
-</li>
-</ul>
-<h3 id="二．虚拟主机配置">二．虚拟主机配置</h3>
-<ul>
-<li><ol>
-<li><blockquote>
-<p>查看虚拟主机配置文件：<br>1.1 rpm -ql httpd | grep httpd-vhost<br>输出如下：</p>
-</blockquote>
-</li>
-</ol>
-</li>
-</ul>
-<figure class="highlight"><pre><div class="line">/&gt;[root@dns www]# rpm -ql httpd | <span class="keyword">grep</span> httpd-vhost</div><div class="line">/usr/share/doc/httpd-<span class="number">2.4</span>.<span class="number">6</span>/httpd-vhosts.<span class="keyword">conf</span></div></pre></figure>
+<p>setfacl -m u:harry:rwx /samba_share</p>
+<figure class="highlight"><pre><div class="line">查看权限是否正确设置：getfacl /samba_share</div><div class="line"><span class="deletion">- 7.	查看配置文件路径：</span></div></pre></figure>
 
-<blockquote>
-<p>1.2 拷贝配置文件到：/etc/httpd/conf.d （Apache子配置文件存放路径）<br>       cp /usr/share/doc/httpd-2.4.6/httpd-vhosts.conf /etc/httpd/conf.d<br>1.4 修改/etc/hosts文件：vi /etc/hosts<br>       127.0.0.1 localhost localhost.localdomain localhost4 localhost4.localdomain4<br>::1         localhost localhost.localdomain localhost6 localhost6.localdomain6<br>192.168.232.131         www.openlab.com         www.redhat.com<br>注：192.168.232.131为本机IP<br>1.3 修改配置文件：vim /etc/httpd/conf.d/httpd-vhosts.conf<br>       <virtualhost 192.168.232.131=""><br>               ServerName 192.168.232.131<br></virtualhost></p>
-<virtualhost www.openlab.com=""><br>   ServerAdmin webmaster@openlab.com<br>   DocumentRoot “/var/www/openlab”<br>   ServerName www.openlab.com<br>   ErrorLog “/var/log/httpd/openlab.com-error_log”<br>   CustomLog “/var/log/httpd/openlab.com-access_log” common<br></virtualhost>
+<p>rpm -qc samba-common</p>
+<figure class="highlight"><pre><div class="line">- <span class="number">8</span>.	创建工作组：</div><div class="line"></div><div class="line">&gt;vim /etc/samba/smb.conf</div><div class="line">&gt;<span class="number">1</span>.	修改： </div><div class="line">&gt;<span class="variable">workgroup =</span> RHEL7</div><div class="line">&gt;hosts <span class="variable">allow =</span> <span class="number">127</span>. <span class="number">192.168</span>.<span class="number">232</span>. </div><div class="line">&gt;//此处为本机网段，注意末尾点.</div><div class="line">&gt;<span class="number">2</span>.	末行添加：</div><div class="line">&gt; [openlab]</div><div class="line">&gt;<span class="variable">path =</span> /samba_share</div><div class="line">&gt;<span class="variable">writable =</span> yes</div><div class="line">&gt;<span class="variable">browseable =</span> yes</div><div class="line"></div><div class="line">- <span class="number">9</span>.	 测试参数是否正确配置：</div></pre></figure>
 
-<virtualhost www.redhat.com=""><br>   ServerAdmin webmaster@redhat.com<br>   DocumentRoot “/var/www/redhat”<br>   ServerName www.RedHat.com<br>   ErrorLog “/var/log/httpd/redhat.com-error_log”<br>   CustomLog “/var/log/httpd/redhat.com-access_log” common<br></virtualhost>
+<p>testparm</p>
+<figure class="highlight"><pre><div class="line"><span class="deletion">- 10.	重启服务并查看状态：</span></div></pre></figure>
 
-</blockquote>
-<ul>
-<li><ol>
-<li>创建虚拟主机目录：</li>
-</ol>
-</li>
-</ul>
-<figure class="highlight"><pre><div class="line">mkdir /<span class="keyword">var</span>/www/{openlab,RedHat}</div></pre></figure>
+<p>systemctl start smb.service<br>systemctl status smb.service</p>
+<figure class="highlight"><pre><div class="line"><span class="deletion">- 11.	设置防火墙并重新加载配置：</span></div></pre></figure>
 
-<ul>
-<li><ol>
-<li>创建主页</li>
-</ol>
-</li>
-</ul>
-<figure class="highlight"><pre><div class="line"><span class="keyword">echo</span> Welcome <span class="keyword">to</span> Openlab &gt; /var/www/openlab/<span class="built_in">index</span>.html</div><div class="line"><span class="keyword">echo</span> Welcome <span class="keyword">to</span> RedHat &gt; /var/www/RedHat/<span class="built_in">index</span>.html</div></pre></figure>
+<p>firewall-cmd —permanent —add-service=samba<br>firewall-cmd —reload</p>
+<figure class="highlight"><pre><div class="line"><span class="deletion">- 12.	查看selinux设置：</span></div></pre></figure>
 
-<ul>
-<li><ol>
-<li>重启服务</li>
-</ol>
-</li>
-</ul>
-<figure class="highlight"><pre><div class="line">systemctl restart httpd.<span class="keyword">service</span></div></pre></figure>
+<p>samba_share_t<br>ls -ldZ /samba_share<br>grep -E ‘setsebool|chcon -‘ /etc/samba/smb.conf<br>chcon -R -t samba_share_t /samba_share</p>
+<figure class="highlight"><pre><div class="line">###二．客户端设置</div><div class="line">-<span class="ruby"> <span class="number">1</span>. windows下测试：</span></div><div class="line">&gt;1.1 ping ip地址</div><div class="line">&gt;1.2 \\ip 输入用户名密码</div><div class="line">-<span class="ruby"> <span class="number">2</span>.进入home目录方法：</span></div></pre></figure>
 
-<ul>
-<li><ol>
-<li>测试</li>
-</ol>
-</li>
-</ul>
-<ul>
-<li><ol>
-<li><blockquote>
-<p>修改主配置文件：vi /etc/httpd/conf/httpd.conf<br>AllowOverride All</p>
-</blockquote>
-</li>
-</ol>
-</li>
-<li><ol>
-<li>在/var/www/html新建.htaccess文件： touch .htaccess</li>
-</ol>
-</li>
-<li><ol>
-<li><blockquote>
-<p>编辑.htaccess文件：<br>AuthName “Please input your name and password”<br>AuthType basic<br>AuthUserFile /var/www/html/user.txt<br>require valid-user</p>
-</blockquote>
-</li>
-</ol>
-</li>
-<li><ol>
-<li>在/var/www/html新建user.txt文件</li>
-</ol>
-</li>
-<li><ol>
-<li>运行命令：htpasswd –b /var/www/html/use.txt hanhan 12345</li>
-</ol>
-</li>
-<li><ol>
-<li>重启服务</li>
-</ol>
-</li>
-</ul>
+<p>setsebool -P samba_enable_home_dirs on<br>```</p>
   
 	</div>
 		<footer class="article-footer clearfix">
 
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/SAMBA/">SAMBA</a>
+  </div>
+
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/AHACHE/">AHACHE</a>
+  <a class="article-category-link" href="/categories/服务配置/">服务配置</a>
 </div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="https://v-script.com/2015/03/12/APACHE-RHEL7安装配置/" data-title="APACHE-RHEL7安装配置 | viscript" data-tsina="null" class="share clearfix">
+  <div data-url="https://v-script.com/2015/03/14/SAMBA安装配置/" data-title="SAMBA安装配置 | viscript" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -263,18 +171,18 @@ rpm -qc httpd
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/03/12/LINUX-RHEL7初始化ROOT密码/" title="LINUX-RHEL7初始化ROOT密码">
+ <a href="/2015/03/14/SAMBA基本配置和双虚机实验/" title="SAMBA基本配置和双虚机实验">
   <strong>PREVIOUS:</strong><br/>
   <span>
-  LINUX-RHEL7初始化ROOT密码</span>
+  SAMBA基本配置和双虚机实验</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2015/03/12/ISCSI配置/"  title="ISCSI配置">
+<a href="/2015/03/14/端口转发/"  title="端口转发">
  <strong>NEXT:</strong><br/> 
- <span>ISCSI配置
+ <span>端口转发
 </span>
 </a>
 </div>
@@ -294,11 +202,11 @@ rpm -qc httpd
 	<p class="asidetitle">分类</p>
 		<ul>
 		
-			<li><a href="/categories/AHACHE/" title="AHACHE">AHACHE<sup>3</sup></a></li>
+			<li><a href="/categories/AHACHE/" title="AHACHE">AHACHE<sup>2</sup></a></li>
 		
 			<li><a href="/categories/DNS/" title="DNS">DNS<sup>1</sup></a></li>
 		
-			<li><a href="/categories/ISCSI/" title="ISCSI">ISCSI<sup>1</sup></a></li>
+			<li><a href="/categories/ISCSI/" title="ISCSI">ISCSI<sup>0</sup></a></li>
 		
 			<li><a href="/categories/Kernel/" title="Kernel">Kernel<sup>1</sup></a></li>
 		
@@ -306,7 +214,7 @@ rpm -qc httpd
 		
 			<li><a href="/categories/LINUX命令/" title="LINUX命令">LINUX命令<sup>14</sup></a></li>
 		
-			<li><a href="/categories/NGINX/" title="NGINX">NGINX<sup>1</sup></a></li>
+			<li><a href="/categories/NGINX/" title="NGINX">NGINX<sup>0</sup></a></li>
 		
 			<li><a href="/categories/RHCA/" title="RHCA">RHCA<sup>1</sup></a></li>
 		
@@ -315,6 +223,10 @@ rpm -qc httpd
 			<li><a href="/categories/图片BLOG/" title="图片BLOG">图片BLOG<sup>1</sup></a></li>
 		
 			<li><a href="/categories/摘录/" title="摘录">摘录<sup>4</sup></a></li>
+		
+			<li><a href="/categories/服务配置/" title="服务配置">服务配置<sup>6</sup></a></li>
+		
+			<li><a href="/categories/游戏/" title="游戏">游戏<sup>1</sup></a></li>
 		
 			<li><a href="/categories/配置文件/" title="配置文件">配置文件<sup>2</sup></a></li>
 		
@@ -327,17 +239,25 @@ rpm -qc httpd
 	<p class="asidetitle">标签</p>
 		<ul class="clearfix">
 		
+			<li><a href="/tags/AHACHE/" title="AHACHE">AHACHE<sup>3</sup></a></li>
+		
 			<li><a href="/tags/ISCSI/" title="ISCSI">ISCSI<sup>1</sup></a></li>
 		
 			<li><a href="/tags/MARKDOWN/" title="MARKDOWN">MARKDOWN<sup>1</sup></a></li>
 		
-			<li><a href="/tags/NGINX/" title="NGINX">NGINX<sup>1</sup></a></li>
+			<li><a href="/tags/NGINX/" title="NGINX">NGINX<sup>2</sup></a></li>
+		
+			<li><a href="/tags/SAMBA/" title="SAMBA">SAMBA<sup>2</sup></a></li>
 		
 			<li><a href="/tags/auto-master/" title="auto.master">auto.master<sup>1</sup></a></li>
 		
 			<li><a href="/tags/autofs/" title="autofs">autofs<sup>1</sup></a></li>
 		
+			<li><a href="/tags/firewall/" title="firewall">firewall<sup>1</sup></a></li>
+		
 			<li><a href="/tags/nfs/" title="nfs">nfs<sup>1</sup></a></li>
+		
+			<li><a href="/tags/代码/" title="代码">代码<sup>1</sup></a></li>
 		
 			<li><a href="/tags/好用的命令/" title="好用的命令">好用的命令<sup>1</sup></a></li>
 		
@@ -350,7 +270,7 @@ rpm -qc httpd
   
   <div class="archiveslist">
     <p class="asidetitle"><a href="/archives">归档</a></p>
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">February 2015</a><span class="archive-list-count">24</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">February 2015</a><span class="archive-list-count">22</span></li></ul>
   </div>
 
 

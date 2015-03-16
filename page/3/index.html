@@ -65,102 +65,113 @@
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/2015/02/27/DNS服务器BIND/" title="DNS服务器BIND" itemprop="url">
+    <a href="/2015/03/12/LINUX-RHEL7初始化ROOT密码/" title="LINUX-RHEL7初始化ROOT密码" itemprop="url">
   
-    <h1 itemprop="name">DNS服务器BIND</h1>
+    <h1 itemprop="name">LINUX-RHEL7初始化ROOT密码</h1>
     
      
-           <p itemprop="description" >BIND的安装和基础
-rpm -qa|grep bind  bind是DNS的工具包
+           <p itemprop="description" >步骤：
 
-bind的进程：
+开机，第一行按e
+在linux16行按ctrl-e光标放置最后一段，输入rd.break  console=tty0ctrl-x启动
 
-named
 
-server named start rpm -qa|grep cach  这个包没有装的啊，必要的配置文件就没有。
+提示符出现：switch_root:/#
+命令行输入：
 
-发现没装。。。
-mount /dev/</p>
+
+
+mount |grep xfs查看信息mount -o remount</p>
         
     
-    <time datetime="2015-02-27T06:09:15.751Z" itemprop="datePublished">2月 27 2015</time>
+    <time datetime="2015-03-12T05:52:52.272Z" itemprop="datePublished">3月 12 2015</time>
   </a>
 </section>
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/2015/02/27/APACHE控制、配置/" title="APACHE控制、配置" itemprop="url">
+    <a href="/2015/03/05/LSOF/" title="LSOF" itemprop="url">
   
-    <h1 itemprop="name">APACHE控制、配置</h1>
+    <h1 itemprop="name">LSOF</h1>
     
      
-           <p itemprop="description" >APACHE的访问控制
-主配置文件位置
-/etc/httpd/conf/httpd.conf
-
-main server在第二部分。
-根：
-指定Document Rootapache有很多的serverserver1               server2           </p>
+           <p itemprop="description" >简介
+lsof(list open files)是一个列出当前系统打开文件的工具。在linux环境下，任何事物都以文件的形式存在，通过文件不仅仅可以访问常规数据，还可以访问网络连接和硬件。所以如传输控制协议 (TCP) 和用户数据报协议 (UDP) 套接字等，系统在后台都为该应用</p>
         
     
-    <time datetime="2015-02-27T03:49:36.334Z" itemprop="datePublished">2月 27 2015</time>
+    <time datetime="2015-03-05T02:25:08.294Z" itemprop="datePublished">3月 5 2015</time>
   </a>
 </section>
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/2015/02/26/TCPWRAP-PAM/" title="TCPWRAP" itemprop="url">
+    <a href="/2015/03/04/Apache配置文件/" title="Apache配置文件" itemprop="url">
   
-    <h1 itemprop="name">TCPWRAP</h1>
+    <h1 itemprop="name">Apache配置文件</h1>
     
      
-           <p itemprop="description" >ldd /usr/sbin/sshd |grep wrapldd /usr/sbin/vsftp |grep wrapldd /bin/login |grep wrapldd /usr/sbin/httpd |grep wrap
-
-得出结论：tcp-wrapper用在需求速度不是</p>
+           <p itemprop="description" >### Section 1: Global Environment//当服务器响应主机头（header）信息时显示Apache的版本和操作系统名称ServerTokens OS//设置服务器的根目录ServerRoot “/etc/httpd”#ScoreBoardFile ru</p>
         
     
-    <time datetime="2015-02-26T06:45:42.291Z" itemprop="datePublished">2月 26 2015</time>
+    <time datetime="2015-03-04T08:19:12.758Z" itemprop="datePublished">3月 4 2015</time>
   </a>
 </section>
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/2015/02/26/IPTABLES/" title="IPTABLES" itemprop="url">
+    <a href="/2015/03/02/EMAIL/" title="EMAIL" itemprop="url">
   
-    <h1 itemprop="name">IPTABLES</h1>
+    <h1 itemprop="name">EMAIL</h1>
     
      
-           <p itemprop="description" >IPTABLES简介
-iptables在最前端，如果还需要加固，需要硬件防火墙。先是以太网接受数据包，往上层区传：IP层（内嵌iptables）。调用的iptables感染了整个TCP/IP处理的各个环节。
+           <p itemprop="description" >MIAL的体系结构
 
-是在tcpwrap之前生效。
+1.SMTP协议
+2.EMAIL体系结构：
 
-tcpwrap是在pam之前生效。
+MUAMTAMDAMAA
 
-</p>
+
+3.LINUX平台SENDMAIL
+
+4.RHEL平台MTA的切换
+5.LINUX平台POSTFIX
+6.RHEL平台的WEBMAIL
+
+SMTP
+cat /etc/redhat-r</p>
         
     
-    <time datetime="2015-02-26T05:57:11.505Z" itemprop="datePublished">2月 26 2015</time>
+    <time datetime="2015-03-02T05:42:46.406Z" itemprop="datePublished">3月 2 2015</time>
   </a>
 </section>
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/2015/02/26/运维安全基础/" title="运维安全基础" itemprop="url">
+    <a href="/2015/03/02/436高可用与高可用集群/" title="436高可用与高可用集群" itemprop="url">
   
-    <h1 itemprop="name">运维安全基础</h1>
+    <h1 itemprop="name">436高可用与高可用集群</h1>
     
      
-           <p itemprop="description" >cd /vi /etc/initab      进程为3chkconfig --list   系统中运行的进程chkconfig --list |grep 3:onchkconfig cups offinit 6ps aux 看看有没有不认识的进程。。netstat -antup</p>
+           <p itemprop="description" >高可用集群
+
+1、高可用的目标：
+
+a&amp;gt; 要有能力监控用于服务的资源和组件的状态；b&amp;gt; 任何一点失败后，整个服务要在短时间内恢复可用状态；c&amp;gt; 有能力自动修复简单的资源或组件的失败；d&amp;gt; 服务可配置以及报警；
+
+
+2、集群的目标：
+
+a&amp;gt; 伸缩性；b</p>
         
     
-    <time datetime="2015-02-26T05:25:20.531Z" itemprop="datePublished">2月 26 2015</time>
+    <time datetime="2015-03-02T05:05:45.714Z" itemprop="datePublished">3月 2 2015</time>
   </a>
 </section>
 
 
   <nav id="page-nav" class="clearfix">
-    <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
+    <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
   </nav>
 
 </div>
@@ -175,11 +186,11 @@ tcpwrap是在pam之前生效。
 	<p class="asidetitle">分类</p>
 		<ul>
 		
-			<li><a href="/categories/AHACHE/" title="AHACHE">AHACHE<sup>3</sup></a></li>
+			<li><a href="/categories/AHACHE/" title="AHACHE">AHACHE<sup>2</sup></a></li>
 		
 			<li><a href="/categories/DNS/" title="DNS">DNS<sup>1</sup></a></li>
 		
-			<li><a href="/categories/ISCSI/" title="ISCSI">ISCSI<sup>1</sup></a></li>
+			<li><a href="/categories/ISCSI/" title="ISCSI">ISCSI<sup>0</sup></a></li>
 		
 			<li><a href="/categories/Kernel/" title="Kernel">Kernel<sup>1</sup></a></li>
 		
@@ -187,7 +198,7 @@ tcpwrap是在pam之前生效。
 		
 			<li><a href="/categories/LINUX命令/" title="LINUX命令">LINUX命令<sup>14</sup></a></li>
 		
-			<li><a href="/categories/NGINX/" title="NGINX">NGINX<sup>1</sup></a></li>
+			<li><a href="/categories/NGINX/" title="NGINX">NGINX<sup>0</sup></a></li>
 		
 			<li><a href="/categories/RHCA/" title="RHCA">RHCA<sup>1</sup></a></li>
 		
@@ -196,6 +207,10 @@ tcpwrap是在pam之前生效。
 			<li><a href="/categories/图片BLOG/" title="图片BLOG">图片BLOG<sup>1</sup></a></li>
 		
 			<li><a href="/categories/摘录/" title="摘录">摘录<sup>4</sup></a></li>
+		
+			<li><a href="/categories/服务配置/" title="服务配置">服务配置<sup>6</sup></a></li>
+		
+			<li><a href="/categories/游戏/" title="游戏">游戏<sup>1</sup></a></li>
 		
 			<li><a href="/categories/配置文件/" title="配置文件">配置文件<sup>2</sup></a></li>
 		
@@ -208,17 +223,25 @@ tcpwrap是在pam之前生效。
 	<p class="asidetitle">标签</p>
 		<ul class="clearfix">
 		
+			<li><a href="/tags/AHACHE/" title="AHACHE">AHACHE<sup>3</sup></a></li>
+		
 			<li><a href="/tags/ISCSI/" title="ISCSI">ISCSI<sup>1</sup></a></li>
 		
 			<li><a href="/tags/MARKDOWN/" title="MARKDOWN">MARKDOWN<sup>1</sup></a></li>
 		
-			<li><a href="/tags/NGINX/" title="NGINX">NGINX<sup>1</sup></a></li>
+			<li><a href="/tags/NGINX/" title="NGINX">NGINX<sup>2</sup></a></li>
+		
+			<li><a href="/tags/SAMBA/" title="SAMBA">SAMBA<sup>2</sup></a></li>
 		
 			<li><a href="/tags/auto-master/" title="auto.master">auto.master<sup>1</sup></a></li>
 		
 			<li><a href="/tags/autofs/" title="autofs">autofs<sup>1</sup></a></li>
 		
+			<li><a href="/tags/firewall/" title="firewall">firewall<sup>1</sup></a></li>
+		
 			<li><a href="/tags/nfs/" title="nfs">nfs<sup>1</sup></a></li>
+		
+			<li><a href="/tags/代码/" title="代码">代码<sup>1</sup></a></li>
 		
 			<li><a href="/tags/好用的命令/" title="好用的命令">好用的命令<sup>1</sup></a></li>
 		
@@ -231,7 +254,7 @@ tcpwrap是在pam之前生效。
   
   <div class="archiveslist">
     <p class="asidetitle"><a href="/archives">归档</a></p>
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">February 2015</a><span class="archive-list-count">24</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">February 2015</a><span class="archive-list-count">22</span></li></ul>
   </div>
 
 

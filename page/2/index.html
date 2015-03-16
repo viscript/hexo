@@ -65,112 +65,136 @@
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/2015/03/05/LSOF/" title="LSOF" itemprop="url">
+    <a href="/2015/03/14/NGINX安装配置及VHOST/" title="NGINX安装配置及VHOST" itemprop="url">
   
-    <h1 itemprop="name">LSOF</h1>
+    <h1 itemprop="name">NGINX安装配置及VHOST</h1>
     
      
-           <p itemprop="description" >简介
-lsof(list open files)是一个列出当前系统打开文件的工具。在linux环境下，任何事物都以文件的形式存在，通过文件不仅仅可以访问常规数据，还可以访问网络连接和硬件。所以如传输控制协议 (TCP) 和用户数据报协议 (UDP) 套接字等，系统在后台都为该应用</p>
+           <p itemprop="description" >NGINX安装
+
+
+安装所需软件包：
+
+
+
+yum install -y make apr* autoconf automake gcc gcc-c++     //编译环境yum install -y zlib-devel pcre-devel openssl openssl-</p>
         
     
-    <time datetime="2015-03-05T02:25:08.294Z" itemprop="datePublished">3月 5 2015</time>
+    <time datetime="2015-03-14T07:03:26.394Z" itemprop="datePublished">3月 14 2015</time>
   </a>
 </section>
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/2015/03/04/Apache配置文件/" title="Apache配置文件" itemprop="url">
+    <a href="/2015/03/14/APACHE控制、配置/" title="APACHE控制、配置" itemprop="url">
   
-    <h1 itemprop="name">Apache配置文件</h1>
+    <h1 itemprop="name">APACHE控制、配置</h1>
     
      
-           <p itemprop="description" >### Section 1: Global Environment//当服务器响应主机头（header）信息时显示Apache的版本和操作系统名称ServerTokens OS//设置服务器的根目录ServerRoot “/etc/httpd”#ScoreBoardFile ru</p>
+           <p itemprop="description" >APACHE的访问控制
+主配置文件位置
+/etc/httpd/conf/httpd.conf
+
+main server在第二部分。
+根：
+指定Document Rootapache有很多的serverserver1               server2           </p>
         
     
-    <time datetime="2015-03-04T08:19:12.758Z" itemprop="datePublished">3月 4 2015</time>
+    <time datetime="2015-03-14T07:01:59.524Z" itemprop="datePublished">3月 14 2015</time>
   </a>
 </section>
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/2015/03/02/EMAIL/" title="EMAIL" itemprop="url">
+    <a href="/2015/03/14/APACHE-RHEL7安装配置/" title="APACHE-RHEL7安装配置" itemprop="url">
   
-    <h1 itemprop="name">EMAIL</h1>
+    <h1 itemprop="name">APACHE-RHEL7安装配置</h1>
     
      
-           <p itemprop="description" >MIAL的体系结构
-
-1.SMTP协议
-2.EMAIL体系结构：
-
-MUAMTAMDAMAA
+           <p itemprop="description" >一．基本服务配置
 
 
-3.LINUX平台SENDMAIL
+安装apache
 
-4.RHEL平台MTA的切换
-5.LINUX平台POSTFIX
-6.RHEL平台的WEBMAIL
 
-SMTP
-cat /etc/redhat-r</p>
+
+yum -y install httpd
+
+
+
+查看配置文件位置
+
+
+
+rpm -qc httpd
+
+
+
+
+修改配置文件：/etc/httpd/conf/httpd.conf去掉以下两行的注释：DocumentRoot “/var/w</p>
         
     
-    <time datetime="2015-03-02T05:42:46.406Z" itemprop="datePublished">3月 2 2015</time>
+    <time datetime="2015-03-14T07:01:25.363Z" itemprop="datePublished">3月 14 2015</time>
   </a>
 </section>
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/2015/03/02/436高可用与高可用集群/" title="436高可用与高可用集群" itemprop="url">
+    <a href="/2015/03/14/APACHE-HTTPS/" title="APACHE-HTTPS" itemprop="url">
   
-    <h1 itemprop="name">436高可用与高可用集群</h1>
+    <h1 itemprop="name">APACHE-HTTPS</h1>
     
      
-           <p itemprop="description" >高可用集群
-
-1、高可用的目标：
-
-a&amp;gt; 要有能力监控用于服务的资源和组件的状态；b&amp;gt; 任何一点失败后，整个服务要在短时间内恢复可用状态；c&amp;gt; 有能力自动修复简单的资源或组件的失败；d&amp;gt; 服务可配置以及报警；
+           <p itemprop="description" >一．服务器端openssl配置
 
 
-2、集群的目标：
+安装openssl ：
 
-a&amp;gt; 伸缩性；b</p>
+
+
+yum install openssl*
+
+
+
+生成私钥：
+
+
+
+openssl  genrsa  -out  server.key  1024
+
+
+
+查看：
+
+
+
+openssl  rsa  -noout  -t</p>
         
     
-    <time datetime="2015-03-02T05:05:45.714Z" itemprop="datePublished">3月 2 2015</time>
+    <time datetime="2015-03-14T07:01:09.032Z" itemprop="datePublished">3月 14 2015</time>
   </a>
 </section>
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/2015/02/28/FTP/" title="FTP" itemprop="url">
+    <a href="/2015/03/14/ISCSI配置/" title="ISCSI配置" itemprop="url">
   
-    <h1 itemprop="name">FTP</h1>
+    <h1 itemprop="name">ISCSI配置</h1>
     
      
-           <p itemprop="description" >传送文件
+           <p itemprop="description" >iqn（iSCSI Qualified Name）
+格式：
 
-scp
-sftp特别慢
-samba也特别慢
-
-
-nfsftprsync这仨很快。
-
-rsync同步文件很牛逼。更新过的copy一下。用ssh通道，和ssh命令差不多
-rsync -e ssh -r shrek@192.168.0.254/etc/sysconfig  </p>
+iqn.yyyy-mm.[:identifier]iqn.2014-12.cn.openlab:storage001iqn：表示“iSCSI Qualified Name”，简称iqn。yyyy-mm：表示年份-月份。</p>
         
     
-    <time datetime="2015-02-28T06:20:42.785Z" itemprop="datePublished">2月 28 2015</time>
+    <time datetime="2015-03-14T07:00:52.350Z" itemprop="datePublished">3月 14 2015</time>
   </a>
 </section>
 
 
   <nav id="page-nav" class="clearfix">
-    <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
+    <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
   </nav>
 
 </div>
@@ -185,11 +209,11 @@ rsync -e ssh -r shrek@192.168.0.254/etc/sysconfig  </p>
 	<p class="asidetitle">分类</p>
 		<ul>
 		
-			<li><a href="/categories/AHACHE/" title="AHACHE">AHACHE<sup>3</sup></a></li>
+			<li><a href="/categories/AHACHE/" title="AHACHE">AHACHE<sup>2</sup></a></li>
 		
 			<li><a href="/categories/DNS/" title="DNS">DNS<sup>1</sup></a></li>
 		
-			<li><a href="/categories/ISCSI/" title="ISCSI">ISCSI<sup>1</sup></a></li>
+			<li><a href="/categories/ISCSI/" title="ISCSI">ISCSI<sup>0</sup></a></li>
 		
 			<li><a href="/categories/Kernel/" title="Kernel">Kernel<sup>1</sup></a></li>
 		
@@ -197,7 +221,7 @@ rsync -e ssh -r shrek@192.168.0.254/etc/sysconfig  </p>
 		
 			<li><a href="/categories/LINUX命令/" title="LINUX命令">LINUX命令<sup>14</sup></a></li>
 		
-			<li><a href="/categories/NGINX/" title="NGINX">NGINX<sup>1</sup></a></li>
+			<li><a href="/categories/NGINX/" title="NGINX">NGINX<sup>0</sup></a></li>
 		
 			<li><a href="/categories/RHCA/" title="RHCA">RHCA<sup>1</sup></a></li>
 		
@@ -206,6 +230,10 @@ rsync -e ssh -r shrek@192.168.0.254/etc/sysconfig  </p>
 			<li><a href="/categories/图片BLOG/" title="图片BLOG">图片BLOG<sup>1</sup></a></li>
 		
 			<li><a href="/categories/摘录/" title="摘录">摘录<sup>4</sup></a></li>
+		
+			<li><a href="/categories/服务配置/" title="服务配置">服务配置<sup>6</sup></a></li>
+		
+			<li><a href="/categories/游戏/" title="游戏">游戏<sup>1</sup></a></li>
 		
 			<li><a href="/categories/配置文件/" title="配置文件">配置文件<sup>2</sup></a></li>
 		
@@ -218,17 +246,25 @@ rsync -e ssh -r shrek@192.168.0.254/etc/sysconfig  </p>
 	<p class="asidetitle">标签</p>
 		<ul class="clearfix">
 		
+			<li><a href="/tags/AHACHE/" title="AHACHE">AHACHE<sup>3</sup></a></li>
+		
 			<li><a href="/tags/ISCSI/" title="ISCSI">ISCSI<sup>1</sup></a></li>
 		
 			<li><a href="/tags/MARKDOWN/" title="MARKDOWN">MARKDOWN<sup>1</sup></a></li>
 		
-			<li><a href="/tags/NGINX/" title="NGINX">NGINX<sup>1</sup></a></li>
+			<li><a href="/tags/NGINX/" title="NGINX">NGINX<sup>2</sup></a></li>
+		
+			<li><a href="/tags/SAMBA/" title="SAMBA">SAMBA<sup>2</sup></a></li>
 		
 			<li><a href="/tags/auto-master/" title="auto.master">auto.master<sup>1</sup></a></li>
 		
 			<li><a href="/tags/autofs/" title="autofs">autofs<sup>1</sup></a></li>
 		
+			<li><a href="/tags/firewall/" title="firewall">firewall<sup>1</sup></a></li>
+		
 			<li><a href="/tags/nfs/" title="nfs">nfs<sup>1</sup></a></li>
+		
+			<li><a href="/tags/代码/" title="代码">代码<sup>1</sup></a></li>
 		
 			<li><a href="/tags/好用的命令/" title="好用的命令">好用的命令<sup>1</sup></a></li>
 		
@@ -241,7 +277,7 @@ rsync -e ssh -r shrek@192.168.0.254/etc/sysconfig  </p>
   
   <div class="archiveslist">
     <p class="asidetitle"><a href="/archives">归档</a></p>
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">February 2015</a><span class="archive-list-count">24</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">February 2015</a><span class="archive-list-count">22</span></li></ul>
   </div>
 
 

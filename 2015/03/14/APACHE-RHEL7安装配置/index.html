@@ -4,19 +4,32 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>NGINX安装配置及VHOST | viscript</title>
+    <title>APACHE-RHEL7安装配置 | viscript</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="viscript">
     
-    <meta name="description" content="NGINX安装
+    <meta name="description" content="一．基本服务配置
 
 
-安装所需软件包：
+安装apache
 
 
 
-yum install -y make apr* autoconf automake gcc gcc-c++     //编译环境yum install -y zlib-devel pcre-devel openssl openssl-devel  //N">
+yum -y install httpd
+
+
+
+查看配置文件位置
+
+
+
+rpm -qc httpd
+
+
+
+
+修改配置文件：/etc/httpd/conf/httpd.conf去掉以下两行的注释：DocumentRoot “/var/www/html”  ">
     
     
     
@@ -73,143 +86,156 @@ yum install -y make apr* autoconf automake gcc gcc-c++     //编译环境yum ins
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/03/12/NGINX安装配置及VHOST/" title="NGINX安装配置及VHOST" itemprop="url">NGINX安装配置及VHOST</a>
+      <a href="/2015/03/14/APACHE-RHEL7安装配置/" title="APACHE-RHEL7安装配置" itemprop="url">APACHE-RHEL7安装配置</a>
   </h1>
   <p class="article-author">By
     
       <a href="https://plus.google.com/https://plus.google.com/u/0/118332448986920483228?rel=author" title="viscript" target="_blank" itemprop="author">viscript</a>
     </p>
   <p class="article-time">
-    <time datetime="2015-03-12T03:52:04.509Z" itemprop="datePublished">3月 12 2015</time>
-    更新日期:<time datetime="2015-03-12T03:52:04.504Z" itemprop="dateModified">3月 12 2015</time>
+    <time datetime="2015-03-14T07:01:25.363Z" itemprop="datePublished">3月 14 2015</time>
+    更新日期:<time datetime="2015-03-14T07:01:25.347Z" itemprop="dateModified">3月 14 2015</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
 		
-		<h3 id="NGINX安装">NGINX安装</h3>
+		<h3 id="一．基本服务配置">一．基本服务配置</h3>
 <ul>
 <li><ol>
-<li>安装所需软件包：</li>
+<li>安装apache</li>
 </ol>
 </li>
 </ul>
-<figure class="highlight"><pre><div class="line">yum install -y make apr* autoconf automake gcc gcc-<span class="built_in">c</span>++     <span class="comment">//编译环境</span></div><div class="line">yum install -y zlib-devel pcre-devel openssl openssl-devel  <span class="comment">//Nginx组件</span></div></pre></figure>
+<figure class="highlight"><pre><div class="line">yum -y <span class="operator"><span class="keyword">install</span> httpd</span></div></pre></figure>
 
 <ul>
 <li><ol>
-<li>创建nginx用户和组：</li>
+<li>查看配置文件位置</li>
 </ol>
 </li>
 </ul>
-<figure class="highlight"><pre><div class="line">groupadd  -r nginx</div><div class="line">useradd  <span class="operator">-s</span> /sbin/nolog  -g nginx  -r nginx</div></pre></figure>
+<figure class="highlight"><pre><div class="line"><span class="title">rpm</span> -qc httpd</div></pre></figure>
 
 <ul>
 <li><ol>
-<li>下载并解压软件包：</li>
-</ol>
-</li>
-</ul>
-<figure class="highlight"><pre><div class="line"><span class="title">tar</span> -xzvf nginx-<span class="number">1</span>.<span class="number">7</span>.<span class="number">10</span>.tar.gz</div></pre></figure>
-
-<ul>
-<li><ol>
-<li>编译软件</li>
-</ol>
-</li>
-</ul>
-<figure class="highlight"><pre><div class="line"><span class="string">.</span><span class="comment">/configure</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">help</span> <span class="comment">|</span> <span class="comment">less</span>         <span class="comment">//查看编译选项</span></div><div class="line"><span class="string">.</span><span class="comment">/configure</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">user=nginx</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">group=nginx</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">with</span><span class="literal">-</span><span class="comment">http_ssl_module</span></div><div class="line"><span class="comment">make</span> <span class="comment">&&</span> <span class="comment">make</span> <span class="comment">install</span></div></pre></figure>
-
-<ul>
-<li><ol>
-<li>添加环境变量：</li>
-</ol>
-</li>
-</ul>
-<figure class="highlight"><pre><div class="line"><span class="keyword">echo</span> <span class="string">'PATH=/usr/local/nginx/sbin:$PATH'</span> &gt;&gt; /etc/<span class="keyword">profile</span></div><div class="line"><span class="keyword">source</span> /etc/<span class="keyword">profile</span></div></pre></figure>
-
-<ul>
-<li><ol>
-<li>启动nginx： 在命令提示符下输入：nginx</li>
-</ol>
-</li>
-<li><ol>
-<li>查看后台进程：</li>
-</ol>
-</li>
-</ul>
-<figure class="highlight"><pre><div class="line"><span class="keyword">ps</span> -ax | <span class="keyword">grep</span> nginx</div></pre></figure>
-
-<ul>
-<li><ol>
-<li>开启防火墙：</li>
-</ol>
-</li>
-</ul>
-<figure class="highlight"><pre><div class="line">firewall-cmd --permanent --<span class="built_in">add</span>-port=<span class="number">80</span>/tcp</div><div class="line">systemctl reload firewalld</div><div class="line">firewall-cmd --<span class="keyword">list</span>-<span class="keyword">all</span></div></pre></figure>
-
-<ul>
-<li><ol>
-<li>测试：firefox  <a href="http://127.0.0.1" target="_blank" rel="external">http://127.0.0.1</a></li>
-</ol>
-</li>
-</ul>
-<h3 id="NGINX配置-VHOST">NGINX配置-VHOST</h3>
-<ul>
-<li><ol>
-<li>在主配置文件中添加虚拟主机配置文件</li>
-</ol>
-</li>
-</ul>
-<figure class="highlight"><pre><div class="line">cd /usr/<span class="keyword">local</span>/nginx/conf/   <span class="comment">#进入nginx安装目录</span></div><div class="line"><span class="keyword">mkdir</span> vhost   <span class="comment">#建立虚拟目录</span></div></pre></figure>
-
-<ul>
-<li><ol>
-<li></li>
-</ol>
-</li>
-</ul>
-<figure class="highlight"><pre><div class="line">vi  /usr/<span class="built_in">local</span>/nginx/conf/nginx.conf   </div><div class="line">在<span class="keyword">http</span> {}段末尾添加<span class="built_in">include</span>  vhost<span class="comment">/*.conf;</span></div></pre></figure>
-
-<ul>
-<li><ol>
-<li>在vhost目录添加虚拟主机配置文件：</li>
-</ol>
-</li>
-</ul>
-<figure class="highlight"><pre><div class="line"><span class="title">vi</span> redhat.conf</div><div class="line">server {</div><div class="line">      <span class="title">listen</span>  <span class="number">80</span>;</div><div class="line">      <span class="title">server_name</span>  www.redhat.com;</div><div class="line">      <span class="title">root</span>  /var/www/redhat.com;</div><div class="line">      <span class="title">index</span>  index.html;</div><div class="line">}</div></pre></figure>
-
-<ul>
-<li><ol>
-<li>测试配置文件是否正确：</li>
-</ol>
-</li>
-</ul>
-<figure class="highlight"><pre><div class="line">nginx -<span class="keyword">t</span> -<span class="keyword">c</span>  /usr/local/nginx/<span class="keyword">conf</span>/nginx.<span class="keyword">conf</span></div></pre></figure>
-
-<ul>
-<li><ol>
-<li>创建网页：</li>
-</ol>
-</li>
-</ul>
-<figure class="highlight"><pre><div class="line">mkdir /<span class="keyword">var</span>/www/redhat.com</div><div class="line">cd /<span class="keyword">var</span>/www/redhat.com && <span class="keyword">echo</span>  RedHat.com &gt;&gt; index.html</div><div class="line">chown -R nginx:nginx /<span class="keyword">var</span>/www/redhat.com</div></pre></figure>
-
-<ul>
-<li><ol>
-<li>重新加载配置文件：</li>
-</ol>
-</li>
-</ul>
-<figure class="highlight"><pre><div class="line">nginx <span class="operator">-s</span> reload</div></pre></figure>
-
-<ul>
-<li><ol>
-<li>本机测试：<blockquote>
-<p>7.1修改hosts文件<br>7.2 firefox www.redhat.com</p>
+<li><blockquote>
+<p>修改配置文件：/etc/httpd/conf/httpd.conf<br>去掉以下两行的注释：<br>DocumentRoot “/var/www/html”  //定义web文件存放的根<br>   DirectoryIndex index.html   //定义默认页的名称</p>
 </blockquote>
 </li>
+</ol>
+</li>
+<li><ol>
+<li>给默认页添加内容：</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight"><pre><div class="line"><span class="keyword">echo</span> Hello &gt; /<span class="keyword">var</span>/www/html/index.html  <span class="comment">//也可是标准HTML此处省略。</span></div></pre></figure>
+
+<ul>
+<li><ol>
+<li>启动httpd服务：</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight"><pre><div class="line">systemctl start httpd.<span class="keyword">service</span></div><div class="line">systemctl status httpd.<span class="keyword">service</span>   <span class="comment">//查看状态</span></div><div class="line">systemctl enable httpd.<span class="keyword">service</span>  <span class="comment">//设置为开机启动</span></div></pre></figure>
+
+<ul>
+<li><ol>
+<li>打开防火墙设置并查看状态</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight"><pre><div class="line"><span class="comment">firewall</span><span class="literal">-</span><span class="comment">cmd</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">permanent</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">add</span><span class="literal">-</span><span class="comment">service=http</span></div><div class="line"><span class="comment">firewall</span><span class="literal">-</span><span class="comment">cmd</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">reload</span></div></pre></figure>
+
+<ul>
+<li><ol>
+<li><blockquote>
+<p>测试：<br>7.1    web浏览器<br>7.2    curl</p>
+</blockquote>
+</li>
+</ol>
+</li>
+</ul>
+<h3 id="二．虚拟主机配置">二．虚拟主机配置</h3>
+<ul>
+<li><ol>
+<li><blockquote>
+<p>查看虚拟主机配置文件：<br>1.1 rpm -ql httpd | grep httpd-vhost<br>输出如下：</p>
+</blockquote>
+</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight"><pre><div class="line">/&gt;[root@dns www]# rpm -ql httpd | <span class="keyword">grep</span> httpd-vhost</div><div class="line">/usr/share/doc/httpd-<span class="number">2.4</span>.<span class="number">6</span>/httpd-vhosts.<span class="keyword">conf</span></div></pre></figure>
+
+<blockquote>
+<p>1.2 拷贝配置文件到：/etc/httpd/conf.d （Apache子配置文件存放路径）<br>       cp /usr/share/doc/httpd-2.4.6/httpd-vhosts.conf /etc/httpd/conf.d<br>1.4 修改/etc/hosts文件：vi /etc/hosts<br>       127.0.0.1 localhost localhost.localdomain localhost4 localhost4.localdomain4<br>::1         localhost localhost.localdomain localhost6 localhost6.localdomain6<br>192.168.232.131         www.openlab.com         www.redhat.com<br>注：192.168.232.131为本机IP<br>1.3 修改配置文件：vim /etc/httpd/conf.d/httpd-vhosts.conf<br>       <virtualhost 192.168.232.131=""><br>               ServerName 192.168.232.131<br></virtualhost></p>
+<virtualhost www.openlab.com=""><br>   ServerAdmin webmaster@openlab.com<br>   DocumentRoot “/var/www/openlab”<br>   ServerName www.openlab.com<br>   ErrorLog “/var/log/httpd/openlab.com-error_log”<br>   CustomLog “/var/log/httpd/openlab.com-access_log” common<br></virtualhost>
+
+<virtualhost www.redhat.com=""><br>   ServerAdmin webmaster@redhat.com<br>   DocumentRoot “/var/www/redhat”<br>   ServerName www.RedHat.com<br>   ErrorLog “/var/log/httpd/redhat.com-error_log”<br>   CustomLog “/var/log/httpd/redhat.com-access_log” common<br></virtualhost>
+
+</blockquote>
+<ul>
+<li><ol>
+<li>创建虚拟主机目录：</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight"><pre><div class="line">mkdir /<span class="keyword">var</span>/www/{openlab,RedHat}</div></pre></figure>
+
+<ul>
+<li><ol>
+<li>创建主页</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight"><pre><div class="line"><span class="keyword">echo</span> Welcome <span class="keyword">to</span> Openlab &gt; /var/www/openlab/<span class="built_in">index</span>.html</div><div class="line"><span class="keyword">echo</span> Welcome <span class="keyword">to</span> RedHat &gt; /var/www/RedHat/<span class="built_in">index</span>.html</div></pre></figure>
+
+<ul>
+<li><ol>
+<li>重启服务</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight"><pre><div class="line">systemctl restart httpd.<span class="keyword">service</span></div></pre></figure>
+
+<ul>
+<li><ol>
+<li>测试</li>
+</ol>
+</li>
+</ul>
+<ul>
+<li><ol>
+<li><blockquote>
+<p>修改主配置文件：vi /etc/httpd/conf/httpd.conf<br>AllowOverride All</p>
+</blockquote>
+</li>
+</ol>
+</li>
+<li><ol>
+<li>在/var/www/html新建.htaccess文件： touch .htaccess</li>
+</ol>
+</li>
+<li><ol>
+<li><blockquote>
+<p>编辑.htaccess文件：<br>AuthName “Please input your name and password”<br>AuthType basic<br>AuthUserFile /var/www/html/user.txt<br>require valid-user</p>
+</blockquote>
+</li>
+</ol>
+</li>
+<li><ol>
+<li>在/var/www/html新建user.txt文件</li>
+</ol>
+</li>
+<li><ol>
+<li>运行命令：htpasswd –b /var/www/html/use.txt hanhan 12345</li>
+</ol>
+</li>
+<li><ol>
+<li>重启服务</li>
 </ol>
 </li>
 </ul>
@@ -219,20 +245,20 @@ yum install -y make apr* autoconf automake gcc gcc-c++     //编译环境yum ins
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/NGINX/">NGINX</a>
+  <span></span> <a href="/tags/AHACHE/">AHACHE</a>
   </div>
 
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/NGINX/">NGINX</a>
+  <a class="article-category-link" href="/categories/服务配置/">服务配置</a>
 </div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="https://v-script.com/2015/03/12/NGINX安装配置及VHOST/" data-title="NGINX安装配置及VHOST | viscript" data-tsina="null" class="share clearfix">
+  <div data-url="https://v-script.com/2015/03/14/APACHE-RHEL7安装配置/" data-title="APACHE-RHEL7安装配置 | viscript" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -242,18 +268,18 @@ yum install -y make apr* autoconf automake gcc gcc-c++     //编译环境yum ins
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/03/12/APACHE-HTTPS/" title="APACHE-HTTPS">
+ <a href="/2015/03/14/APACHE控制、配置/" title="APACHE控制、配置">
   <strong>PREVIOUS:</strong><br/>
   <span>
-  APACHE-HTTPS</span>
+  APACHE控制、配置</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2015/03/05/LSOF/"  title="LSOF">
+<a href="/2015/03/14/APACHE-HTTPS/"  title="APACHE-HTTPS">
  <strong>NEXT:</strong><br/> 
- <span>LSOF
+ <span>APACHE-HTTPS
 </span>
 </a>
 </div>
@@ -273,11 +299,11 @@ yum install -y make apr* autoconf automake gcc gcc-c++     //编译环境yum ins
 	<p class="asidetitle">分类</p>
 		<ul>
 		
-			<li><a href="/categories/AHACHE/" title="AHACHE">AHACHE<sup>3</sup></a></li>
+			<li><a href="/categories/AHACHE/" title="AHACHE">AHACHE<sup>2</sup></a></li>
 		
 			<li><a href="/categories/DNS/" title="DNS">DNS<sup>1</sup></a></li>
 		
-			<li><a href="/categories/ISCSI/" title="ISCSI">ISCSI<sup>1</sup></a></li>
+			<li><a href="/categories/ISCSI/" title="ISCSI">ISCSI<sup>0</sup></a></li>
 		
 			<li><a href="/categories/Kernel/" title="Kernel">Kernel<sup>1</sup></a></li>
 		
@@ -285,7 +311,7 @@ yum install -y make apr* autoconf automake gcc gcc-c++     //编译环境yum ins
 		
 			<li><a href="/categories/LINUX命令/" title="LINUX命令">LINUX命令<sup>14</sup></a></li>
 		
-			<li><a href="/categories/NGINX/" title="NGINX">NGINX<sup>1</sup></a></li>
+			<li><a href="/categories/NGINX/" title="NGINX">NGINX<sup>0</sup></a></li>
 		
 			<li><a href="/categories/RHCA/" title="RHCA">RHCA<sup>1</sup></a></li>
 		
@@ -294,6 +320,10 @@ yum install -y make apr* autoconf automake gcc gcc-c++     //编译环境yum ins
 			<li><a href="/categories/图片BLOG/" title="图片BLOG">图片BLOG<sup>1</sup></a></li>
 		
 			<li><a href="/categories/摘录/" title="摘录">摘录<sup>4</sup></a></li>
+		
+			<li><a href="/categories/服务配置/" title="服务配置">服务配置<sup>6</sup></a></li>
+		
+			<li><a href="/categories/游戏/" title="游戏">游戏<sup>1</sup></a></li>
 		
 			<li><a href="/categories/配置文件/" title="配置文件">配置文件<sup>2</sup></a></li>
 		
@@ -306,17 +336,25 @@ yum install -y make apr* autoconf automake gcc gcc-c++     //编译环境yum ins
 	<p class="asidetitle">标签</p>
 		<ul class="clearfix">
 		
+			<li><a href="/tags/AHACHE/" title="AHACHE">AHACHE<sup>3</sup></a></li>
+		
 			<li><a href="/tags/ISCSI/" title="ISCSI">ISCSI<sup>1</sup></a></li>
 		
 			<li><a href="/tags/MARKDOWN/" title="MARKDOWN">MARKDOWN<sup>1</sup></a></li>
 		
-			<li><a href="/tags/NGINX/" title="NGINX">NGINX<sup>1</sup></a></li>
+			<li><a href="/tags/NGINX/" title="NGINX">NGINX<sup>2</sup></a></li>
+		
+			<li><a href="/tags/SAMBA/" title="SAMBA">SAMBA<sup>2</sup></a></li>
 		
 			<li><a href="/tags/auto-master/" title="auto.master">auto.master<sup>1</sup></a></li>
 		
 			<li><a href="/tags/autofs/" title="autofs">autofs<sup>1</sup></a></li>
 		
+			<li><a href="/tags/firewall/" title="firewall">firewall<sup>1</sup></a></li>
+		
 			<li><a href="/tags/nfs/" title="nfs">nfs<sup>1</sup></a></li>
+		
+			<li><a href="/tags/代码/" title="代码">代码<sup>1</sup></a></li>
 		
 			<li><a href="/tags/好用的命令/" title="好用的命令">好用的命令<sup>1</sup></a></li>
 		
@@ -329,7 +367,7 @@ yum install -y make apr* autoconf automake gcc gcc-c++     //编译环境yum ins
   
   <div class="archiveslist">
     <p class="asidetitle"><a href="/archives">归档</a></p>
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">February 2015</a><span class="archive-list-count">24</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">February 2015</a><span class="archive-list-count">22</span></li></ul>
   </div>
 
 
